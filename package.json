@@ -9,8 +9,11 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "build": "react-scripts build",
+    "build": "react-scripts build && rimraf docs && cp -R build docs && echo 'uconn-bus.gaberogan.me' > docs/CNAME",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject"
+  },
+  "devDependencies": {
+    "rimraf": "^2.6.2"
   }
 }
