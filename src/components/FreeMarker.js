@@ -76,7 +76,7 @@ export default class FreeMarker extends React.Component {
 
       map.dragPan.enable()
 
-      this.props.onPanEnd(this)
+      this.props.onPanEnd && this.props.onPanEnd(this)
     })
   }
 
