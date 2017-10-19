@@ -1,6 +1,5 @@
 import React from 'react'
 import Map from 'components/Map'
-// import Marker from 'components/Marker'
 import FreeMarker from 'components/FreeMarker'
 
 
@@ -19,8 +18,17 @@ export default class App extends React.Component {
         center={[-72.2683646, 41.8059531]}
         zoom={12}
         >
-        <FreeMarker style={{background:'red'}} projected={this.state.projected} onPanEnd={()=>this.setState({projected: !this.state.projected})}>hey there bud</FreeMarker>
-        {/* <div style={{position:'absolute',bottom:0,zIndex:100}}>hi i'm down here!</div> */}
+        <FreeMarker
+          className='mydiv'
+          style={{
+            background:'red',
+            width:'14px',
+            height:'14px',
+            borderRadius:'100px',
+          }}
+          projected={this.state.projected}
+          onPanEnd={()=>this.setState({projected: !this.state.projected})}
+        />
       </Map>
     )
   }

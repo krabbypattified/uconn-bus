@@ -17,7 +17,6 @@ export default class FreeMarker extends React.Component {
     if (this.projected === false) this.markerDiv.remove()
     resetPosition(this.markerDiv)
 
-    // [map.clientX, map.clientY] TODO what if its outside the map, or map not fullscreen
     this.marker.setLngLat(lngLat).addTo(map)
     this.projected = true
   }
@@ -45,15 +44,15 @@ export default class FreeMarker extends React.Component {
     let x = 0
     let y = 0
 
-    this.markerDiv.addEventListener('mouseover', e=>map.dragPan.disable())
-    this.markerDiv.addEventListener('mouseout', e=>map.dragPan.enable())
-
     let mc = new Hammer(this.markerDiv)
     let lock = this.props.lock
     mc.get('pan').set({ direction: Hammer.DIRECTION_ALL, threshold: 0 })
 
     mc.on('panstart', e => {
       if (lock) return
+
+      map.dragPan.disable()
+
       const matrix = window.getComputedStyle(this.markerDiv).getPropertyValue('transform')
       const translate = matrix.match(/\d+/g) || [0,0,0,0,0,0]
       x = parseInt(translate[4], 10)
@@ -67,12 +66,15 @@ export default class FreeMarker extends React.Component {
 
     mc.on('panend', e => {
       if (lock) return
-    	x += e.deltaX
+
+      x += e.deltaX
     	y += e.deltaY
+
       let px = x + this.markerDiv.offsetWidth/2 + this.markerDiv.offsetLeft
       let py = y + this.markerDiv.offsetHeight/2 + this.markerDiv.offsetTop
-
       this.marker.setLngLat(map.unproject([px, py]))
+
+      map.dragPan.enable()
 
       this.props.onPanEnd(this)
     })

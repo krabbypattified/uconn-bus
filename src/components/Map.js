@@ -26,7 +26,6 @@ export default class Map extends React.Component {
       style: mapStyle,
       ...otherProps
     })
-    this.map.addControl(new MapboxGL.FullscreenControl())
   }
 
   render() {
