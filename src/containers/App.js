@@ -5,6 +5,12 @@ import FreeMarker from 'components/FreeMarker'
 
 
 export default class App extends React.Component {
+
+  constructor(props, context) {
+    super(props, context)
+    this.state = {projected: false}
+  }
+
   render() {
     return (
       <Map
@@ -13,9 +19,7 @@ export default class App extends React.Component {
         center={[-72.2683646, 41.8059531]}
         zoom={12}
         >
-        {/* <Marker lngLat={[-72.2683646, 41.8059531]}>hey there bud</Marker> */}
-        <FreeMarker projected lngLat={[-72.2683646, 41.8059531]}>hey there kids</FreeMarker>
-        {/* <FreeMarker lock lngLat={[-72.2683646, 41.8059531]} position={{top:0,left:0}}>hey there kids</FreeMarker> */}
+        <FreeMarker style={{background:'red'}} projected={this.state.projected} onPanEnd={()=>this.setState({projected: !this.state.projected})}>hey there bud</FreeMarker>
         {/* <div style={{position:'absolute',bottom:0,zIndex:100}}>hi i'm down here!</div> */}
       </Map>
     )

@@ -11,44 +11,37 @@ export default class FreeMarker extends React.Component {
     map: PropTypes.any
   }
 
-  project(lngLat) {
-    if (this.projected === false) this.markerDiv.remove() // remove from DOM tree
+  // Place on map
+  project(lngLat=this.marker.getLngLat()) {
+    let map = this.context.map
+    if (this.projected === false) this.markerDiv.remove()
+    resetPosition(this.markerDiv)
 
-    if (!lngLat) {
-      // translate(x,y) => lngLat
-      const matrix = window.getComputedStyle(this.markerDiv).getPropertyValue('transform')
-      const translate = matrix.match(/\d+/g) || [0,0,0,0,0,0]
-      const xy = [translate[4],translate[5]]
-      lngLat = this.context.map.project(xy) // TODO BUG i think we're off by a few pixels
-    }
-
-    if (!this.marker) this.marker = new MapboxGL.Marker(this.markerDiv)
-    this.marker.setLngLat(lngLat).addTo(this.context.map)
-    // TODO make sure you can drag it once it becomes a marker
+    // [map.clientX, map.clientY] TODO what if its outside the map, or map not fullscreen
+    this.marker.setLngLat(lngLat).addTo(map)
+    this.projected = true
   }
 
+  // Place on mapDiv
   unproject(position) {
-    if (this.projected) this.marker.remove() // remove from map
+    if (this.projected) this.marker.remove()
 
-    if (!position) {
-      // The marker keeps its transform property.
-      // If no transform property, no need to initialize one
-    }
-    else {
-      // TODO top, right, bottom, left => translate(calc(-50% + x), calc(-50% + y))
-      this.markerDiv.style.transform = '...'
+    if (position) {
+      this.markerDiv.style.transform = ''
+      setPosition(this.markerDiv, position)
     }
 
     this.context.map.getContainer().appendChild(this.markerDiv)
+    this.projected = false
   }
 
   componentWillMount() {
     let map = this.context.map
 
     this.markerDiv = document.createElement('div')
-    this.markerDiv.style.position = 'absolute'
+    this.marker = new MapboxGL.Marker(this.markerDiv)
+    resetPosition(this.markerDiv)
 
-    // TODO easy fix for DRAGGABLE MARKER!! (initialize to translate matrix)
     let x = 0
     let y = 0
 
@@ -56,15 +49,32 @@ export default class FreeMarker extends React.Component {
     this.markerDiv.addEventListener('mouseout', e=>map.dragPan.enable())
 
     let mc = new Hammer(this.markerDiv)
+    let lock = this.props.lock
     mc.get('pan').set({ direction: Hammer.DIRECTION_ALL, threshold: 0 })
 
+    mc.on('panstart', e => {
+      if (lock) return
+      const matrix = window.getComputedStyle(this.markerDiv).getPropertyValue('transform')
+      const translate = matrix.match(/\d+/g) || [0,0,0,0,0,0]
+      x = parseInt(translate[4], 10)
+    	y = parseInt(translate[5], 10)
+    })
+
     mc.on('pan', e => {
+      if (lock) return
     	this.markerDiv.style.transform = `translate(${x + e.deltaX}px, ${y + e.deltaY}px)`
     })
 
-    mc.on('panend pancancel', e => {
+    mc.on('panend', e => {
+      if (lock) return
     	x += e.deltaX
     	y += e.deltaY
+      let px = x + this.markerDiv.offsetWidth/2 + this.markerDiv.offsetLeft
+      let py = y + this.markerDiv.offsetHeight/2 + this.markerDiv.offsetTop
+
+      this.marker.setLngLat(map.unproject([px, py]))
+
+      this.props.onPanEnd(this)
     })
   }
 
@@ -76,10 +86,40 @@ export default class FreeMarker extends React.Component {
   }
 
   render() {
-    if (!this.same) this.props.projected ? this.project(this.props.lngLat) : this.unproject(this.props.position)
+    let {children, style, className='', position, projected, lngLat} = this.props
+    if (typeof projected === 'undefined' && lngLat) projected = true // if only lngLat defined
+
+    // CSS
+    setStyle(this.markerDiv, style)
+    this.markerDiv.classList = className
+
+    // Projection
+    if (!this.same) projected ? this.project(lngLat) : this.unproject(position)
+
+    // Render
     return ReactDOM.createPortal(
-      this.props.children,
+      children,
       this.markerDiv,
     )
   }
+}
+
+
+// Helpers
+function setPosition(el, position={}) {
+  for (let key in position) if (typeof position[key] === 'number') position[key] = position[key]+'px'
+  el.style.position = 'absolute'
+  el.style.top = position.top || ''
+  el.style.right = position.right || ''
+  el.style.bottom = position.bottom || ''
+  el.style.left = position.left || ''
+}
+
+function resetPosition(el) {
+  setPosition(el)
+}
+
+function setStyle(el, style={}) {
+  let {top, right, bottom, left, transform, position, ...other} = style
+  for (let p in other) el.style[p] = other[p]
 }
