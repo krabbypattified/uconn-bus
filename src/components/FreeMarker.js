@@ -54,9 +54,9 @@ export default class FreeMarker extends React.Component {
       map.dragPan.disable()
 
       const matrix = window.getComputedStyle(this.markerDiv).getPropertyValue('transform')
-      const translate = matrix.match(/\d+/g) || [0,0,0,0,0,0]
-      x = parseInt(translate[4], 10)
-    	y = parseInt(translate[5], 10)
+      const translate = matrix.match(/[0-9\.]+/g) || [0,0,0,0,0,0] // eslint-disable-line
+      x = parseFloat(translate[4], 10)
+    	y = parseFloat(translate[5], 10)
     })
 
     mc.on('pan', e => {

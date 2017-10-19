@@ -19,16 +19,29 @@ export default class App extends React.Component {
         zoom={12}
         >
         <FreeMarker
-          className='mydiv'
-          style={{
-            background:'red',
-            width:'14px',
-            height:'14px',
-            borderRadius:'100px',
-          }}
+          position={{top:5,left:5}}
           projected={this.state.projected}
-          onPanEnd={()=>this.setState({projected: !this.state.projected})}
-        />
+          onPanEnd={()=>this.setState({projected: true})}
+        >
+          <div style={{
+            backgroundColor:'rgba(255,100,119,.25)',
+            width:'29px',
+            height:'29px',
+            borderRadius:'100px',
+            display:'flex',
+            justifyContent:'center',
+            alignItems:'center',
+          }}>
+            <div style={{
+              backgroundColor:'rgb(255,100,119)',
+              width:'13px',
+              height:'13px',
+              borderRadius:'100px',
+              border:'2px solid white',
+              boxShadow:'0 1px 1px 0 rgba(0,0,0,.3)'
+            }}></div>
+          </div>
+        </FreeMarker>
       </Map>
     )
   }
