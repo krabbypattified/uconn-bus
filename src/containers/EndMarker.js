@@ -1,23 +1,27 @@
 import React from 'react'
 import FreeMarker from 'components/FreeMarker'
-import StyledMarkerDiv from 'components/StyledMarkerDiv'
+import CircleMarkerDiv from 'components/CircleMarkerDiv'
 
 
 export default class EndMarker extends React.Component {
 
   constructor(props, context) {
     super(props, context)
-    this.state = {projected: false}
+    this.state = {}
   }
 
   render() {
     return (
       <FreeMarker
-        position={{top:5,left:5}}
+        position={{top:5,right:5}}
         projected={this.state.projected}
         onPanEnd={()=>this.setState({projected: true})}
       >
-        <StyledMarkerDiv color='#FF6477'/>
+        <CircleMarkerDiv
+          color='#FF6477'
+          label='End'
+          labelPosition='left'
+        />
       </FreeMarker>
     )
   }

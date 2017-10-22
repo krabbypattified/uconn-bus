@@ -13,9 +13,13 @@ export default class Marker extends React.Component {
   componentWillMount() {
     this.markerDiv = document.createElement('div')
 
-    new MapboxGL.Marker(this.markerDiv)
+    this.marker = new MapboxGL.Marker(this.markerDiv)
       .setLngLat(this.props.lngLat)
       .addTo(this.context.map)
+  }
+
+  componentWillUnmount() {
+    this.marker.remove()
   }
 
   render() {
