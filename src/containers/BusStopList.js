@@ -1,9 +1,9 @@
 import React from 'react'
-import { graphql, compose } from 'react-apollo'
+import {graphql, compose} from 'react-apollo'
 
 import BusStop from 'components/BusStop'
-
 import {busStops} from 'data/queries'
+
 
 class BusStopList extends React.Component {
   render() {
