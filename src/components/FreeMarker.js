@@ -19,14 +19,14 @@ export default class FreeMarker extends React.Component {
     const INTERP = this.shouldInterpolate && lngLat
 
     // Clean up
-    if (this.projected !== true) this.markerDiv.remove()
+    if (this.projected === false) this.markerDiv.remove()
     resetPosition(this.markerDiv)
 
     // Set position (vs interpolate)
     if (!INTERP) this.marker.setLngLat(lngLat||this.marker.getLngLat())
 
     // Add to map
-    if (this.projected === false) this.marker.addTo(map)
+    if (this.projected !== true) this.marker.addTo(map)
 
     // Interpolate
     if (INTERP) {
@@ -43,8 +43,6 @@ export default class FreeMarker extends React.Component {
 
   // Place on mapDiv
   unproject(position) {
-    let {map} =this.context
-
     // Clean up
     if (this.projected) this.marker.remove()
 

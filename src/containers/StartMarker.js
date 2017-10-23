@@ -19,22 +19,24 @@ export default class StartMarker extends React.Component {
     let startBounds = this.context.map.getBounds()
     navigator.geolocation.getCurrentPosition(pos => {
       if (this.state.projected) return
+
       let lng = parseFloat(pos.coords.longitude)
       let lat = parseFloat(pos.coords.latitude)
+
       if (!pointInBounds([lng,lat], startBounds)) return
-      this.setState({position:[lng, lat], projected:true})
-      this.position = [lng, lat] // immutable
+
+      this.setState({lngLat:[lng, lat], projected:true})
+      this.lngLat = [lng, lat] // immutable
     })
   }
 
   render() {
-    let {projected} = this.state
     return (
       <FreeMarker
-        projected={projected}
+        {...this.state}
+        style={{zIndex:100}}
         position={{top:5,left:5}}
-        lngLat={this.state.position}
-        onPanEnd={()=>this.setState({projected:true,position:null})}
+        onPanEnd={()=>this.setState({projected:true,lngLat:null})}
       >
         <CircleMarkerDiv
           color='#6964D6'

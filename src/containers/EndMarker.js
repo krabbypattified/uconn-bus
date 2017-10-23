@@ -11,11 +11,9 @@ export default class EndMarker extends React.Component {
   }
 
   render() {
-    let {position, projected} = this.state
     return (
       <FreeMarker
-        position={position}
-        projected={projected}
+        {...this.state}
         onPanEnd={()=>this.setState({projected: true})}
       >
         <CircleMarkerDiv
