@@ -42,7 +42,7 @@ export default class App extends React.Component {
         >
           <EndMarker/>
           <StartMarker/>
-          <BusList/>
+          {/* <BusList/> */}
           <BusStopList/>
         </Map>
       </ApolloProvider>

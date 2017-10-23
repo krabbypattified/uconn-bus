@@ -23,16 +23,18 @@ export default class StartMarker extends React.Component {
       let lat = parseFloat(pos.coords.latitude)
       if (!pointInBounds([lng,lat], startBounds)) return
       this.setState({position:[lng, lat], projected:true})
+      this.position = [lng, lat] // immutable
     })
   }
 
   render() {
+    let {projected} = this.state
     return (
       <FreeMarker
-        projected={this.state.projected}
+        projected={projected}
         position={{top:5,left:5}}
         lngLat={this.state.position}
-        onPanEnd={()=>this.setState({projected:true})}
+        onPanEnd={()=>this.setState({projected:true,position:null})}
       >
         <CircleMarkerDiv
           color='#6964D6'

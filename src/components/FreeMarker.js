@@ -1,8 +1,10 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 import PropTypes from 'prop-types'
-import MapboxGL from 'mapbox-gl'
+import MapboxGL, {Point} from 'mapbox-gl'
 import Hammer from 'hammerjs'
+import {Matrix} from 'transformation-matrix-js'
+import 'web-animations-js'
 
 
 export default class FreeMarker extends React.Component {
@@ -14,68 +16,83 @@ export default class FreeMarker extends React.Component {
   // Place on map
   project(lngLat) {
     let {map} =this.context
-    let {interpolation} = this.props
-    let interpolate = interpolation && lngLat
+    const INTERP = this.shouldInterpolate && lngLat
 
     // Clean up
-    if (this.projected === false) this.markerDiv.remove()
+    if (this.projected !== true) this.markerDiv.remove()
     resetPosition(this.markerDiv)
 
     // Set position (vs interpolate)
-    if (!interpolate) this.marker.setLngLat(lngLat||this.marker.getLngLat())
+    if (!INTERP) this.marker.setLngLat(lngLat||this.marker.getLngLat())
 
     // Add to map
-    this.marker.addTo(map)
+    if (this.projected === false) this.marker.addTo(map)
+
+    // Interpolate
+    if (INTERP) {
+      let oldPos = cornerToCenter(this.markerDiv)
+      let newPos = map.project(lngLat)
+      this.interpolatePosition(newPos.minus(oldPos), () => {
+        this.marker.setLngLat(lngLat)
+      })
+    }
 
     // Update state
     this.projected = true
-
-    // Interpolate
-    if (!interpolate) return
-
-
-    // get the current transform
-    // compute the new transform
-    // interpolate
-    // project(newTransform)
-    let oldPos = cornerToCenter(this.markerDiv)
-    let newPos = map.project(lngLat)
-    interpolate(this.markerDiv, oldPos, newPos)
   }
 
   // Place on mapDiv
   unproject(position) {
-    // TODO interpolation
+    let {map} =this.context
+
+    // Clean up
     if (this.projected) this.marker.remove()
 
-    // Without interpolation (&& position)
-    if (position && !this.props.interpolation) {
+    // Set position (vs interpolate)
+    if (position && !this.shouldInterpolate) {
       this.markerDiv.style.transform = ''
       setPosition(this.markerDiv, position)
     }
 
     // Add to mapDiv
-    this.context.map.getContainer().appendChild(this.markerDiv)
+    if (this.projected !== false) this.context.map.getContainer().appendChild(this.markerDiv)
+
+    // Interpolate
+    if (position && this.shouldInterpolate) {
+      let oldPos = cornerToCenter(this.markerDiv)
+      let newPos = absoluteToPoint(this.markerDiv, position)
+      this.interpolatePosition(newPos.minus(oldPos), () => {
+        this.markerDiv.style.transform = ''
+        setPosition(this.markerDiv, position)
+      })
+    }
 
     // Update state
     this.projected = false
+  }
 
-    // Interpolate
-    // get the current transform
-    // compute the new transform
-    // interpolate
-    // unproject(newTransform)
+  // Animate marker position
+  interpolatePosition(point, callback) {
+    this.interpolating = true
+    interpolate({
+      el: this.markerDiv,
+      delta: new Matrix().translate(point.x,point.y),
+      ...this.props.interpolation,
+      callback: () => {
+        this.interpolating = false
+        callback && callback()
+      }
+    })
   }
 
   componentWillMount() {
-    let map = this.context.map
+    let {map} = this.context
 
     this.markerDiv = document.createElement('div')
     this.marker = new MapboxGL.Marker(this.markerDiv)
     resetPosition(this.markerDiv)
 
-    let x = 0
-    let y = 0
+    let pos = new Point(0,0)
 
     let mc = new Hammer(this.markerDiv)
     mc.get('pan').set({ direction: Hammer.DIRECTION_ALL, threshold: 0 })
@@ -85,24 +102,21 @@ export default class FreeMarker extends React.Component {
 
       map.dragPan.disable()
 
-      let trans = getTransform(this.markerDiv)
-      x = trans.x
-      y = trans.y
+      pos = getPosition(this.markerDiv)
     })
 
     mc.on('pan', e => {
       if (this.lock) return
-    	this.markerDiv.style.transform = `translate(${x + e.deltaX}px, ${y + e.deltaY}px)`
+    	this.markerDiv.style.transform = `translate(${pos.x + e.deltaX}px, ${pos.y + e.deltaY}px)`
     })
 
     mc.on('panend', e => {
       if (this.lock) return
 
-      x += e.deltaX
-    	y += e.deltaY
+      pos.add([e.deltaX, e.deltaY])
 
-      let offset = cornerToCenter(this.markerDiv)
-      this.marker.setLngLat(map.unproject([x+offset.x, y+offset.y]))
+      let offset = cornerToCenter(this.markerDiv).add(pos)
+      this.marker.setLngLat(map.unproject(offset))
 
       map.dragPan.enable()
 
@@ -121,11 +135,16 @@ export default class FreeMarker extends React.Component {
     this.marker.remove()
   }
 
-  render() {
-    let {children, style, className='', position, projected, lngLat, lock, interpolation} = this.props
+  get lock() {
+    return this.props.lock || this.interpolating
+  }
 
-    // Dragable lock
-    this.lock = lock || interpolation
+  get shouldInterpolate() {
+    return (typeof this.projected !== 'undefined' && Boolean(this.props.interpolation))
+  }
+
+  render() {
+    let {children, style, className='', position, projected, lngLat} = this.props
 
     // CSS
     setStyle(this.markerDiv, style)
@@ -157,21 +176,69 @@ function resetPosition(el) {
   setPosition(el)
 }
 
+let checkerDiv
+function absoluteToPoint(el, pos) {
+  if (!checkerDiv) {
+    checkerDiv = document.createElement('div')
+    checkerDiv.style.pointerEvents = 'none'
+    el.parentNode.appendChild(checkerDiv)
+  }
+
+  checkerDiv.style.width = el.offsetWidth+'px'
+  checkerDiv.style.height = el.offsetHeight+'px'
+  setPosition(checkerDiv, pos)
+  return cornerToCenter(checkerDiv)
+}
+
 function setStyle(el, style={}) {
   let {top, right, bottom, left, transform, position, ...other} = style
   for (let p in other) el.style[p] = other[p]
 }
 
-function getTransform(el) {
+function getPosition(el) {
   const matrix = window.getComputedStyle(el).getPropertyValue('transform')
   const translate = matrix.match(/[0-9\.]+/g) || [0,0,0,0,0,0] // eslint-disable-line
   const x = parseFloat(translate[4], 10)
   const y = parseFloat(translate[5], 10)
-  return {x,y}
+  return new Point(x,y)
 }
 
 function cornerToCenter(el) {
   let x = el.offsetWidth/2 + el.offsetLeft
   let y = el.offsetHeight/2 + el.offsetTop
-  return {x,y}
+  return new Point(x,y)
+}
+
+function interpolate({el, delta, easing='ease-in-out', duration=1000, callback=()=>{}}) {
+  if (!el) throw new Error('Interpolation requires an \'el\' parameter.')
+  if (!delta) throw new Error('Interpolation requires a \'delta\' parameter.')
+
+  let before = Matrix.from(el)
+  if (isNaN(before.a)) before = new Matrix() // bugfix
+  let after = before.concat(delta)
+
+  el.willChange = 'transform'
+
+  let frames = [
+    {transform: before.toCSS(), easing},
+    {transform:  after.toCSS(), easing}
+  ]
+  let timing = {duration}
+  let anim = el.animate(frames, timing)
+  anim.onfinish = callback
+}
+
+// Mutates
+Point.prototype.add = function(point) {
+  if (Array.isArray(point)) point = new Point(...point)
+  this.x += point.x
+  this.y += point.y
+  return this
+}
+
+Point.prototype.minus = function(point) {
+  if (Array.isArray(point)) point = new Point(...point)
+  const x = this.x - point.x
+  const y = this.y - point.y
+  return new Point(x,y)
 }
