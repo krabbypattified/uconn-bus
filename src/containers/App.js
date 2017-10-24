@@ -49,21 +49,3 @@ export default class App extends React.Component {
     )
   }
 }
-
-
-// Connect & Export TODO
-// export default connect(
-//   dispatch => ({onMapClick: () => dispatch(deselect())})
-// )(MapContainer)
-
-
-// // Connect & Export TODO
-// export default compose(
-//   graphql(query.busLines, {name: 'busLines'}),
-//   graphql(query.buses, {name: 'buses', /*options: { pollInterval: 2000 }*/}),
-//   graphql(query.busStops, {name: 'busStops', /*options: { pollInterval: 15000 }*/}),
-//   connect(
-//     state => ({...state}),
-//     dispatch => ({onMapClick: () => dispatch(deselect())})
-//   ),
-// )(MapContainer)

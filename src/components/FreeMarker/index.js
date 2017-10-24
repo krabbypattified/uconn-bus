@@ -1,10 +1,9 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 import PropTypes from 'prop-types'
-import MapboxGL from 'mapbox-gl'
+import MapboxGL, {Point} from 'mapbox-gl'
 import Hammer from 'hammerjs'
-import Point from './Point'
-import {resetPosition,cornerToCenter,setPosition,absoluteToPoint,interpolate,getPosition,setStyle} from './helpers'
+import {resetPosition,cornerToCenter,setPosition,absoluteToPoint,interpolate,getPosition,setStyle,addPoints,subtractPoints} from './helpers'
 
 
 export default class FreeMarker extends React.Component {
@@ -31,7 +30,7 @@ export default class FreeMarker extends React.Component {
     // Interpolate
     if (INTERP) {
       let newPos = map.project(lngLat)
-      newPos = newPos.minus(getPosition(this.markerDiv))
+      newPos = subtractPoints(newPos, getPosition(this.markerDiv))
       newPos = `translate(-50%, -50%) translate(${newPos.x}px,${newPos.y}px)`
       this.interpolatePosition(newPos, () => {
         this.marker.setLngLat(lngLat)
@@ -59,7 +58,7 @@ export default class FreeMarker extends React.Component {
     // Interpolate
     if (position && this.shouldInterpolate) {
       let newPos = absoluteToPoint(this.markerDiv, position)
-      newPos = newPos.minus(getPosition(this.markerDiv))
+      newPos = subtractPoints(newPos, this.markerDiv)
       newPos = `translate(-50%, -50%) translate(${newPos.x}px,${newPos.y}px)`
       this.interpolatePosition(newPos, () => {
         this.markerDiv.style.transform = ''
@@ -115,9 +114,9 @@ export default class FreeMarker extends React.Component {
     mc.on('panend', e => {
       if (this.lock) return
 
-      pos.add([e.deltaX, e.deltaY])
+      pos = addPoints(pos, [e.deltaX, e.deltaY])
 
-      let offset = cornerToCenter(this.markerDiv).add(pos)
+      let offset = addPoints(cornerToCenter(this.markerDiv), pos)
       this.marker.setLngLat(map.unproject(offset))
 
       map.dragPan.enable()

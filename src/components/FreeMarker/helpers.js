@@ -1,7 +1,25 @@
-import Point from './Point'
+import {Point} from 'mapbox-gl'
 import 'web-animations-js'
 
 // Helpers
+export function addPoints(p1, p2) {
+  if (Array.isArray(p1)) p1 = new Point(...p1)
+  if (Array.isArray(p2)) p2 = new Point(...p2)
+  const x = p1.x + p2.x
+  const y = p1.y + p2.y
+  return new Point(x,y)
+}
+
+
+export function subtractPoints(p1, p2) {
+  if (Array.isArray(p1)) p1 = new Point(...p1)
+  if (Array.isArray(p2)) p2 = new Point(...p2)
+  const x = p1.x - p2.x
+  const y = p1.y - p2.y
+  return new Point(x,y)
+}
+
+
 export function setPosition(el, position={}) {
   for (let key in position) if (typeof position[key] === 'number') position[key] = position[key]+'px'
   el.style.position = 'absolute'
