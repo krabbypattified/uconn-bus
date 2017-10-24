@@ -17,10 +17,12 @@ class Pointer extends React.Component {
   }
 
   setHighlightedThings() {
-    let {loading, buses=[], busStops=[]} = this.props.data
+    let {buses, busStops} = this.props
     let {map} = this.context
 
-    if (loading) return
+    if (buses.loading || busStops.loading) return
+    buses = buses.buses || []
+    busStops = busStops.busStops || []
 
     let center = map.getCenter()
     let centerPx = map.project(center)
@@ -51,8 +53,8 @@ class Pointer extends React.Component {
 
 // Connect & Export
 export default compose(
-  graphql(buses), // TODO see if this works/updates
-  graphql(busStops),
+  graphql(buses, {name: 'buses'}), // TODO see if this works/updates
+  graphql(busStops, {name: 'busStops'}),
   connect(
     state => ({}),
     dispatch => ({
