@@ -6,10 +6,10 @@ import Dot from 'components/Dot'
 export default class BusStop extends React.Component {
 
   render() {
-    let {lngLat, color} = this.props
+    let {lngLat} = this.props
     return (
       <Marker lngLat={lngLat}>
-        <Dot color={color}/>
+        <Dot color='#ff6666' radius={5}/>
       </Marker>
     )
   }
@@ -17,3 +17,4 @@ export default class BusStop extends React.Component {
 
 // TODO size algorithm based on px distance between stops, say 50ft away
 // directly proportional (& global max) (min 3?)
+// TODO data-driven map layer?

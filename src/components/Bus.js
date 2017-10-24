@@ -6,11 +6,15 @@ import busSVG from 'assets/bus.svg'
 
 
 export default class Bus extends React.Component {
+  componentWillUpdate(nextProps) {
+    if (nextProps.heading) this.heading = nextProps.heading // prevent realign to 0deg
+  }
+
   render() {
-    let {lngLat, color, heading} = this.props
+    let {lngLat, color} = this.props
     return (
       <FreeMarker projected lock lngLat={lngLat} interpolation>
-        <BusSVG path={busSVG} color={color} heading={heading}/>
+        <BusSVG path={busSVG} color={color} style={{transform: `rotate(${this.heading||this.props.heading}deg)`}}/>
       </FreeMarker>
     )
   }
@@ -20,7 +24,6 @@ export default class Bus extends React.Component {
 
 // Helpers
 let BusSVG = styled(ReactSVG)`
-  transform: rotate(${({heading}) => heading}deg);
 	.st0 {
 		fill: ${({color}) => color};
 	}

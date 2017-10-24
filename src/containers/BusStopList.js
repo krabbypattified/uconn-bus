@@ -13,12 +13,7 @@ class BusStopList extends React.Component {
       <div>
         {
           data.busStops.map((stop, idx) => (
-            <BusStop
-              onClick
-              key={idx}
-              color='#ff2222'
-              lngLat={[stop.longitude, stop.latitude]}
-            />
+            <BusStop key={idx} lngLat={[stop.longitude, stop.latitude]} />
           ))
         }
       </div>

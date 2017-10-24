@@ -4,10 +4,11 @@ import { ApolloClient, ApolloProvider, createBatchingNetworkInterface } from 're
 
 import reducers from 'data/reducers'
 import Map from 'components/Map'
+import Pointer from 'containers/Pointer'
 import GeolocationMarker from 'containers/GeolocationMarker'
 import BusStopList from 'containers/BusStopList'
 import BusList from 'containers/BusList'
-import Pointer from 'containers/Pointer'
+import BottomButton from 'containers/BottomButton'
 
 
 // Apollo Setup
@@ -35,15 +36,16 @@ export default class App extends React.Component {
       <ApolloProvider store={store} client={client}>
         <Map
           container='root'
-          mapStyle='mapbox://styles/mapbox/streets-v9'
+          mapStyle='mapbox://styles/mapbox/streets-v9?optimize=true'
           maxBounds={[-72.55,41.65,-71.96,41.97]}
           center={[-72.2683646, 41.8059531]}
           zoom={13}
         >
-          <GeolocationMarker/>
           <Pointer/>
-          <BusStopList/>
-          <BusList/>
+          <GeolocationMarker/>
+          {/* <BusStopList/> */}
+          {/* <BusList/> */}
+          <BottomButton/>
         </Map>
       </ApolloProvider>
     )
