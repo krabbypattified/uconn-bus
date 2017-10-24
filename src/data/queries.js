@@ -9,6 +9,7 @@ export const buses = gql`{
 		speed
 		busLine {
 			id
+      name
 			color
 		}
 	}
