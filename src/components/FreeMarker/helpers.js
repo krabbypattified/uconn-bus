@@ -72,17 +72,22 @@ export function cornerToCenter(el) {
 }
 
 
-export function interpolate({el, to, easing='ease-in-out', duration=1000, callback=()=>{}}) {
+export function interpolatePosition({el, to, easing='ease-in-out', duration=1000, callback=()=>{}}) {
   if (!el) throw new Error('Interpolation requires an \'el\' parameter.')
   if (!to) throw new Error('Interpolation requires a \'to\' parameter.')
 
   el.willChange = 'transform'
 
-  let from = el.style.transform
-  if (!from) from = `translate(0px,0px)`
+  let from = window.getComputedStyle(el).getPropertyValue('transform')
 
   let frames = {transform: [from, to], easing}
   let timing = {duration}
   let anim = el.animate(frames, timing)
-  anim.onfinish = callback
+
+  if (!el.dataset.animations) el.dataset.animations = 0
+  el.dataset.animations++
+  anim.onfinish = function() {
+    el.dataset.animations--
+    if (el.dataset.animations==0) callback() // eslint-disable-line
+  }
 }

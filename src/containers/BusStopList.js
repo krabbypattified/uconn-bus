@@ -22,7 +22,7 @@ class BusStopList extends React.Component {
 }
 
 
-// Connect & Export TODO
+// Connect & Export
 export default compose(
   graphql(busStops),
   // connect(

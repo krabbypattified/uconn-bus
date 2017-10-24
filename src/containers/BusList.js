@@ -27,9 +27,9 @@ class BusList extends React.Component {
 }
 
 
-// Connect & Export TODO
+// Connect & Export
 export default compose(
-  graphql(buses, {options: { pollInterval: 2000 }}),
+  graphql(buses, {options: { pollInterval: 2400 }}),
   // connect(
   //   state => ({...state}),
   //   dispatch => ({onMapClick: () => dispatch(deselect())})

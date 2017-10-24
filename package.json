@@ -5,6 +5,7 @@
   "dependencies": {
     "hammerjs": "^2.0.8",
     "mapbox-gl": "https://github.com/krabbypattified/mapbox-gl-js.git",
+    "polished": "^1.8.1",
     "prop-types": "^15.6.0",
     "react": "^16.0.0",
     "react-apollo": "^1.4.16",

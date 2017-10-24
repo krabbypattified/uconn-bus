@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom'
 import PropTypes from 'prop-types'
 import MapboxGL, {Point} from 'mapbox-gl'
 import Hammer from 'hammerjs'
-import {resetPosition,cornerToCenter,setPosition,absoluteToPoint,interpolate,getPosition,setStyle,addPoints,subtractPoints} from './helpers'
+import {resetPosition,cornerToCenter,setPosition,absoluteToPoint,interpolatePosition,getPosition,setStyle,addPoints,subtractPoints} from './helpers'
 
 
 export default class FreeMarker extends React.Component {
@@ -73,7 +73,7 @@ export default class FreeMarker extends React.Component {
   // Animate marker position
   interpolatePosition(point, callback) {
     this.interpolating = true
-    interpolate({
+    interpolatePosition({
       el: this.animationDiv,
       to: point,
       ...this.props.interpolation,

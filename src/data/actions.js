@@ -5,3 +5,10 @@ export const setLocation = location => {
     location
   }
 }
+
+export const setHighlightedThings = things => {
+  return {
+    type: 'SET_HIGHLIGHTED_THINGS',
+    things
+  }
+}
