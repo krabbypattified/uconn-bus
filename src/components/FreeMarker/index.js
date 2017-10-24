@@ -1,10 +1,11 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 import PropTypes from 'prop-types'
-import MapboxGL, {Point} from 'mapbox-gl'
+import MapboxGL from 'mapbox-gl'
 import Hammer from 'hammerjs'
 import {Matrix} from 'transformation-matrix-js'
-import 'web-animations-js'
+import Point from './Point'
+import {resetPosition,cornerToCenter,setPosition,absoluteToPoint,interpolate,getPosition,setStyle} from './helpers'
 
 
 export default class FreeMarker extends React.Component {
@@ -32,6 +33,9 @@ export default class FreeMarker extends React.Component {
     if (INTERP) {
       let oldPos = cornerToCenter(this.markerDiv)
       let newPos = map.project(lngLat)
+      console.log('oldPos',oldPos)
+      console.log('newPos',newPos)
+      debugger;
       this.interpolatePosition(newPos.minus(oldPos), () => {
         this.marker.setLngLat(lngLat)
       })
@@ -71,6 +75,7 @@ export default class FreeMarker extends React.Component {
 
   // Animate marker position
   interpolatePosition(point, callback) {
+    console.log('point',point)
     this.interpolating = true
     interpolate({
       el: this.markerDiv,
@@ -157,86 +162,4 @@ export default class FreeMarker extends React.Component {
       this.markerDiv,
     )
   }
-}
-
-
-// Helpers
-function setPosition(el, position={}) {
-  for (let key in position) if (typeof position[key] === 'number') position[key] = position[key]+'px'
-  el.style.position = 'absolute'
-  el.style.top = position.top || ''
-  el.style.right = position.right || ''
-  el.style.bottom = position.bottom || ''
-  el.style.left = position.left || ''
-}
-
-function resetPosition(el) {
-  setPosition(el)
-}
-
-let checkerDiv
-function absoluteToPoint(el, pos) {
-  if (!checkerDiv) {
-    checkerDiv = document.createElement('div')
-    checkerDiv.style.pointerEvents = 'none'
-    el.parentNode.appendChild(checkerDiv)
-  }
-
-  checkerDiv.style.width = el.offsetWidth+'px'
-  checkerDiv.style.height = el.offsetHeight+'px'
-  setPosition(checkerDiv, pos)
-  return cornerToCenter(checkerDiv)
-}
-
-function setStyle(el, style={}) {
-  let {top, right, bottom, left, transform, position, ...other} = style
-  for (let p in other) el.style[p] = other[p]
-}
-
-function getPosition(el) {
-  const matrix = window.getComputedStyle(el).getPropertyValue('transform')
-  const translate = matrix.match(/[0-9\.]+/g) || [0,0,0,0,0,0] // eslint-disable-line
-  const x = parseFloat(translate[4], 10)
-  const y = parseFloat(translate[5], 10)
-  return new Point(x,y)
-}
-
-function cornerToCenter(el) {
-  let x = el.offsetWidth/2 + el.offsetLeft
-  let y = el.offsetHeight/2 + el.offsetTop
-  return new Point(x,y)
-}
-
-function interpolate({el, delta, easing='ease-in-out', duration=1000, callback=()=>{}}) {
-  if (!el) throw new Error('Interpolation requires an \'el\' parameter.')
-  if (!delta) throw new Error('Interpolation requires a \'delta\' parameter.')
-
-  let before = Matrix.from(el)
-  if (isNaN(before.a)) before = new Matrix() // bugfix
-  let after = before.concat(delta)
-
-  el.willChange = 'transform'
-
-  let frames = [
-    {transform: before.toCSS(), easing},
-    {transform:  after.toCSS(), easing}
-  ]
-  let timing = {duration}
-  let anim = el.animate(frames, timing)
-  anim.onfinish = callback
-}
-
-// Mutates
-Point.prototype.add = function(point) {
-  if (Array.isArray(point)) point = new Point(...point)
-  this.x += point.x
-  this.y += point.y
-  return this
-}
-
-Point.prototype.minus = function(point) {
-  if (Array.isArray(point)) point = new Point(...point)
-  const x = this.x - point.x
-  const y = this.y - point.y
-  return new Point(x,y)
 }

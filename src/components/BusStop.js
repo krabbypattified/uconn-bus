@@ -1,5 +1,6 @@
 import React from 'react'
 import Marker from 'components/Marker'
+import Dot from 'components/Dot'
 
 
 export default class BusStop extends React.Component {
@@ -8,15 +9,7 @@ export default class BusStop extends React.Component {
     let {lngLat, color} = this.props
     return (
       <Marker lngLat={lngLat}>
-        <div style={{
-          backgroundColor:color,
-          width:'10px',
-          height:'10px',
-          borderRadius:'100px',
-          display:'flex',
-          justifyContent:'center',
-          alignItems:'center',
-        }}></div>
+        <Dot color={color}/>
       </Marker>
     )
   }

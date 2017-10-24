@@ -1,9 +1,11 @@
 import React from 'react'
+import ReactSVG from 'react-svg'
+import styled from 'styled-components'
 import FreeMarker from 'components/FreeMarker'
-import CircleMarkerDiv from 'components/CircleMarkerDiv'
+import busSVG from 'assets/bus.svg'
 
 
-export default class BusStop extends React.Component {
+export default class Bus extends React.Component {
 
   componentWillMount() {
     this.firstPosition = true
@@ -15,15 +17,22 @@ export default class BusStop extends React.Component {
     this.firstPosition = false
   }
 
+  // interpolation={{duration:this.duration}}
   render() {
-    let {lngLat, color} = this.props
+    let {lngLat, color, heading} = this.props
     return (
-      <FreeMarker
-        lngLat={lngLat}
-        interpolation={{duration:this.duration}}
-      >
-        <CircleMarkerDiv color={color} />
+      <FreeMarker projected lock lngLat={lngLat}>
+        <BusSVG path={busSVG} color={color} heading={heading}/>
       </FreeMarker>
     )
   }
 }
+
+
+// Helpers
+let BusSVG = styled(ReactSVG)`
+  transform: rotate(${({heading}) => heading}deg);
+	.st0 {
+		fill: ${({color}) => color};
+	}
+`

@@ -9,8 +9,11 @@
     "react": "^16.0.0",
     "react-apollo": "^1.4.16",
     "react-dom": "^16.0.0",
+    "react-redux": "^5.0.6",
     "react-scripts": "1.0.14",
+    "react-svg": "^2.1.22",
     "redux": "^3.7.2",
+    "styled-components": "^2.2.1",
     "transformation-matrix-js": "^2.7.1",
     "web-animations-js": "^2.3.1"
   },

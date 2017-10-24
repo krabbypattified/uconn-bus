@@ -14,10 +14,10 @@ class BusList extends React.Component {
         {
           data.buses.map((bus, idx) => (
             <Bus
-              onClick
               key={idx}
-              color={bus.color}
+              color={bus.busLine.color}
               lngLat={[bus.longitude, bus.latitude]}
+              heading={bus.heading}
             />
           ))
         }
@@ -29,7 +29,7 @@ class BusList extends React.Component {
 
 // Connect & Export TODO
 export default compose(
-  graphql(buses),
+  graphql(buses, {options: { pollInterval: 2000 }}),
   // connect(
   //   state => ({...state}),
   //   dispatch => ({onMapClick: () => dispatch(deselect())})
