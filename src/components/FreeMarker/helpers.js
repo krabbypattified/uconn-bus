@@ -1,4 +1,3 @@
-import {Matrix} from 'transformation-matrix-js'
 import Point from './Point'
 import 'web-animations-js'
 
@@ -29,7 +28,7 @@ export function absoluteToPoint(el, pos) {
   checkerDiv.style.width = el.offsetWidth+'px'
   checkerDiv.style.height = el.offsetHeight+'px'
   setPosition(checkerDiv, pos)
-  return cornerToCenter(checkerDiv)
+  return new Point(el.offsetLeft,el.offsetTop)
 }
 
 
@@ -55,23 +54,16 @@ export function cornerToCenter(el) {
 }
 
 
-export function interpolate({el, delta, easing='ease-in-out', duration=1000, callback=()=>{}}) {
+export function interpolate({el, to, easing='ease-in-out', duration=1000, callback=()=>{}}) {
   if (!el) throw new Error('Interpolation requires an \'el\' parameter.')
-  if (!delta) throw new Error('Interpolation requires a \'delta\' parameter.')
-
-  let before = Matrix.from(el)
-  if (isNaN(before.a)) before = new Matrix() // bugfix
-  let after = before.concat(delta)
+  if (!to) throw new Error('Interpolation requires a \'to\' parameter.')
 
   el.willChange = 'transform'
 
-  console.log('before',before)
-  console.log('after',after)
+  let from = el.style.transform
+  if (!from) from = `translate(0px,0px)`
 
-  let frames = [
-    {transform: before.toCSS(), easing},
-    {transform:  after.toCSS(), easing}
-  ]
+  let frames = {transform: [from, to], easing}
   let timing = {duration}
   let anim = el.animate(frames, timing)
   anim.onfinish = callback

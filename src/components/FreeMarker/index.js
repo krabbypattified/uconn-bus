@@ -3,7 +3,6 @@ import ReactDOM from 'react-dom'
 import PropTypes from 'prop-types'
 import MapboxGL from 'mapbox-gl'
 import Hammer from 'hammerjs'
-import {Matrix} from 'transformation-matrix-js'
 import Point from './Point'
 import {resetPosition,cornerToCenter,setPosition,absoluteToPoint,interpolate,getPosition,setStyle} from './helpers'
 
@@ -31,12 +30,10 @@ export default class FreeMarker extends React.Component {
 
     // Interpolate
     if (INTERP) {
-      let oldPos = cornerToCenter(this.markerDiv)
       let newPos = map.project(lngLat)
-      console.log('oldPos',oldPos)
-      console.log('newPos',newPos)
-      debugger;
-      this.interpolatePosition(newPos.minus(oldPos), () => {
+      newPos = newPos.minus(getPosition(this.markerDiv))
+      newPos = `translate(-50%, -50%) translate(${newPos.x}px,${newPos.y}px)`
+      this.interpolatePosition(newPos, () => {
         this.marker.setLngLat(lngLat)
       })
     }
@@ -61,9 +58,10 @@ export default class FreeMarker extends React.Component {
 
     // Interpolate
     if (position && this.shouldInterpolate) {
-      let oldPos = cornerToCenter(this.markerDiv)
       let newPos = absoluteToPoint(this.markerDiv, position)
-      this.interpolatePosition(newPos.minus(oldPos), () => {
+      newPos = newPos.minus(getPosition(this.markerDiv))
+      newPos = `translate(-50%, -50%) translate(${newPos.x}px,${newPos.y}px)`
+      this.interpolatePosition(newPos, () => {
         this.markerDiv.style.transform = ''
         setPosition(this.markerDiv, position)
       })
@@ -75,11 +73,10 @@ export default class FreeMarker extends React.Component {
 
   // Animate marker position
   interpolatePosition(point, callback) {
-    console.log('point',point)
     this.interpolating = true
     interpolate({
-      el: this.markerDiv,
-      delta: new Matrix().translate(point.x,point.y),
+      el: this.animationDiv,
+      to: point,
       ...this.props.interpolation,
       callback: () => {
         this.interpolating = false
@@ -91,7 +88,9 @@ export default class FreeMarker extends React.Component {
   componentWillMount() {
     let {map} = this.context
 
+    this.animationDiv = document.createElement('div')
     this.markerDiv = document.createElement('div')
+    this.markerDiv.appendChild(this.animationDiv)
     this.marker = new MapboxGL.Marker(this.markerDiv)
     resetPosition(this.markerDiv)
 
@@ -159,7 +158,7 @@ export default class FreeMarker extends React.Component {
     // Render
     return ReactDOM.createPortal(
       children,
-      this.markerDiv,
+      this.animationDiv,
     )
   }
 }

@@ -7,6 +7,7 @@ import Map from 'components/Map'
 import GeolocationMarker from 'containers/GeolocationMarker'
 import BusStopList from 'containers/BusStopList'
 import BusList from 'containers/BusList'
+import Pointer from 'containers/Pointer'
 
 
 // Apollo Setup
@@ -40,6 +41,7 @@ export default class App extends React.Component {
           zoom={13}
         >
           <GeolocationMarker/>
+          <Pointer/>
           <BusStopList/>
           <BusList/>
         </Map>

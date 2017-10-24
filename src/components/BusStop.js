@@ -14,3 +14,6 @@ export default class BusStop extends React.Component {
     )
   }
 }
+
+// TODO size algorithm based on px distance between stops, say 50ft away
+// directly proportional (& global max) (min 3?)

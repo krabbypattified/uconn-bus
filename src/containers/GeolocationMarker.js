@@ -16,11 +16,6 @@ class GeolocationMarker extends React.Component {
     let {location, setLocation} = this.props
     let startBounds = this.context.map.getBounds()
 
-    setTimeout(args => {
-      setLocation([-72.2666303,41.8274861])
-      // setLocation([-72.2413409,41.8012331])
-    }, 2000)
-
     navigator.geolocation.getCurrentPosition(pos => {
       if (location) return
 
@@ -36,12 +31,12 @@ class GeolocationMarker extends React.Component {
   render() {
     let {location, setLocation} = this.props
     if (!location) return null
+    console.log(location)
     return (
       <FreeMarker
         style={{zIndex:100}}
         lngLat={location}
         onPanEnd={that=>setLocation(that.marker.getLngLat())} // dispatch
-        interpolation
         projected
       >
         <Dot color='#6964D6' satellite={20} />
