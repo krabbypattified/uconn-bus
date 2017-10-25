@@ -4,12 +4,12 @@ import PreviewBox from 'components/PreviewBox'
 import styled from 'styled-components'
 
 
-class PreviewList extends React.Component {
+class PreviewBoxList extends React.Component {
   render() {
     return (
       <List>
         {this.props.highlightedThings.map((thing, idx) => (
-          <PreviewBox key={idx} data={thing}/>
+          <PreviewBox key={idx} data={{...thing,idx}}/>
         ))}
       </List>
     )
@@ -22,11 +22,13 @@ export default connect(
   state => ({
     highlightedThings: state.highlightedThings
   })
-)(PreviewList)
+)(PreviewBoxList)
 
 
 // Helpers
 let List = styled.div`
   position: absolute;
   z-index: 20;
+  width: 400px;
+  max-width: 100%;
 `

@@ -17,8 +17,8 @@ class BottomButton extends React.Component {
     let {map} = this.context
 
     let button = location
-    ? <Button color='#61a3fe' onClick={()=>'getDirectionsMode()'}>Get Directions</Button>
-    : <Button color='#ff6666' onClick={()=>setLocation(map.getCenter())}>Set My Location</Button>
+    ? <Button color='#254A7D' onClick={()=>'getDirectionsMode()'}>Get Directions</Button>
+    : <Button color='#888' onClick={()=>setLocation(map.getCenter())}>Set My Location</Button>
 
     return <BottomBar>{button}</BottomBar>
   }
@@ -41,7 +41,7 @@ let BottomBar = styled.div`
   position: absolute;
   bottom: 0;
   width: 100%;
-  padding: 2em 1.9em;
+  padding: .6em .5em;
   z-index: 11;
   pointer-events: none;
 `
@@ -55,11 +55,11 @@ let Button = styled.div`
   background-color: ${({color})=>color};
   text-align: center;
   color: white;
-  border-radius: 100px;
+  border-radius: 6px;
   padding: 9px;
   font-size: 17px;
   font-weight: 600;
-  box-shadow: 0 1px 4px 0 rgba(0,0,0,.3);
+  box-shadow: 0 2px 3px 0 rgba(0,0,0,.33);
   transition: background-color .15s;
   &:hover {
     background-color: ${({color})=>desaturate(.45,darken(.13,color))};

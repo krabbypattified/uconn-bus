@@ -4,8 +4,10 @@ import PropTypes from 'prop-types'
 import styled from 'styled-components'
 import FreeMarker from 'components/FreeMarker'
 import busSVG from 'assets/bus.svg'
+import {isMobile, nearestDeg} from './helpers'
 
 
+// TODO better bus svg
 export default class Bus extends React.Component {
 
   static contextTypes = {
@@ -16,7 +18,7 @@ export default class Bus extends React.Component {
     let {map} = this.context
     this.heading = 0
     this.headingMod = 0
-    this.interpolation = isMobile ? false : {duration:350}
+    this.interpolation = isMobile() ? false : {duration:350}
 
     map.on('rotateend', () => {
       this.headingMod = map.getBearing()
@@ -45,28 +47,3 @@ let BusSVG = styled(ReactSVG)`
 		fill: ${({color}) => color};
 	}
 `
-
-
-let isMobile = navigator.userAgent.match(/Android/i)
-|| navigator.userAgent.match(/webOS/i)
-|| navigator.userAgent.match(/iPhone/i)
-|| navigator.userAgent.match(/iPad/i)
-|| navigator.userAgent.match(/iPod/i)
-|| navigator.userAgent.match(/BlackBerry/i)
-|| navigator.userAgent.match(/Windows Phone/i)
-
-
-function nearestDeg(dOld,dNew) {
-  let old = dOld % 360
-
-  let dist1 = Math.abs(old-dNew)
-  let dist2 = 360 - dist1
-
-  if (old>dNew) {
-  	  if (dist1<dist2) return dOld - dist1
-  		else return dOld + dist2
-  }
-
-  if (dist1<dist2) return dOld + dist1
-  else return dOld - dist2
-}

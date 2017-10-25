@@ -2,7 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import {connect} from 'react-redux'
 import FreeMarker from 'components/FreeMarker'
-import Dot from 'components/Dot'
+import GeolocationDot from 'components/GeolocationDot'
 import {setLocation} from 'data/actions'
 
 
@@ -38,7 +38,7 @@ class GeolocationMarker extends React.Component {
         onPanEnd={that=>setLocation(that.marker.getLngLat())} // dispatch
         projected
       >
-        <Dot color='#61a3fe' satellite />
+        <GeolocationDot color='#61a3fe' satellite />
       </FreeMarker>
     )
   }

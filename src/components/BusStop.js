@@ -1,8 +1,9 @@
 import React from 'react'
 import Marker from 'components/Marker'
-import Dot from 'components/Dot'
+import {Dot} from './helpers'
 
 
+// TODO ONE updating geojson maplayer for all busStops (solves size problem)
 export default class BusStop extends React.Component {
 
   render() {
@@ -14,7 +15,3 @@ export default class BusStop extends React.Component {
     )
   }
 }
-
-// TODO size algorithm based on px distance between stops, say 50ft away
-// directly proportional (& global max) (min 3?)
-// TODO data-driven map layer?

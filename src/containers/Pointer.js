@@ -30,12 +30,11 @@ class Pointer extends React.Component {
     let offCenter = map.unproject(offCenterPx)
     let maxDist = distance(center, offCenter)
 
-    let things = getNearestThings([...buses, ...busStops], {distance:maxDist, location:center, max:4})
+    let things = getNearestThings([...buses, ...busStops], {distance:maxDist, location:center, max:3})
     this.props.setHighlightedThings(things)
   }
 
   componentWillMount() {
-    // TODO don't listen so much lol
     this.context.map.on('drag', this.setHighlightedThings.bind(this))
     this.context.map.on('zoom', this.setHighlightedThings.bind(this))
   }
@@ -53,7 +52,7 @@ class Pointer extends React.Component {
 
 // Connect & Export
 export default compose(
-  graphql(buses, {name: 'buses'}), // TODO see if this works/updates
+  graphql(buses, {name: 'buses'}),
   graphql(busStops, {name: 'busStops'}),
   connect(
     state => ({}),
@@ -71,8 +70,8 @@ let PointerSVG = styled(ReactSVG)`
   pointer-events: none;
   z-index: 10;
   position: absolute;
-  left: 50%;
-  top: 50%;
+  left: calc(50% + 8px);
+  top: calc(50% + 6px);
   transform: translate(-50%,-100%);
 `
 

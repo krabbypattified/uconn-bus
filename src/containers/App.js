@@ -4,7 +4,8 @@ import { ApolloClient, ApolloProvider, createBatchingNetworkInterface } from 're
 
 import reducers from 'data/reducers'
 import Map from 'components/Map'
-import PreviewList from 'containers/PreviewList'
+import DetailView from 'containers/DetailView'
+import PreviewBoxList from 'containers/PreviewBoxList'
 import Pointer from 'containers/Pointer'
 import GeolocationMarker from 'containers/GeolocationMarker'
 import BusStopList from 'containers/BusStopList'
@@ -15,7 +16,7 @@ import BottomButton from 'containers/BottomButton'
 // Apollo Setup
 const networkInterface = createBatchingNetworkInterface({
 	uri: 'https://uconn-bus-api.herokuapp.com/graphql',
-	batchInterval: 35,
+	batchInterval: 250,
 })
 
 const client = new ApolloClient({networkInterface})
@@ -44,7 +45,8 @@ export default class App extends React.Component {
           center={[-72.2683646, 41.8059531]}
           zoom={13}
         >
-          <PreviewList/>
+          <DetailView/>
+          <PreviewBoxList/>
           <Pointer/>
           <GeolocationMarker/>
           <BusStopList/>
