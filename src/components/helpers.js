@@ -3,6 +3,35 @@ import ReactSVG from 'react-svg'
 import {darken, desaturate} from 'polished'
 
 
+export class GeoJSON {
+  constructor() {
+    this.d = {}
+  }
+
+  set(key, {coordinates, properties}) {
+    this.d[key] = {
+      type: 'Feature',
+      properties,
+      geometry: {
+        type: 'Point',
+        coordinates
+      }
+    }
+  }
+
+  delete(key) {
+    delete this.d[key]
+  }
+
+  data() {
+    return {
+      type: 'FeatureCollection',
+      features: Object.values(this.d)
+    }
+  }
+}
+
+
 let mobile
 export function isMobile() {
   if (typeof mobile !== 'undefined') return mobile
@@ -30,6 +59,11 @@ export function nearestDeg(dOld,dNew) {
 
   if (dist1<dist2) return dOld + dist1
   else return dOld - dist2
+}
+
+
+export function randomNumber() {
+  return String(Math.floor(Math.random() * 9e15))
 }
 
 
@@ -89,6 +123,7 @@ export let Flex = styled.div`
   align-items: center;
 `
 
+// TODO animate in out from left? OR just helper keyframes?
 export let Box = styled.div`
   background: white;
   display: flex;
@@ -123,17 +158,6 @@ export let Details = styled.div`
     background-color: ${({color})=>desaturate(.1,darken(.03,color))};
     transform: translateY(1px);
   }
-`
-
-export let BusStopDot = styled.div`
-  background-color: ${({color})=>color};
-  width: 14px;
-  height: 14px;
-  border-radius: 100px;
-  border: 2px solid white;
-  box-shadow: 0 1px 3px 0 rgba(0,0,0,.36);
-  transform: translateX(8px);
-  margin-right: 10px;
 `
 
 export let BusSVG = styled(ReactSVG)`

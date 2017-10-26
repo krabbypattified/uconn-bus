@@ -4,13 +4,13 @@ import { ApolloClient, ApolloProvider, createBatchingNetworkInterface } from 're
 
 import reducers from 'data/reducers'
 import Map from 'components/Map'
-import DetailView from 'containers/DetailView'
-import PreviewBoxList from 'containers/PreviewBoxList'
+// import DetailViewContainer from 'containers/DetailViewContainer'
+import PreviewList from 'containers/PreviewList'
 import Pointer from 'containers/Pointer'
 import GeolocationMarker from 'containers/GeolocationMarker'
 import BusStopList from 'containers/BusStopList'
 import BusList from 'containers/BusList'
-import BottomButton from 'containers/BottomButton'
+import MainButton from 'containers/MainButton'
 
 
 // Apollo Setup
@@ -45,13 +45,13 @@ export default class App extends React.Component {
           center={[-72.2683646, 41.8059531]}
           zoom={13}
         >
-          <DetailView/>
-          <PreviewBoxList/>
+          {/* <DetailViewContainer/> */}
+          <PreviewList/>
           <Pointer/>
           <GeolocationMarker/>
           <BusStopList/>
           <BusList/>
-          <BottomButton/>
+          <MainButton/>
         </Map>
       </ApolloProvider>
     )

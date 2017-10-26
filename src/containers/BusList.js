@@ -1,5 +1,5 @@
 import React from 'react'
-import {graphql, compose} from 'react-apollo'
+import {graphql} from 'react-apollo'
 
 import Bus from 'components/Bus'
 import {buses} from 'data/queries'
@@ -27,11 +27,4 @@ class BusList extends React.Component {
 }
 
 
-// Connect & Export
-export default compose(
-  graphql(buses, {options: { pollInterval: 2400 }}),
-  // connect(
-  //   state => ({...state}),
-  //   dispatch => ({onMapClick: () => dispatch(deselect())})
-  // ),
-)(BusList)
+export default graphql(buses, {options: { pollInterval: 2400 }})(BusList)

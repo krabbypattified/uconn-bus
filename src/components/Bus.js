@@ -1,49 +1,60 @@
 import React from 'react'
-import ReactSVG from 'react-svg'
 import PropTypes from 'prop-types'
-import styled from 'styled-components'
-import FreeMarker from 'components/FreeMarker'
-import busSVG from 'assets/bus.svg'
-import {isMobile, nearestDeg} from './helpers'
+import {randomNumber, GeoJSON} from './helpers'
+// import busSVG from 'assets/bus.svg'
 
 
-// TODO better bus svg
+let nope
+let buses = new GeoJSON()
 export default class Bus extends React.Component {
 
   static contextTypes = {
     map: PropTypes.any
   }
 
-  componentWillMount() {
-    let {map} = this.context
-    this.heading = 0
-    this.headingMod = 0
-    this.interpolation = isMobile() ? false : {duration:350}
+  updateMap() {
+    this.context.map.getSource('buses').setData(buses.data())
+  }
 
-    map.on('rotateend', () => {
-      this.headingMod = map.getBearing()
-      this.forceUpdate()
+  componentWillMount() {
+    this.key = randomNumber()
+
+    if (nope) return
+    nope = true
+    let {map} = this.context
+
+    // TODO check github issues
+    // map.addImage('bus', busSVG)
+
+    map.addSource('buses', {
+      "type": "geojson",
+      "data": buses.data()
+    })
+
+    map.addLayer({
+      id: 'buses',
+      type: 'symbol',
+      source: 'buses',
+      layout: {
+        'icon-image': 'airport-15',
+        'icon-rotation-alignment': 'map',
+        'icon-rotate': {
+          property: 'heading',
+          stops: [[0, 0], [359, 359]]
+        }
+      }
     })
   }
 
+  componentWillUnmount() {
+    buses.delete(this.key)
+    this.updateMap()
+  }
+
   render() {
-    let {lngLat, color, heading} = this.props
-
-    if (heading) this.heading = nearestDeg(this.heading, heading) // smooth rotation
-
-    return (
-      <FreeMarker projected lock lngLat={lngLat} interpolation={this.interpolation}>
-        <div style={{transform: `rotate(${this.heading - this.headingMod}deg)`,transition:'transform 1s'}}>
-          <BusSVG path={busSVG} color={color} />
-        </div>
-      </FreeMarker>
-    )
+    let {lngLat, heading} = this.props
+    buses.set(this.key, {coordinates:lngLat,properties:{heading}})
+    this.updateMap()
+    return null
   }
 }
-
-// Helpers
-let BusSVG = styled(ReactSVG)`
-	.st0 {
-		fill: ${({color}) => color};
-	}
-`

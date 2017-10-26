@@ -6,7 +6,7 @@ import {darken, desaturate} from 'polished'
 import {setLocation} from 'data/actions';
 
 
-class BottomButton extends React.Component {
+class MainButton extends React.Component {
 
   static contextTypes = {
     map: PropTypes.any
@@ -33,7 +33,7 @@ export default connect(
   dispatch => ({
     setLocation: loc => dispatch(setLocation(loc))
   })
-)(BottomButton)
+)(MainButton)
 
 
 // Helpers
