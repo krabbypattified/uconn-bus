@@ -12,3 +12,16 @@ export const setHighlightedThings = things => {
     things
   }
 }
+
+export const selectThing = thing => {
+  return {
+    type: 'SELECT_THING',
+    thing
+  }
+}
+
+export const deselectThing = () => {
+  return {
+    type: 'DESELECT_THING',
+  }
+}

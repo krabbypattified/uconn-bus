@@ -20,7 +20,7 @@ class Pointer extends React.Component {
     let {buses, busStops} = this.props
     let {map} = this.context
 
-    if (buses.loading || busStops.loading) return
+    if (buses.loading || busStops.loading) return null
     buses = buses.buses || []
     busStops = busStops.busStops || []
 
@@ -46,6 +46,7 @@ class Pointer extends React.Component {
   }
 
   render() {
+    this.debounceThings()
     return <PointerSVG path={pointerSVG}/>
   }
 }

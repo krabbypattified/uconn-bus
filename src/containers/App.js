@@ -4,7 +4,7 @@ import { ApolloClient, ApolloProvider, createBatchingNetworkInterface } from 're
 
 import reducers from 'data/reducers'
 import Map from 'components/Map'
-// import DetailViewContainer from 'containers/DetailViewContainer'
+import DetailViewContainer from 'containers/DetailViewContainer'
 import PreviewList from 'containers/PreviewList'
 import Pointer from 'containers/Pointer'
 import GeolocationMarker from 'containers/GeolocationMarker'
@@ -55,7 +55,7 @@ export default class App extends React.Component {
             {id:'busStops', type:'circle', source:'busStops'},
           ]}
         >
-          {/* <DetailViewContainer/> */}
+          <DetailViewContainer/>
           <PreviewList/>
           <Pointer/>
           <GeolocationMarker/>

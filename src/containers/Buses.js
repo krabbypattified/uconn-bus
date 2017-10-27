@@ -8,7 +8,7 @@ import {buses, busLines} from 'data/queries'
 class Buses extends React.Component {
   render() {
     let {buses, busLines} = this.props
-    if (buses.loading || busLines.loading) return
+    if (buses.loading || busLines.loading) return null
     buses = buses.buses || []
     busLines = busLines.busLines || []
 

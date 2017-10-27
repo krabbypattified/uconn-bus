@@ -18,7 +18,7 @@ class MainButton extends React.Component {
 
     let button = location
     ? <Button color='#254A7D' onClick={()=>'getDirectionsMode()'}>Get Directions</Button>
-    : <Button color='#888' onClick={()=>setLocation(map.getCenter())}>Set My Location</Button>
+    : <Button color='#5eb3d2' onClick={()=>setLocation(map.getCenter())}>Set My Location</Button>
 
     return <BottomBar>{button}</BottomBar>
   }
@@ -47,6 +47,7 @@ let BottomBar = styled.div`
 `
 
 let Button = styled.div`
+  user-select: none;
   pointer-events: auto;
   cursor: pointer;
   margin: 0 auto;
@@ -61,7 +62,7 @@ let Button = styled.div`
   font-weight: 600;
   box-shadow: 0 2px 3px 0 rgba(0,0,0,.33);
   transition: background-color .15s;
-  &:hover {
+  &:active {
     background-color: ${({color})=>desaturate(.45,darken(.13,color))};
   }
 `
