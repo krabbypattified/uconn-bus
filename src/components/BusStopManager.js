@@ -20,17 +20,13 @@ export default class BusStopManager extends React.Component {
       })
     })
 
-    map.addLayer({
-      id: 'busStops',
-      type: 'circle',
-      source: 'busStops',
-      paint: {
-        'circle-radius': 4,
-        'circle-color': '#ff6666',
-        'circle-stroke-width': 2,
-        'circle-stroke-color': '#fff',
-      }
-    })
+    let paint = {
+      'circle-radius': 4,
+      'circle-color': '#ff6666',
+      'circle-stroke-width': 2,
+      'circle-stroke-color': '#fff',
+    }
+    for (let prop in paint) map.setPaintProperty('busStops', prop, paint[prop])
   }
 
   componentWillUnmount() {

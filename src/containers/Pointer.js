@@ -35,13 +35,14 @@ class Pointer extends React.Component {
   }
 
   componentWillMount() {
-    this.context.map.on('drag', this.setHighlightedThings.bind(this))
-    this.context.map.on('zoom', this.setHighlightedThings.bind(this))
+    this.debounceThings = debounce(this.setHighlightedThings.bind(this), 17)
+    this.context.map.on('drag', this.debounceThings)
+    this.context.map.on('zoom', this.debounceThings)
   }
 
   componentWillUnmount() {
-    this.context.map.off('drag', this.setHighlightedThings)
-    this.context.map.off('zoom', this.setHighlightedThings)
+    this.context.map.off('drag', this.debounceThings)
+    this.context.map.off('zoom', this.debounceThings)
   }
 
   render() {
@@ -92,4 +93,19 @@ function getNearestThings(things, {distance:maxDist, location, max}) {
     .slice(0,max)
     .filter(({distance}) => distance < maxDist)
     .map(wrap => wrap.val)
+}
+
+function debounce(func, wait, immediate) {
+  var timeout;
+  return function() {
+    var context = this, args = arguments;
+    var later = function() {
+      timeout = null;
+      if (!immediate) func.apply(context, args);
+    };
+    var callNow = immediate && !timeout;
+    clearTimeout(timeout);
+    timeout = setTimeout(later, wait);
+    if (callNow) func.apply(context, args);
+  };
 }

@@ -1,17 +1,23 @@
 import React from 'react'
-import {graphql} from 'react-apollo'
+import {graphql, compose} from 'react-apollo'
 
 import BusManager from 'components/BusManager'
-import {buses} from 'data/queries'
+import {buses, busLines} from 'data/queries'
 
 
-class BusList extends React.Component {
+class Buses extends React.Component {
   render() {
-    let {data} = this.props
-    if (data.loading) return null
-    return <BusManager buses={data.buses}/>
+    let {buses, busLines} = this.props
+    if (buses.loading || busLines.loading) return
+    buses = buses.buses || []
+    busLines = busLines.busLines || []
+
+    return <BusManager buses={buses} colors={busLines.map(i=>i.color)}/>
   }
 }
 
 
-export default graphql(buses, {options: { pollInterval: 2400 }})(BusList)
+export default compose(
+  graphql(buses, {name: 'buses', options: { pollInterval: 2400 }}),
+  graphql(busLines, {name: 'busLines'}),
+)(Buses)

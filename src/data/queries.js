@@ -1,51 +1,33 @@
-import { gql } from 'react-apollo'
+import {gql} from 'react-apollo'
 
 export const buses = gql`{
-	buses {
-		id
-		latitude
-		longitude
-		heading
-		speed
-		busLine {
-			id
+  buses {
+    id
+    latitude
+    longitude
+    heading
+    speed
+    busLine {
+      id
       name
-			color
-		}
-	}
+      color
+    }
+  }
 }`
 
 export const busLines = gql`{
-	busLines {
-		id
-		path
-		color
-		buses {
-			id
-		}
-	}
+  busLines {
+    id
+    color
+  }
 }`
 
+
 export const busStops = gql`{
-	busStops {
-		id
-		latitude
-		longitude
-		busLines {
-			id
-			color
-		}
-		name
-		arrivals {
-			bus {
-				id
-				busLine {
-					id
-					name
-					color
-				}
-			}
-			time
-		}
-	}
+  busStops {
+    id
+    latitude
+    longitude
+    name
+  }
 }`

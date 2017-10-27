@@ -7,17 +7,10 @@ export class SourceManager {
 
   constructor(args) {
     Object.assign(this, args)
-
-    this.map.addSource(this.source, {
-      "type": "geojson",
-      "data": {
-        type: 'FeatureCollection',
-        features: []
-      }
-    })
   }
 
   set(data) {
+    if (!data) return
     let features = data.map(d => {
         let {coordinates, properties={}} = this.getProperties(d)
         return {
@@ -51,23 +44,33 @@ export class AnimationSourceManager extends SourceManager {
     this.keyframes = []
   }
 
+  remove() {
+    this.frame && cancelAnimationFrame(this.frame)
+    super.remove()
+  }
+
   addKeyframe(data) {
     let now = Date.now()
 
     let assocData = []
     for (let i = data.length; i--;) {
-      assocData[data.key] = {
-        ...(this.getProperties(data[i])),
+      let props = this.getProperties(data[i])
+      assocData[props.key] = {
+        ...props,
         timeStamp: now
       }
     }
 
     this.keyframes.push(assocData)
+    if (this.paused) {
+      this.paused = false
+      this.frame = window.requestAnimationFrame(()=>this.animate(this.keyframes.length-2))
+    }
 
     if (this.keyframes.length === 2) {
       let startIn = this.delay - (now-this.startTime)
-      if (startIn < 0) window.requestAnimationFrame(()=>this.animate(0))
-      else setTimeout(() => window.requestAnimationFrame(()=>this.animate(0)), startIn)
+      if (startIn < 0) this.frame = window.requestAnimationFrame(()=>this.animate(0))
+      else setTimeout(() => this.frame = window.requestAnimationFrame(()=>this.animate(0)), startIn)
     }
   }
 
@@ -75,19 +78,19 @@ export class AnimationSourceManager extends SourceManager {
     // Handle removing/adding objects
     let {one:currKeyframe, two:nextKeyframe} = intersectKeys(this.keyframes[key], this.keyframes[key+1])
 
-
     // Calculate ti
     let ti
-    if (!previousti) ti = currKeyframe[0].timeStamp
-    else if (previousti >= nextKeyframe[0].timeStamp) {
-      key += 1
-      currKeyframe = this.keyframes[key]
-      nextKeyframe = this.keyframes[key+1]
-      ti = currKeyframe[0].timeStamp
+    if (!previousti) ti = getFirstThing(currKeyframe).timeStamp
+    else if (previousti >= getFirstThing(nextKeyframe).timeStamp) {
+      key++
+      if (!this.keyframes[key+1]) return this.paused = true
+      let {one, two} = intersectKeys(this.keyframes[key], this.keyframes[key+1])
+      currKeyframe = one
+      nextKeyframe = two
+      ti = getFirstThing(currKeyframe).timeStamp
     }
     else ti = previousti + (Date.now() - this.lastAnimated)
     this.lastAnimated = Date.now()
-
 
     // Calculate frame data
     let frameData = currKeyframe.map((curr, idx) => {
@@ -100,7 +103,10 @@ export class AnimationSourceManager extends SourceManager {
         // Calculate coordinates
         let dist = distance(curr.coordinates, next.coordinates)
         let delta = dpPlusError(ti, curr, next)
-        newCoordinates = lerp(curr.coordinates, next.coordinates, delta/dist)
+        let dLerp
+        if (dist && dist<1) dLerp = delta/dist
+        else if (dist) dLerp = 1
+        newCoordinates = lerp(curr.coordinates, next.coordinates, dLerp)
 
         // Lerp properties
         let tiPercent = (ti - curr.timeStamp) / (next.timeStamp - curr.timeStamp)
@@ -109,7 +115,7 @@ export class AnimationSourceManager extends SourceManager {
 
           let currProp = curr.properties[key]
           let nextProp = next.properties[key]
-          newProperties[key] = lerp([currProp], [nextProp], tiPercent)
+          newProperties[key] = lerp([currProp], [nextProp], tiPercent)[0]
         }
 
         // Map it
@@ -124,13 +130,12 @@ export class AnimationSourceManager extends SourceManager {
 
     })
 
-
     this.map.getSource(this.source).setData({
       type: 'FeatureCollection',
-      features: frameData,
+      features: Object.values(frameData),
     })
 
-    window.requestAnimationFrame(this.animate)
+    this.frame = window.requestAnimationFrame(()=>this.animate(key))
   }
 }
 
@@ -149,27 +154,30 @@ function lerp(a, b, t) {
 
 
 // ti: a time between curr.timeStamp and next.timeStamp
-function dpPlusError(ti, curr, next) {
+// units : milliseconds, miles
+function dpPlusError(_ti, _curr, _next) {
+	// miles/hour => meters/second, milliseconds => seconds
+  let ti = _ti/1000
+  let curr = {..._curr, velocity: _curr.velocity*0.44704, timeStamp: _curr.timeStamp/1000}
+  let next = {..._next, velocity: _next.velocity*0.44704,  timeStamp: _next.timeStamp/1000}
   let dpFunc = deltaPosition(curr,next) // optimize: computed once each keyframe?
 
-  let actualDP = distance(curr.coordinates, next.coordinates)
-  let computedDP = dpFunc(next.timeStamp, curr.timeStamp)
-  let error = actualDP - computedDP
-  let E = error * (ti - curr.timeStamp) / (next.timeStamp - curr.timeStamp)
+  let actualDP = distance(curr.coordinates, next.coordinates) * 1609.34 // meters
+  let computedDP = dpFunc(next.timeStamp, curr.timeStamp) // meters
+  let error = actualDP - computedDP // meters
+  let E = error * (ti - curr.timeStamp) / (next.timeStamp - curr.timeStamp) // meters
 
-  return dpFunc(ti, curr.timeStamp) + E
+  return (dpFunc(ti, curr.timeStamp) + E) / 1609.34 // back to miles
 }
 
 
-// compute ∫v(t)dt (where t > t0)
+// unitless
 function deltaPosition(curr, next) {
-  // v(t) = mx+b
-  let m = (next.velocity-curr.velocity) / (next.timeStamp-curr.timeStamp)
-  let b = curr.velocity
-
-  // optimize: precompute with t0
-  return function(t,t0) {
-    return (m*Math.pow(t,2)/2 + b*t) - (m*Math.pow(t0,2)/2 + b*t0) // ∫v(t)dt
+  let a = (next.velocity-curr.velocity) / (next.timeStamp-curr.timeStamp)
+  let v = curr.velocity
+  return (t,t0) => {
+  	let dt = t - t0
+    return v*dt + .5*a*dt*dt // distance formula
   }
 }
 
@@ -177,6 +185,12 @@ function deltaPosition(curr, next) {
 function distance(from, to) {
   let d2 = Math.pow(from[0] - to[0], 2) + Math.pow(from[1] - to[1], 2)
   return Math.sqrt(d2) * 60.7053 // for miles (hacky)
+}
+
+
+function getFirstThing(data) {
+  for (var prop in data)
+    return data[prop]
 }
 
 
@@ -293,8 +307,7 @@ export let Box = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 13.5px 23.5px;
-  box-shadow: 0 0 7px 0 rgba(0,0,0,.2);
+  padding: 13.5px 21px 13.5px 23.5px;
   font-size: 17px;
   width: 100%;
   border-bottom: .5px solid #eee;
@@ -310,10 +323,10 @@ export let Title = styled.div`
 export let Details = styled.div`
   user-select: none;
   cursor: pointer;
-  font-size: 14.5px;
+  font-size: 14px;
   font-weight: 600;
   color: white;
-  padding: 3px 18px ;
+  padding: 3px 17px ;
   background-color: ${({color})=>color};
   border-radius: 30px;
   box-shadow: 0 1px 2px 0 rgba(0,0,0,.36);

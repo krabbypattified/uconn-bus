@@ -17,7 +17,7 @@ export default class Map extends React.Component {
   }
 
   componentWillMount() {
-    let { container, mapStyle, ...otherProps } = this.props
+    let { container, mapStyle, sources, layers, ...otherProps } = this.props
 
     this.mapDiv = document.getElementById(this.props.container)
 
@@ -26,12 +26,27 @@ export default class Map extends React.Component {
       style: mapStyle,
       ...otherProps
     })
+
+    this.renderFunc = ()=>null
+    this.map.on('load', () => {
+      
+      sources.forEach(src => {
+        this.map.addSource(src, {type:'geojson', data: {type: 'FeatureCollection',features: []}})
+      })
+      layers.forEach(layer => {
+        this.map.addLayer(layer)
+      })
+
+      this.renderFunc = ReactDOM.createPortal.bind(
+        this,
+        this.props.children,
+        this.mapDiv,
+      )
+      this.forceUpdate()
+    })
   }
 
   render() {
-    return ReactDOM.createPortal(
-      this.props.children,
-      this.mapDiv,
-    )
+    return this.renderFunc()
   }
 }

@@ -11,6 +11,7 @@ import GeolocationMarker from 'containers/GeolocationMarker'
 import BusStops from 'containers/BusStops'
 import Buses from 'containers/Buses'
 import MainButton from 'containers/MainButton'
+import {buses,busStops,busLines} from 'data/queries'
 
 
 // Apollo Setup
@@ -29,6 +30,10 @@ const store = createStore(
 	{/* preloadedState, */},
 	composeEnhancers(applyMiddleware(client.middleware()))
 )
+// Prefetch
+client.query({query:buses})
+client.query({query:busStops})
+client.query({query:busLines})
 
 
 // Base App
@@ -41,13 +46,18 @@ export default class App extends React.Component {
           mapStyle='mapbox://styles/mapbox/streets-v9?optimize=true'
           attributionControl={false}
           logoPosition='top-left'
-          maxBounds={[-72.55,41.65,-71.96,41.97]}
-          center={[-72.2683646, 41.8059531]}
+          center={[-72.253502, 41.8051962]}
           zoom={13}
+          minZoom={12}
+          sources={['buses', 'busStops']}
+          layers={[
+            {id:'buses', type:'symbol', source:'buses'},
+            {id:'busStops', type:'circle', source:'busStops'},
+          ]}
         >
           {/* <DetailViewContainer/> */}
           <PreviewList/>
-          {/* <Pointer/> BUG TODO slows down the app? */}
+          <Pointer/>
           <GeolocationMarker/>
           <BusStops/>
           <Buses/>

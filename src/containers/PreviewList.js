@@ -31,4 +31,5 @@ let List = styled.div`
   z-index: 20;
   width: 400px;
   max-width: 100%;
+  box-shadow: 0 0 7px 0 rgba(0,0,0,.2);
 `
