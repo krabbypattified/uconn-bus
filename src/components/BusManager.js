@@ -1,35 +1,34 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import {randomNumber, GeoJSON} from './helpers'
+import {AnimationSourceManager} from './helpers'
 // import busSVG from 'assets/bus.svg'
 
 
-let nope
-let buses = new GeoJSON()
-export default class Bus extends React.Component {
+export default class BusManager extends React.Component {
 
   static contextTypes = {
     map: PropTypes.any
   }
 
-  updateMap() {
-    this.context.map.getSource('buses').setData(buses.data())
-  }
-
   componentWillMount() {
-    this.key = randomNumber()
-
-    if (nope) return
-    nope = true
     let {map} = this.context
+
+    this.manager = new AnimationSourceManager({
+      map,
+      source: 'buses',
+      delay: 3500,
+      getProperties: bus => ({
+        key: bus.id,
+        coordinates: [bus.longitude, bus.latitude],
+        velocity: bus.speed,
+        properties: {
+          heading: bus.heading
+        },
+      }),
+    })
 
     // TODO check github issues
     // map.addImage('bus', busSVG)
-
-    map.addSource('buses', {
-      "type": "geojson",
-      "data": buses.data()
-    })
 
     map.addLayer({
       id: 'buses',
@@ -47,14 +46,11 @@ export default class Bus extends React.Component {
   }
 
   componentWillUnmount() {
-    buses.delete(this.key)
-    this.updateMap()
+    this.manager.remove()
   }
 
   render() {
-    let {lngLat, heading} = this.props
-    buses.set(this.key, {coordinates:lngLat,properties:{heading}})
-    this.updateMap()
+    this.manager.addKeyframe(this.props.buses)
     return null
   }
 }

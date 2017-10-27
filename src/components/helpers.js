@@ -3,32 +3,196 @@ import ReactSVG from 'react-svg'
 import {darken, desaturate} from 'polished'
 
 
-export class GeoJSON {
-  constructor() {
-    this.d = {}
+export class SourceManager {
+
+  constructor(args) {
+    Object.assign(this, args)
+
+    this.map.addSource(this.source, {
+      "type": "geojson",
+      "data": {
+        type: 'FeatureCollection',
+        features: []
+      }
+    })
   }
 
-  set(key, {coordinates, properties}) {
-    this.d[key] = {
-      type: 'Feature',
-      properties,
-      geometry: {
-        type: 'Point',
-        coordinates
+  set(data) {
+    let features = data.map(d => {
+        let {coordinates, properties={}} = this.getProperties(d)
+        return {
+            type: 'Feature',
+            properties,
+            geometry: {
+              type: 'Point',
+              coordinates
+            }
+        }
+    })
+
+    this.map.getSource(this.source).setData({
+      type: 'FeatureCollection',
+      features,
+    })
+  }
+
+  remove() {
+    this.map.removeSource(this.source)
+  }
+}
+
+
+export class AnimationSourceManager extends SourceManager {
+
+  constructor(args) {
+    super(args)
+    this.startTime = Date.now()
+    this.delay = this.delay || 0
+    this.keyframes = []
+  }
+
+  addKeyframe(data) {
+    let now = Date.now()
+
+    let assocData = []
+    for (let i = data.length; i--;) {
+      assocData[data.key] = {
+        ...(this.getProperties(data[i])),
+        timeStamp: now
       }
     }
-  }
 
-  delete(key) {
-    delete this.d[key]
-  }
+    this.keyframes.push(assocData)
 
-  data() {
-    return {
-      type: 'FeatureCollection',
-      features: Object.values(this.d)
+    if (this.keyframes.length === 2) {
+      let startIn = this.delay - (now-this.startTime)
+      if (startIn < 0) window.requestAnimationFrame(()=>this.animate(0))
+      else setTimeout(() => window.requestAnimationFrame(()=>this.animate(0)), startIn)
     }
   }
+
+  animate(key, previousti) {
+    // Handle removing/adding objects
+    let {one:currKeyframe, two:nextKeyframe} = intersectKeys(this.keyframes[key], this.keyframes[key+1])
+
+
+    // Calculate ti
+    let ti
+    if (!previousti) ti = currKeyframe[0].timeStamp
+    else if (previousti >= nextKeyframe[0].timeStamp) {
+      key += 1
+      currKeyframe = this.keyframes[key]
+      nextKeyframe = this.keyframes[key+1]
+      ti = currKeyframe[0].timeStamp
+    }
+    else ti = previousti + (Date.now() - this.lastAnimated)
+    this.lastAnimated = Date.now()
+
+
+    // Calculate frame data
+    let frameData = currKeyframe.map((curr, idx) => {
+
+        let next = nextKeyframe[idx]
+
+        let newCoordinates = []
+        let newProperties = {}
+
+        // Calculate coordinates
+        let dist = distance(curr.coordinates, next.coordinates)
+        let delta = dpPlusError(ti, curr, next)
+        newCoordinates = lerp(curr.coordinates, next.coordinates, delta/dist)
+
+        // Lerp properties
+        let tiPercent = (ti - curr.timeStamp) / (next.timeStamp - curr.timeStamp)
+        for (let key in curr.properties) {
+          if (typeof curr.properties[key] !== 'number') continue
+
+          let currProp = curr.properties[key]
+          let nextProp = next.properties[key]
+          newProperties[key] = lerp([currProp], [nextProp], tiPercent)
+        }
+
+        // Map it
+        return {
+            type: 'Feature',
+            properties: newProperties,
+            geometry: {
+              type: 'Point',
+              coordinates: newCoordinates,
+            }
+        }
+
+    })
+
+
+    this.map.getSource(this.source).setData({
+      type: 'FeatureCollection',
+      features: frameData,
+    })
+
+    window.requestAnimationFrame(this.animate)
+  }
+}
+
+
+// a,b: array of length X
+// t: number from 0 to 1
+function lerp(a, b, t) {
+    var len = a.length;
+    if(b.length !== len) return;
+
+    var x = [];
+    for(var i = 0; i < len; i++)
+        x.push(a[i] + t * (b[i] - a[i]));
+    return x;
+}
+
+
+// ti: a time between curr.timeStamp and next.timeStamp
+function dpPlusError(ti, curr, next) {
+  let dpFunc = deltaPosition(curr,next) // optimize: computed once each keyframe?
+
+  let actualDP = distance(curr.coordinates, next.coordinates)
+  let computedDP = dpFunc(next.timeStamp, curr.timeStamp)
+  let error = actualDP - computedDP
+  let E = error * (ti - curr.timeStamp) / (next.timeStamp - curr.timeStamp)
+
+  return dpFunc(ti, curr.timeStamp) + E
+}
+
+
+// compute ∫v(t)dt (where t > t0)
+function deltaPosition(curr, next) {
+  // v(t) = mx+b
+  let m = (next.velocity-curr.velocity) / (next.timeStamp-curr.timeStamp)
+  let b = curr.velocity
+
+  // optimize: precompute with t0
+  return function(t,t0) {
+    return (m*Math.pow(t,2)/2 + b*t) - (m*Math.pow(t0,2)/2 + b*t0) // ∫v(t)dt
+  }
+}
+
+
+function distance(from, to) {
+  let d2 = Math.pow(from[0] - to[0], 2) + Math.pow(from[1] - to[1], 2)
+  return Math.sqrt(d2) * 60.7053 // for miles (hacky)
+}
+
+
+function intersectKeys(_one, _two) {
+  let keys1 = Object.keys(_one)
+  let keys2 = Object.keys(_two)
+  let common = keys1.filter(n => keys2.includes(n))
+  let one = []
+  let two = []
+
+  for (let i = 0; i < common.length; i++) {
+    one[common[i]] = _one[common[i]]
+    two[common[i]] = _two[common[i]]
+  }
+
+  return {one, two}
 }
 
 

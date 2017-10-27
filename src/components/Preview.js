@@ -1,7 +1,7 @@
 import React from 'react'
 import busSVG from 'assets/bus.svg'
 import {Flex, Box, Title, Details, BusSVG} from './helpers'
-import {Dot as BusStopDot} from 'components/BusStop'
+import BusStopDot from 'components/BusStopDot'
 
 
 export default class Preview extends React.Component {

@@ -8,15 +8,15 @@ import Map from 'components/Map'
 import PreviewList from 'containers/PreviewList'
 import Pointer from 'containers/Pointer'
 import GeolocationMarker from 'containers/GeolocationMarker'
-import BusStopList from 'containers/BusStopList'
-import BusList from 'containers/BusList'
+import BusStops from 'containers/BusStops'
+import Buses from 'containers/Buses'
 import MainButton from 'containers/MainButton'
 
 
 // Apollo Setup
 const networkInterface = createBatchingNetworkInterface({
 	uri: 'https://uconn-bus-api.herokuapp.com/graphql',
-	batchInterval: 250,
+	batchInterval: 200,
 })
 
 const client = new ApolloClient({networkInterface})
@@ -47,10 +47,10 @@ export default class App extends React.Component {
         >
           {/* <DetailViewContainer/> */}
           <PreviewList/>
-          <Pointer/>
+          {/* <Pointer/> BUG TODO slows down the app? */}
           <GeolocationMarker/>
-          <BusStopList/>
-          <BusList/>
+          <BusStops/>
+          <Buses/>
           <MainButton/>
         </Map>
       </ApolloProvider>

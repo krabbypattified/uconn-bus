@@ -1,7 +1,7 @@
 import React from 'react'
 import {connect} from 'react-redux'
 import DetailView, {Title, Detail} from 'components/DetailView'
-import {Dot as BusStopDot} from 'components/BusStop'
+import BusStopDot from 'components/BusStopDot'
 
 
 class DetailViewContainer extends React.Component {
