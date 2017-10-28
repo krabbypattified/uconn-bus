@@ -3,9 +3,8 @@ import {connect} from 'react-redux'
 import styled from 'styled-components'
 import CSSTransitionGroup from 'react-addons-css-transition-group'
 import Preview from 'components/Preview'
-import 'assets/PreviewAnimation.css'
-import {isMobile} from 'components/helpers'
 import {selectThing} from 'data/actions'
+import 'assets/PreviewAnimation.css'
 
 
 class PreviewList extends React.Component {
@@ -15,8 +14,8 @@ class PreviewList extends React.Component {
     return (
       <List>
         <CSSTransitionGroup
-          transitionName={isMobile() ? 'PreviewAnimationVertical' : 'PreviewAnimation'}
-          transitionEnterTimeout={300} transitionLeaveTimeout={300}>
+          transitionName={'PreviewAnimation'}
+          transitionEnterTimeout={200} transitionLeaveTimeout={200}>
               {highlightedThings.map((thing, idx) => (
                 <Preview onDetailsClick={()=>selectThing(thing)} key={idx} data={{...thing,idx}}/>
               ))}

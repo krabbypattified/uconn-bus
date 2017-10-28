@@ -4,7 +4,7 @@ import styled from 'styled-components'
 import ReactSVG from 'react-svg'
 
 
-export default props => <SVG path={busSVG} color={props.color}/>
+export default ({color}) => <SVG path={busSVG} color={color}/>
 
 
 let SVG = styled(ReactSVG)`

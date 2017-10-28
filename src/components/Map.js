@@ -17,7 +17,7 @@ export default class Map extends React.Component {
   }
 
   componentWillMount() {
-    let { container, mapStyle, sources, layers, ...otherProps } = this.props
+    let { container, mapStyle, sources, layers, onLoad, ...otherProps } = this.props
 
     this.mapDiv = document.getElementById(this.props.container)
 
@@ -29,7 +29,9 @@ export default class Map extends React.Component {
 
     this.renderFunc = ()=>null
     this.map.on('load', () => {
-      
+
+      onLoad(this.map)
+
       sources.forEach(src => {
         this.map.addSource(src, {type:'geojson', data: {type: 'FeatureCollection',features: []}})
       })

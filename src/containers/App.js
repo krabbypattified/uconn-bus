@@ -3,8 +3,8 @@ import { createStore, combineReducers, applyMiddleware, compose } from 'redux'
 import { ApolloClient, ApolloProvider, createBatchingNetworkInterface } from 'react-apollo'
 
 import reducers from 'data/reducers'
-import Map from 'components/Map'
-import DetailViewContainer from 'containers/DetailViewContainer'
+import Map from 'containers/Map'
+import DetailView from 'containers/DetailView'
 import PreviewList from 'containers/PreviewList'
 import Pointer from 'containers/Pointer'
 import GeolocationMarker from 'containers/GeolocationMarker'
@@ -41,21 +41,8 @@ export default class App extends React.Component {
   render() {
     return (
       <ApolloProvider store={store} client={client}>
-        <Map
-          container='root'
-          mapStyle='mapbox://styles/mapbox/streets-v9?optimize=true'
-          attributionControl={false}
-          logoPosition='top-left'
-          center={[-72.253502, 41.8051962]}
-          zoom={13}
-          minZoom={12}
-          sources={['buses', 'busStops']}
-          layers={[
-            {id:'buses', type:'symbol', source:'buses'},
-            {id:'busStops', type:'circle', source:'busStops'},
-          ]}
-        >
-          <DetailViewContainer/>
+        <Map>
+          <DetailView/>
           <PreviewList/>
           <Pointer/>
           <GeolocationMarker/>

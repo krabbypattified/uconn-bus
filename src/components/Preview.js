@@ -8,7 +8,7 @@ import BusStopDot from 'components/BusStopDot'
 export default ({data, onDetailsClick}) => {
   let isBus = data.id < 60
   return (
-    <Box style={{zIndex:-data.idx}}>
+    <Box style={{zIndex:20-data.idx}}>
       <Flex>
         <Title>{data.name||`${data.busLine.name} Bus`}</Title>
         {isBus ? <BusSVG color={data.busLine.color}/> : <BusStopDot color='#ff6666'/>}
@@ -22,6 +22,7 @@ export default ({data, onDetailsClick}) => {
 
 
 let Box = styled.div`
+  position: relative;
   background: white;
   display: flex;
   justify-content: space-between;
@@ -30,7 +31,12 @@ let Box = styled.div`
   font-size: 17px;
   width: 100%;
   border-bottom: .5px solid #eee;
-  /*TODO right and bottom only box shadow*/
+  &:last-child {
+    /*see PreviewAnimation.css*/
+    transition-property: transform, opacity, box-shadow;
+    transition-duration: 200ms, 200ms, 1s;
+    box-shadow: 0px 7px 7px -5px rgba(31, 73, 125, 0.18);
+  }
 `
 
 let Flex = styled.div`

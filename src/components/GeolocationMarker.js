@@ -1,18 +1,18 @@
 import React from 'react'
 import styled, {keyframes} from 'styled-components'
+import FreeMarker from 'components/FreeMarker'
 
 
-export default ({color='#333', radius, stroke, satellite}) => {
-  if (!satellite) return <Dot color={color} radius={radius} stroke={stroke}/>
-  return (
-    <div>
-      <Satellite color={color}/>
-      <Dot color={color} radius={radius} stroke={stroke}/>
-    </div>
-  )
-}
-
-
+export default ({location, onPanEnd}) => (
+  <FreeMarker projected
+    style={{zIndex:1}}
+    lngLat={location}
+    onPanEnd={onPanEnd}
+  >
+    <Satellite color='#61a3fe'/>
+    <Dot color='#61a3fe'/>
+  </FreeMarker>
+)
 
 
 // Styled Components

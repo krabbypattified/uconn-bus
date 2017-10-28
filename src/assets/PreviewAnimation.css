@@ -1,47 +1,33 @@
-.PreviewAnimation-enter,
-.PreviewAnimationVertical-enter {
+:root {
+  --cubic-in: cubic-bezier(0.55, 0.055, 0.675, 0.19);
+  --cubic-out: cubic-bezier(0.215, 0.61, 0.355, 1);
+}
+
+.PreviewAnimation-enter {
   opacity: 0;
-  transform: translate(-65px,0);
+  transform: translateY(-100%);
   transition-property: transform, opacity;
-  transition-duration: 300ms;
-  transition-timing-function: cubic-bezier(0.215, 0.61, 0.355, 1)/*cubic ease out*/, ease-out;
-  position: relative; /*for zindex*/
+  transition-duration: 200ms;
+  transition-timing-function: var(--cubic-in), linear;
 }
 
-/*Mobile*/
-.PreviewAnimationVertical-enter {
-  transform: translate(0,-65px);
-}
 
-.PreviewAnimation-enter.PreviewAnimation-enter-active,
-.PreviewAnimationVertical-enter.PreviewAnimationVertical-enter-active {
+.PreviewAnimation-enter-active {
   opacity: 1;
-  transform: translate(0,0);
+  transform: none;
 }
 
 
-.PreviewAnimation-leave,
-.PreviewAnimationVertical-leave {
+.PreviewAnimation-leave {
   opacity: 1;
-  transform: translate(0,0);
+  transform: none;
   transition-property: transform, opacity;
-  transition-duration: 300ms;
-  transition-timing-function: ease, ease-out;
-  position: relative; /*for zindex*/
+  transition-duration: 200ms;
+  transition-timing-function: var(--cubic-out), linear;
 }
 
-/*Mobile*/
-.PreviewAnimationVertical-leave {
-  transition-timing-function: cubic-bezier(0.215, 0.61, 0.355, 1)/*cubic ease out*/, ease-in;
-}
 
-.PreviewAnimation-leave.PreviewAnimation-leave-active,
-.PreviewAnimationVertical-leave.PreviewAnimationVertical-leave-active {
+.PreviewAnimation-leave-active {
   opacity: 0;
-  transform: translate(-65px,0);
-}
-
-/*Mobile*/
-.PreviewAnimationVertical-leave.PreviewAnimationVertical-leave-active {
-  transform: translate(0,-65px);
+  transform: translateY(-100%);
 }

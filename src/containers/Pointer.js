@@ -38,7 +38,6 @@ class Pointer extends React.Component {
     this.debounceThings = debounce(this.setHighlightedThings.bind(this), 17)
     this.context.map.on('drag', this.debounceThings)
     this.context.map.on('zoom', this.debounceThings)
-    this.debounceThings()
   }
 
   componentWillUnmount() {

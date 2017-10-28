@@ -25,3 +25,9 @@ export const deselectThing = () => {
     type: 'DESELECT_THING',
   }
 }
+
+export const deselectAll = () => {
+  return {
+    type: 'DESELECT_ALL',
+  }
+}

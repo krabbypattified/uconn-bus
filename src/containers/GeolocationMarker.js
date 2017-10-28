@@ -1,12 +1,11 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import {connect} from 'react-redux'
-import FreeMarker from 'components/FreeMarker'
-import GeolocationDot from 'components/GeolocationDot'
+import GeolocationMarker from 'components/GeolocationMarker'
 import {setLocation} from 'data/actions'
 
 
-class GeolocationMarker extends React.Component {
+class GeolocationMarkerContainer extends React.Component {
 
   static contextTypes = {
     map: PropTypes.any
@@ -31,16 +30,7 @@ class GeolocationMarker extends React.Component {
   render() {
     let {location, setLocation} = this.props
     if (!location) return null
-    return (
-      <FreeMarker
-        style={{zIndex:1}}
-        lngLat={location}
-        onPanEnd={that=>setLocation(that.marker.getLngLat())} // dispatch
-        projected
-      >
-        <GeolocationDot color='#61a3fe' satellite />
-      </FreeMarker>
-    )
+    return <GeolocationMarker location={location} onPanEnd={that=>setLocation(that.marker.getLngLat())}/>
   }
 }
 
@@ -53,7 +43,7 @@ export default connect(
   dispatch => ({
     setLocation: loc => dispatch(setLocation(loc))
   })
-)(GeolocationMarker)
+)(GeolocationMarkerContainer)
 
 
 
