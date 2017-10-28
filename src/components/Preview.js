@@ -3,27 +3,23 @@ import styled from 'styled-components'
 import {darken, desaturate} from 'polished'
 import BusSVG from 'components/BusSVG'
 import BusStopDot from 'components/BusStopDot'
-import {isMobile} from 'components/helpers'
 
 
-export default class Preview extends React.Component {
-  render() {
-    let {data} = this.props
-    let isBus = data.id < 60
-    return (
-      <Box style={{zIndex:-data.idx}}>
-        <Flex>
-          <Title>{data.name||`${data.busLine.name} Bus`}</Title>
-          {isBus ? <BusSVG color={data.busLine.color}/> : <BusStopDot color='#ff6666'/>}
-        </Flex>
-        <Details onClick={this.props.onClick} color={isBus?data.busLine.color:'#383838'}>Details</Details>
-      </Box>
-    )
-  }
+export default ({data, onDetailsClick}) => {
+  let isBus = data.id < 60
+  return (
+    <Box style={{zIndex:-data.idx}}>
+      <Flex>
+        <Title>{data.name||`${data.busLine.name} Bus`}</Title>
+        {isBus ? <BusSVG color={data.busLine.color}/> : <BusStopDot color='#ff6666'/>}
+      </Flex>
+      <Details onClick={onDetailsClick} color={isBus?data.busLine.color:'#383838'}>Details</Details>
+    </Box>
+  )
 }
 
 
-// Styled Components
+
 
 let Box = styled.div`
   background: white;
@@ -34,7 +30,7 @@ let Box = styled.div`
   font-size: 17px;
   width: 100%;
   border-bottom: .5px solid #eee;
-  ${isMobile() || 'box-shadow: 0 0 7px 0 rgba(0,0,0,.2);'}
+  /*TODO right and bottom only box shadow*/
 `
 
 let Flex = styled.div`

@@ -18,7 +18,7 @@ class PreviewList extends React.Component {
           transitionName={isMobile() ? 'PreviewAnimationVertical' : 'PreviewAnimation'}
           transitionEnterTimeout={300} transitionLeaveTimeout={300}>
               {highlightedThings.map((thing, idx) => (
-                <Preview onClick={()=>selectThing(thing)} key={idx} data={{...thing,idx}}/>
+                <Preview onDetailsClick={()=>selectThing(thing)} key={idx} data={{...thing,idx}}/>
               ))}
         </CSSTransitionGroup>
       </List>

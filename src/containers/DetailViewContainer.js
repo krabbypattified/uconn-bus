@@ -1,42 +1,56 @@
 import React from 'react'
 import {connect} from 'react-redux'
+import {graphql, compose} from 'react-apollo'
 import {deselectThing} from 'data/actions'
-import DetailView, {Title, Detail} from 'components/DetailView'
-import BusStopDot from 'components/BusStopDot'
-import BusSVG from 'components/BusSVG'
+import {arrivalsForBus, arrivalsForStop} from 'data/queries'
+import DetailView from 'components/DetailView'
 
 
+// Redux business
+let DetailViewManager = ({thingStack, deselectThing}) => {
+  let len = thingStack.length
+
+  if (!len) return null
+
+  let thing = thingStack[len-1]
+  return <ConnectedContainer thing={thing} isBus={thing.id < 60} onBack={deselectThing}/>
+}
+
+export default connect(
+  state => ({
+    thingStack: state.selectedThingStack,
+  }),
+  dispatch => ({
+    deselectThing: ()=>dispatch(deselectThing()),
+  })
+)(DetailViewManager)
+
+
+
+
+// GraphQL business
 class DetailViewContainer extends React.Component {
   render() {
-    let {selectedThingStack} = this.props
-    let len = selectedThingStack.length
-    if (!len) return null
-    let thing = selectedThingStack[len-1]
-    let isBus = thing.id < 60
+    let {thing, isBus, data, onBack} = this.props
 
-    return isBus
-    ? (
-      <DetailView pullForMore>
-        <Title>{`${thing.busLine.name} Bus`} <BusSVG color={thing.busLine.color}/></Title>
-        {[].map(row => <Detail data={row}/>)}
-      </DetailView>
-    )
-    : (
-      <DetailView pullForMore>
-        <Title>{thing.name} <BusStopDot color='#ff6666'/></Title>
-        {[].map(row => <Detail data={row}/>)}
-      </DetailView>
-    )
+    let arrivals
+    let loading = data.loading
+    if (!loading) arrivals = isBus ? data.bus.arrivals : data.busStop.arrivals
+
+    return <DetailView {...({thing,isBus,arrivals,onBack,loading})}/>
   }
 }
 
+let ConnectedContainer = compose(
 
-// Connect & Export
-export default connect(
-  state => ({
-    selectedThingStack: state.selectedThingStack,
+  graphql(arrivalsForBus, {
+    skip: ({isBus}) => !isBus,
+    options: ({thing}) => ({ variables: { id: thing.id } }),
   }),
-  dispatch => ({
-    deselectThing: dispatch(deselectThing(null)),
-  })
+
+  graphql(arrivalsForStop, {
+    skip: ({isBus}) => isBus,
+    options: ({thing}) => ({ variables: { id: thing.id } }),
+  }),
+
 )(DetailViewContainer)

@@ -1,15 +1,16 @@
 .PreviewAnimation-enter,
 .PreviewAnimationVertical-enter {
   opacity: 0;
-  transform: translate(-50px,0);
+  transform: translate(-65px,0);
   transition-property: transform, opacity;
   transition-duration: 300ms;
-  transition-timing-function: cubic-bezier(0.175, 0.665, 0.320, 1), linear;
+  transition-timing-function: cubic-bezier(0.215, 0.61, 0.355, 1)/*cubic ease out*/, ease-out;
+  position: relative; /*for zindex*/
 }
 
 /*Mobile*/
 .PreviewAnimationVertical-enter {
-  transform: translate(0,-50px);
+  transform: translate(0,-65px);
 }
 
 .PreviewAnimation-enter.PreviewAnimation-enter-active,
@@ -24,17 +25,23 @@
   opacity: 1;
   transform: translate(0,0);
   transition-property: transform, opacity;
-  transition-duration: 230ms;
-  transition-timing-function: cubic-bezier(0.175, 0.665, 0.320, 1); /*opacity ease out*/
+  transition-duration: 300ms;
+  transition-timing-function: ease, ease-out;
+  position: relative; /*for zindex*/
+}
+
+/*Mobile*/
+.PreviewAnimationVertical-leave {
+  transition-timing-function: cubic-bezier(0.215, 0.61, 0.355, 1)/*cubic ease out*/, ease-in;
 }
 
 .PreviewAnimation-leave.PreviewAnimation-leave-active,
 .PreviewAnimationVertical-leave.PreviewAnimationVertical-leave-active {
   opacity: 0;
-  transform: translate(-35px,0);
+  transform: translate(-65px,0);
 }
 
 /*Mobile*/
 .PreviewAnimationVertical-leave.PreviewAnimationVertical-leave-active {
-  transform: translate(0,35px);
+  transform: translate(0,-65px);
 }
