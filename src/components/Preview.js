@@ -51,6 +51,7 @@ let Title = styled.div`
   white-space: nowrap;
   overflow: hidden;
   text-overflow: fade;
+  line-height: normal;
 `
 
 let Details = styled.div`

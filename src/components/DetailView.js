@@ -1,5 +1,5 @@
 import React from 'react'
-import styled from 'styled-components'
+import styled, {keyframes} from 'styled-components'
 import ReactSVG from 'react-svg'
 import moment from 'moment'
 import BusSVG from 'components/BusSVG'
@@ -8,18 +8,16 @@ import {isMobile} from './helpers'
 import arrowSVG from 'assets/arrow.svg'
 
 
-
 export default ({thing,isBus,arrivals,onBack,loading}) => (
   <DetailView /*pullformore*/>
     <Title onBack={onBack} thing={thing} isBus={isBus}/>
     {loading
-      ? [1,2,3,4,5].map(i=><Detail key={i} placeholder/>)
+      ? [1,2].map(i=><Detail key={i} placeholder/>)
       : arrivals.map((arrival,i) => <Detail key={i} arrival={arrival} isBus={arrival.id<60}/>)
     }
-    {!loading && !arrivals.length && 'No data!!'}
+    {!loading && !arrivals.length && <NoContent/>}
   </DetailView>
 )
-
 
 
 let DetailView = styled.div`
@@ -32,6 +30,7 @@ let DetailView = styled.div`
   box-shadow: 0 0 7px 0 rgba(0,0,0,.2);
   display: flex;
   flex-direction: column;
+  padding-bottom: 15px;
 `
 
 let Title = ({onBack, thing, isBus}) => {
@@ -64,6 +63,65 @@ let Detail = ({arrival, isBus, placeholder}) => {
   )
 }
 
+let Placeholder = () => (
+  <ShinyRow>
+    <Bar style={{flexBasis:'48%'}}/>
+    <div style={{flexBasis:'30%', display:'flex', justifyContent:'space-between'}}>
+      <Bar style={{width: '45%'}}/>
+      <Bar style={{width: '45%'}}/>
+    </div>
+  </ShinyRow>
+)
+
+let NoContent = () => (
+  <NoContentDiv>No Arrivals. Sucks for you.</NoContentDiv>
+)
+
+let NoContentDiv = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 60px;
+  font-size: 14px;
+`
+
+let Row = styled.div`
+  margin: 5px 30px;
+  display: flex;
+  justify-content: space-between;
+`
+
+let ShinyRow = styled(Row)`
+  position: relative;
+
+  &:after {
+    content: " ";
+    z-index: 10;
+    display: block;
+    position: absolute;
+    height: 100%;
+    top: 0;
+    left: 0;
+    right: 0;
+    color: rgba(255,255,255,0.1);
+    background: -webkit-gradient(linear, left top, right top, from(rgba(255,255,255,0)), to(rgba(255,255,255,0)),
+      color-stop(0.5, #fff)
+    );
+    background-size: 300px 100%;
+    background-repeat: repeat-x;
+    pointer-events: none;
+    animation: .8s linear infinite ${keyframes`
+      0% { background-position: 0 0; }
+      100% { background-position: 300px 0; }
+    `};
+  }
+`
+
+let Bar = styled.div`
+  background-color: #e8e8e8;
+  height: 20px;
+`
+
 let Flex = styled.div`
   display: flex;
   justify-content: center;
@@ -72,7 +130,7 @@ let Flex = styled.div`
 
 let Header = styled(Flex)`
   position: relative;
-  margin: 2em;
+  margin: 20px;
 `
 
 let Name = styled.div`
@@ -92,11 +150,4 @@ let BackArrow = styled.div`
   bottom: 0;
   svg { transition: transform .3s; }
   &:hover svg { transform: translateX(-5px) }
-`
-
-let Placeholder = styled.div`
-  width: 100%;
-  height: 20px;
-  margin-bottom: 5px;
-  background-color: gray;
 `

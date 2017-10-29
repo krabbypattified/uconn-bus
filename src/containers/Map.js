@@ -27,7 +27,7 @@ class MapContainer extends React.Component {
     return (
       <Map
         container='root'
-        mapStyle='mapbox://styles/mapbox/streets-v9?optimize=true'
+        mapStyle='mapbox://styles/chefgabe/cj9d0hyrr5qu42smoce9sjx8o'
         attributionControl={false}
         logoPosition='top-left'
         center={[-72.253502, 41.8051962]}

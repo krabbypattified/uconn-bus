@@ -42,12 +42,12 @@ let ConnectedContainer = compose(
 
   graphql(arrivalsForBus, {
     skip: ({isBus}) => !isBus,
-    options: ({thing}) => ({ variables: { id: thing.id } }),
+    options: ({thing}) => ({ variables: { id: thing.id }, notifyOnNetworkStatusChange: true }),
   }),
 
   graphql(arrivalsForStop, {
     skip: ({isBus}) => isBus,
-    options: ({thing}) => ({ variables: { id: thing.id } }),
+    options: ({thing}) => ({ variables: { id: thing.id }, notifyOnNetworkStatusChange: true }),
   }),
 
 )(DetailViewContainer)

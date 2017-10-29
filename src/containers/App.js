@@ -37,6 +37,7 @@ client.query({query:buses})
 client.query({query:busStops})
 client.query({query:busLines})
 
+// TODO make sure all queries get updated when user enters/exits app
 
 // Normalize CSS
 injectGlobal`${normalize()}`
