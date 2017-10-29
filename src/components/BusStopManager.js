@@ -22,7 +22,7 @@ export default class BusStopManager extends React.Component {
 
     let paint = {
       'circle-radius': 4,
-      'circle-color': '#ff6666',
+      'circle-color': '#ff6f6f',
       'circle-stroke-width': 2,
       'circle-stroke-color': '#fff',
     }

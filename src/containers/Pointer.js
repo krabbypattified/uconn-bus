@@ -2,10 +2,9 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import {connect} from 'react-redux'
 import {graphql, compose} from 'react-apollo'
-import ReactSVG from 'react-svg'
 import styled from 'styled-components'
 import {LngLat} from 'mapbox-gl'
-import pointerSVG from 'assets/pointer.svg'
+import pointerImage from 'assets/pointer.png'
 import {buses, busStops} from 'data/queries'
 import {setHighlightedThings} from 'data/actions'
 
@@ -46,7 +45,8 @@ class Pointer extends React.Component {
   }
 
   render() {
-    return <PointerSVG path={pointerSVG}/>
+    if (this.props.thingSelected) return null
+    return <PointerImage src={pointerImage}/>
   }
 }
 
@@ -56,7 +56,9 @@ export default compose(
   graphql(buses, {name: 'buses'}),
   graphql(busStops, {name: 'busStops'}),
   connect(
-    state => ({}),
+    state => ({
+      thingSelected: state.selectedThingStack.length
+    }),
     dispatch => ({
       setHighlightedThings: things => dispatch(setHighlightedThings(things))
     })
@@ -67,11 +69,12 @@ export default compose(
 
 
 // Helpers
-let PointerSVG = styled(ReactSVG)`
+let PointerImage = styled.img`
   pointer-events: none;
   z-index: 10;
+  width: 43px;
   position: absolute;
-  left: calc(50% + 8px);
+  left: calc(50% + 9px);
   top: calc(50% + 6px);
   transform: translate(-50%,-100%);
 `

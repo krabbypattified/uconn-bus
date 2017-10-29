@@ -1,6 +1,8 @@
 import React from 'react'
 import { createStore, combineReducers, applyMiddleware, compose } from 'redux'
 import { ApolloClient, ApolloProvider, createBatchingNetworkInterface } from 'react-apollo'
+import {injectGlobal} from 'styled-components'
+import {normalize} from 'polished'
 
 import reducers from 'data/reducers'
 import Map from 'containers/Map'
@@ -34,6 +36,10 @@ const store = createStore(
 client.query({query:buses})
 client.query({query:busStops})
 client.query({query:busLines})
+
+
+// Normalize CSS
+injectGlobal`${normalize()}`
 
 
 // Base App

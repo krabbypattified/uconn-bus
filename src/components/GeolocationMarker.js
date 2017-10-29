@@ -9,8 +9,8 @@ export default ({location, onPanEnd}) => (
     lngLat={location}
     onPanEnd={onPanEnd}
   >
-    <Satellite color='#61a3fe'/>
-    <Dot color='#61a3fe'/>
+    <Satellite color='#2196f3'/>
+    <Dot color='#2196f3'/>
   </FreeMarker>
 )
 

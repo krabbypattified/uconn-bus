@@ -13,12 +13,14 @@ class MainButton extends React.Component {
   }
 
   render() {
-    let {location,setLocation} = this.props
+    let {location,setLocation, thingSelected} = this.props
     let {map} = this.context
 
+    if (thingSelected) return null
+
     let button = location
-    ? <Button color='#254A7D' onClick={()=>'getDirectionsMode()'}>Get Directions</Button>
-    : <Button color='#5eb3d2' onClick={()=>setLocation(map.getCenter())}>Set My Location</Button>
+    ? <Button color='#2196f3' onClick={()=>'getDirectionsMode()'}>Get Directions</Button>
+    : <Button color='#f44336' onClick={()=>setLocation(map.getCenter())}>Set My Location</Button>
 
     return <BottomBar>{button}</BottomBar>
   }
@@ -28,7 +30,8 @@ class MainButton extends React.Component {
 // Connect & Export
 export default connect(
   state => ({
-    location: state.location
+    location: state.location,
+    thingSelected: state.selectedThingStack.length,
   }),
   dispatch => ({
     setLocation: loc => dispatch(setLocation(loc))
@@ -41,7 +44,7 @@ let BottomBar = styled.div`
   position: absolute;
   bottom: 0;
   width: 100%;
-  padding: .6em .5em;
+  padding: 1em 7px 0 7px;
   z-index: 11;
   pointer-events: none;
 `
@@ -53,14 +56,15 @@ let Button = styled.div`
   margin: 0 auto;
   width: 400px;
   max-width: 100%;
+  background-color: white;
   background-color: ${({color})=>color};
   text-align: center;
   color: white;
-  border-radius: 6px;
-  padding: 9px;
+  border-radius: 10px 10px 0 0;
+  padding: 13px;
   font-size: 17px;
   font-weight: 600;
-  box-shadow: 0 2px 3px 0 rgba(0,0,0,.33);
+  box-shadow: 0 0px 12px -1px rgba(0,0,0,0.33);
   transition: background-color .15s;
   &:active {
     background-color: ${({color})=>desaturate(.45,darken(.13,color))};

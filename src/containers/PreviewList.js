@@ -4,13 +4,14 @@ import styled from 'styled-components'
 import CSSTransitionGroup from 'react-addons-css-transition-group'
 import Preview from 'components/Preview'
 import {selectThing} from 'data/actions'
+import {isMobile} from 'components/helpers'
 import 'assets/PreviewAnimation.css'
 
 
 class PreviewList extends React.Component {
   render() {
-    let {selectedThingStack, highlightedThings, selectThing} = this.props
-    if (selectedThingStack&&selectedThingStack.length) return null
+    let {thingSelected, highlightedThings, selectThing} = this.props
+    if (thingSelected) return null
     return (
       <List>
         <CSSTransitionGroup
@@ -29,7 +30,8 @@ class PreviewList extends React.Component {
 // Connect & Export
 export default connect(
   state => ({
-    highlightedThings: state.highlightedThings
+    highlightedThings: state.highlightedThings,
+    thingSelected: state.selectedThingStack.length,
   }),
   dispatch => ({
     selectThing: thing => dispatch(selectThing(thing))
@@ -41,6 +43,7 @@ export default connect(
 let List = styled.div`
   position: absolute;
   z-index: 20;
-  width: 400px;
+  width: ${isMobile()?'100%':'400px'};
   max-width: 100%;
+  ${isMobile()&&'padding: 0 7px;'}
 `

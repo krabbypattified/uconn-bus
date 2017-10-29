@@ -7,18 +7,15 @@ import DetailView from 'components/DetailView'
 
 
 // Redux business
-let DetailViewManager = ({thingStack, deselectThing}) => {
-  let len = thingStack.length
-
-  if (!len) return null
-
-  let thing = thingStack[len-1]
+let DetailViewManager = ({thingSelected, thing, deselectThing}) => {
+  if (!thingSelected) return null
   return <ConnectedContainer thing={thing} isBus={thing.id < 60} onBack={deselectThing}/>
 }
 
 export default connect(
   state => ({
-    thingStack: state.selectedThingStack,
+    thingSelected: state.selectedThingStack.length,
+    thing: state.selectedThingStack[state.selectedThingStack.length-1],
   }),
   dispatch => ({
     deselectThing: ()=>dispatch(deselectThing()),

@@ -10,7 +10,7 @@ import arrowSVG from 'assets/arrow.svg'
 
 
 export default ({thing,isBus,arrivals,onBack,loading}) => (
-  <DetailView pullformore={isMobile()}>
+  <DetailView /*pullformore*/>
     <Title onBack={onBack} thing={thing} isBus={isBus}/>
     {loading
       ? [1,2,3,4,5].map(i=><Detail key={i} placeholder/>)
@@ -25,9 +25,9 @@ export default ({thing,isBus,arrivals,onBack,loading}) => (
 let DetailView = styled.div`
   position: absolute;
   z-index: 21;
-  width: 400px;
+  width: ${isMobile()?'100%':'400px'};
   max-width: 100%;
-  height: 100%;
+  ${isMobile()&&'max-height: 50%;'}
   background-color: white;
   box-shadow: 0 0 7px 0 rgba(0,0,0,.2);
   display: flex;
@@ -81,6 +81,7 @@ let Name = styled.div`
   overflow: hidden;
   text-overflow: ellipsis;
   font-size: 17px;
+  font-weight: 600;
 `
 
 let BackArrow = styled.div`
