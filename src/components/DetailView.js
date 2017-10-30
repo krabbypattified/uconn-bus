@@ -17,9 +17,9 @@ export default ({type, arrivals=[], directions=[], thing, onBack, loading}) => {
   })
 
   let noContent = switchy(type)({
-    BUS: arrivals.length || <NoContent>This bus doesn't stop anywhere. Sucks for you.</NoContent>,
-    STOP: arrivals.length || <NoContent>No arrivals. Sucks for you.</NoContent>,
-    DIRECTIONS: directions.length || <NoContent>I got nothin.</NoContent>,
+    BUS: arrivals.length ? null : <NoContent>This bus doesn't stop anywhere. Sucks for you.</NoContent>,
+    STOP: arrivals.length ? null : <NoContent>No arrivals. Sucks for you.</NoContent>,
+    DIRECTIONS: directions.length ? null : <NoContent>I got nothin.</NoContent>,
   })
 
   return(
@@ -68,7 +68,7 @@ let Title = ({onBack, thing, type}) => {
     <Header>
       <BackArrow onClick={onBack}><ReactSVG path={arrowSVG}/></BackArrow>
       <Flex>
-        <Name>{name}</Name>
+        <TitleName>{name}</TitleName>
         {icon}
       </Flex>
     </Header>
@@ -80,8 +80,8 @@ let Title = ({onBack, thing, type}) => {
 let Detail = ({type, arrival, content}) => {
 
   let leftDivs = switchy(type)({
-    BUS: _=><div>{`${arrival.busLine.name} Bus`} <BusIcon color={arrival.busLine.color}/></div>,
-    STOP: _=><div>{arrival.name} <BusStopDot/></div>,
+    BUS: _=><FlexLeft><Name>{`${arrival.bus.busLine.name} Bus`}</Name><BusIcon color={arrival.bus.busLine.color}/></FlexLeft>,
+    STOP: _=><FlexLeft><Name>{arrival.stop.name}</Name><BusStopDot/></FlexLeft>,
     DIRECTIONS: content,
   })
 
@@ -90,9 +90,9 @@ let Detail = ({type, arrival, content}) => {
     let time = moment(arrival.time).format('h:mm A')
     let fromNow = moment(arrival.time).diff(moment(), 'minutes') // 14
     fromNow += [-1,1].includes(fromNow) ? ' min' : ' mins'
-    rightDivs =  <div style={{display:'flex', justifyContent:'space-between'}}>
-                  <div>{fromNow}</div>
-                  <div>{time}</div>
+    rightDivs = <div style={{display:'flex'}}>
+                  <div style={{color:'#B1B1B1'}}>{fromNow}</div>
+                  <div style={{marginLeft:'10px'}}>{time}</div>
                 </div>
   }
 
@@ -126,6 +126,7 @@ let Row = styled.div`
   display: flex;
   justify-content: space-between;
   font-size: 17px;
+  font-weight: 600;
 `
 
 let ShinyRow = styled(Row)`
@@ -165,18 +166,28 @@ let Flex = styled.div`
   align-items: center;
 `
 
+let FlexLeft = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+`
+
 let Header = styled(Flex)`
   position: relative;
   margin: 20px;
 `
 
 let Name = styled.div`
-  max-width: ${isMobile()?'209px':'246px'};
+  max-width: ${isMobile()?'139':'161'}px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
   font-weight: 600;
   font-size: 17px;
+`
+
+let TitleName = styled(Name)`
+  max-width: ${isMobile()?'209':'246'}px;
 `
 
 let BackArrow = styled.div`

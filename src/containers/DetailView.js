@@ -28,10 +28,16 @@ export default connect(
 // GraphQL business
 class DetailViewContainer extends React.Component {
   render() {
-    let {thing, isBus, onBack, data: {loading, bus, busStop}} = this.props
+    let {thing, isBus, onBack, bus, busStop} = this.props
 
-    let arrivals
-    if (!loading) arrivals = isBus ? bus.arrivals : busStop.arrivals
+    let arrivals=[]
+    let loading = isBus ? bus.loading : busStop.loading
+    if (!loading) {
+      arrivals = isBus ? bus.bus.arrivals : busStop.busStop.arrivals
+      arrivals = arrivals
+        .filter(a => a.time < Date.now()+1000*60*100)
+        .sort((a,b) => a.time - b.time)
+    }
     let type = isBus ? 'BUS' : 'STOP'
 
     return <DetailView {...({thing,type,arrivals,onBack,loading})}/>
@@ -40,12 +46,15 @@ class DetailViewContainer extends React.Component {
 
 let ConnectedContainer = compose(
 
+  // TODO: bug should be arrivals for bus not busline, AND they should be unique?!
   graphql(arrivalsForBus, {
+    name: 'bus',
     skip: ({isBus}) => !isBus,
     options: ({thing}) => ({ variables: { id: thing.id }, notifyOnNetworkStatusChange: true }),
   }),
 
   graphql(arrivalsForStop, {
+    name: 'busStop',
     skip: ({isBus}) => isBus,
     options: ({thing}) => ({ variables: { id: thing.id }, notifyOnNetworkStatusChange: true }),
   }),

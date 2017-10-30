@@ -26,8 +26,8 @@ class MainButton extends React.Component {
     return (
       <BottomBar>
         <CSSTransitionGroup
-          transitionAppear={true} // weird...
           transitionName={'MainButtonAnimation'}
+          transitionAppear={true} transitionAppearTimeout={130} // weird...
           transitionEnterTimeout={130} transitionLeaveTimeout={130}>
             {button}
         </CSSTransitionGroup>

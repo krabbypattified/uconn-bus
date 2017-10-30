@@ -18,7 +18,7 @@ export default class BusStopManager extends React.Component {
       source: 'busLine',
       type: 'LineString',
       getProperties: line => ({
-        coordinates: polyline.decode(line.path),
+        coordinates: polyline.decode(line.path).map(pt=>[pt[1], pt[0]]),
         color: line.color,
       })
     })
@@ -35,7 +35,7 @@ export default class BusStopManager extends React.Component {
   }
 
   render() {
-    this.manager.set([this.props.busLine])
+    this.manager.set([this.props.line])
     return null
   }
 }

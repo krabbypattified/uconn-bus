@@ -24,6 +24,7 @@ export default class WalkManager extends React.Component {
     let paint = {
       'line-color': '#2196f3',
       'line-width': 4,
+      'line-dasharray': [1,1],
     }
     for (let prop in paint) map.setPaintProperty('walk', prop, paint[prop])
   }

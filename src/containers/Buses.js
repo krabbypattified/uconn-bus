@@ -1,5 +1,6 @@
 import React from 'react'
 import {graphql, compose} from 'react-apollo'
+import {connect} from 'react-redux'
 
 import BusManager from 'components/BusManager'
 import {buses, busLines} from 'data/queries'
@@ -7,8 +8,8 @@ import {buses, busLines} from 'data/queries'
 
 class Buses extends React.Component {
   render() {
-    let {buses, busLines} = this.props
-    if (buses.loading || busLines.loading) return null
+    let {buses, busLines, directions} = this.props
+    if (buses.loading || busLines.loading || directions) return null
     buses = buses.buses || []
     busLines = busLines.busLines || []
 
@@ -20,4 +21,7 @@ class Buses extends React.Component {
 export default compose(
   graphql(buses, {name: 'buses', options: { pollInterval: 2400 }}),
   graphql(busLines, {name: 'busLines'}),
+  connect(state => ({
+      directions: state.directions
+    }))
 )(Buses)

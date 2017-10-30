@@ -57,14 +57,13 @@ export default class BusManager extends React.Component {
   render() {
     let {buses} = this.props
 
-    // Fix heading 0
     this.manager.set(buses.map(b => ({
       ...b,
-      heading: !b.heading && this.oldBuses[b.id] ? this.oldBuses[b.id].heading : b.heading
+      heading: !b.heading && this.oldBuses[b.id] ? this.oldBuses[b.id].heading : b.heading // Fix heading 0
     })))
 
     buses.forEach(b => {
-      if (b.heading) this.oldBuses[b.id] = b
+      if (b.heading) this.oldBuses[b.id] = b // Fix heading 0
     })
     return null
   }

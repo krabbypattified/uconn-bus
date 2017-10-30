@@ -1,17 +1,23 @@
 import React from 'react'
-import {graphql} from 'react-apollo'
+import {graphql, compose} from 'react-apollo'
+import {connect} from 'react-redux'
 
 import BusStopManager from 'components/BusStopManager'
 import {busStops} from 'data/queries'
 
 
-class BusStopList extends React.Component {
+class BusStops extends React.Component {
   render() {
-    let {data} = this.props
-    if (data.loading) return null
+    let {data, directions} = this.props
+    if (data.loading || directions) return null
     return <BusStopManager busStops={data.busStops}/>
   }
 }
 
 
-export default graphql(busStops)(BusStopList)
+export default compose(
+  graphql(busStops),
+  connect(state => ({
+    directions: state.directions
+  }))
+)(BusStops)
