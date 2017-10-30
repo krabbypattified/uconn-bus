@@ -31,3 +31,17 @@ export const deselectAll = () => {
     type: 'DESELECT_ALL',
   }
 }
+
+export const getDirections = ({from, to}) => {
+  return {
+    type: 'GET_DIRECTIONS',
+    from,
+    to,
+  }
+}
+
+export const clearDirections = () => {
+  return {
+    type: 'CLEAR_DIRECTIONS',
+  }
+}

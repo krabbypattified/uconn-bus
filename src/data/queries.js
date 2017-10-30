@@ -39,11 +39,11 @@ export const arrivalsForBus = gql`
 query ArrivalsForBus($id: Int!) {
   bus(id: $id) {
     arrivals {
+      time
       stop {
         id
         name
       }
-      time
     }
   }
 }`
@@ -53,6 +53,7 @@ export const arrivalsForStop = gql`
 query ArrivalsForStop($id: Int!) {
   busStop(id: $id) {
     arrivals {
+      time
       bus {
         id
         busLine {
@@ -60,7 +61,45 @@ query ArrivalsForStop($id: Int!) {
           color
         }
       }
+    }
+  }
+}`
+
+
+export const directions = gql`
+query Directions($from: LngLat!, $to: LngLat!) {
+  directions(from: $from, to: $to) {
+
+    path
+
+    hopOn {
       time
+      bus {
+        id
+        latitude
+        longitude
+        heading
+        busLine {
+          name
+          color
+        }
+      }
+      stop {
+        id
+        latitude
+        longitude
+        name
+      }
+    }
+
+    hopOff {
+      time
+      stop {
+        id
+        latitude
+        longitude
+        name
+      }
     }
   }
 }`

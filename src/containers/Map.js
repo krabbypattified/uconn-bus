@@ -34,10 +34,12 @@ class MapContainer extends React.Component {
         onLoad={map=>this.onLoad(map)}
         zoom={13}
         minZoom={12}
-        sources={['buses', 'busStops']}
+        sources={['buses', 'busStops', 'busLine', 'walk']}
         layers={[
           {id:'buses', type:'symbol', source:'buses'},
           {id:'busStops', type:'circle', source:'busStops'},
+          {id:'busLine', type:'line', source:'busLine'},
+          {id:'walk', type:'line', source:'walk'},
         ]}
       >{children}</Map>
     )

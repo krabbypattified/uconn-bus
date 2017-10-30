@@ -7,9 +7,10 @@ import {normalize} from 'polished'
 import reducers from 'data/reducers'
 import Map from 'containers/Map'
 import DetailView from 'containers/DetailView'
-import PreviewList from 'containers/PreviewList'
+import Previews from 'containers/Previews'
 import Pointer from 'containers/Pointer'
 import GeolocationMarker from 'containers/GeolocationMarker'
+import Directions from 'containers/Directions'
 import BusStops from 'containers/BusStops'
 import Buses from 'containers/Buses'
 import MainButton from 'containers/MainButton'
@@ -50,9 +51,10 @@ export default class App extends React.Component {
       <ApolloProvider store={store} client={client}>
         <Map>
           <DetailView/>
-          <PreviewList/>
+          <Previews/>
           <Pointer/>
           <GeolocationMarker/>
+          <Directions/>
           <BusStops/>
           <Buses/>
           <MainButton/>

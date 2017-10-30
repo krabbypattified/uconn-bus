@@ -7,12 +7,12 @@ export class SourceManager {
   set(data) {
     if (!data) return
     let features = data.map(d => {
-        let {coordinates, properties={}} = this.getProperties(d)
+        let {coordinates, ...properties} = this.getProperties(d)
         return {
             type: 'Feature',
             properties,
             geometry: {
-              type: 'Point',
+              type: this.type||'Point',
               coordinates
             }
         }
@@ -25,7 +25,10 @@ export class SourceManager {
   }
 
   remove() {
-    this.map.removeSource(this.source)
+    this.map.getSource(this.source).setData({
+      type: 'FeatureCollection',
+      features: [],
+    })
   }
 }
 
@@ -139,7 +142,7 @@ export class AnimationSourceManager extends SourceManager {
 // t: number from 0 to 1
 function lerp(a, b, t) {
     var len = a.length;
-    if(b.length !== len) return;
+    if (b.length !== len) return;
 
     var x = [];
     for(var i = 0; i < len; i++)
@@ -237,4 +240,21 @@ export function nearestDeg(dOld,dNew) {
 
 export function randomNumber() {
   return String(Math.floor(Math.random() * 9e15))
+}
+
+
+export function switchy(thing) {
+	return function(choices) {
+  	let res = choices[thing]
+	  return res instanceof Function ? res() : res
+  }
+}
+
+
+export function times(num) {
+	return function(val) {
+  	return val instanceof Function
+    ? [...Array(num)].map((v,i)=>i).map(val)
+    : [...Array(10)].map(v=>val)
+  }
 }

@@ -45,7 +45,8 @@ class Pointer extends React.Component {
   }
 
   render() {
-    if (this.props.thingSelected) return null
+    let {thingSelected, directions} = this.props
+    if (thingSelected || directions) return null
     return <PointerImage src={pointerImage}/>
   }
 }
@@ -57,7 +58,8 @@ export default compose(
   graphql(busStops, {name: 'busStops'}),
   connect(
     state => ({
-      thingSelected: state.selectedThingStack.length
+      thingSelected: state.selectedThingStack.length,
+      directions: state.directions,
     }),
     dispatch => ({
       setHighlightedThings: things => dispatch(setHighlightedThings(things))

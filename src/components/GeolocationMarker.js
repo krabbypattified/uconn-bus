@@ -7,6 +7,7 @@ export default ({location, onPanEnd}) => (
   <FreeMarker projected
     style={{zIndex:1}}
     lngLat={location}
+    // TODO fork my version of MapBox to fix mobile onPanEnd
     onPanEnd={onPanEnd}
   >
     <Satellite color='#2196f3'/>

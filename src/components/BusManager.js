@@ -19,10 +19,8 @@ export default class BusManager extends React.Component {
       source: 'buses',
       getProperties: bus => ({
         coordinates: [bus.longitude, bus.latitude],
-        properties: {
-          heading: bus.heading,
-          color: bus.busLine.color
-        },
+        heading: bus.heading,
+        color: bus.busLine.color,
       }),
     })
 

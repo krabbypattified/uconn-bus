@@ -28,13 +28,13 @@ export default connect(
 // GraphQL business
 class DetailViewContainer extends React.Component {
   render() {
-    let {thing, isBus, data, onBack} = this.props
+    let {thing, isBus, onBack, data: {loading, bus, busStop}} = this.props
 
     let arrivals
-    let loading = data.loading
-    if (!loading) arrivals = isBus ? data.bus.arrivals : data.busStop.arrivals
+    if (!loading) arrivals = isBus ? bus.arrivals : busStop.arrivals
+    let type = isBus ? 'BUS' : 'STOP'
 
-    return <DetailView {...({thing,isBus,arrivals,onBack,loading})}/>
+    return <DetailView {...({thing,type,arrivals,onBack,loading})}/>
   }
 }
 

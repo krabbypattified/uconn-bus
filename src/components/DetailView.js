@@ -2,22 +2,35 @@ import React from 'react'
 import styled, {keyframes} from 'styled-components'
 import ReactSVG from 'react-svg'
 import moment from 'moment'
-import BusSVG from 'components/BusSVG'
+import BusIcon from 'components/BusIcon'
 import BusStopDot from 'components/BusStopDot'
-import {isMobile} from './helpers'
+import {isMobile, switchy, times} from './helpers'
 import arrowSVG from 'assets/arrow.svg'
 
 
-export default ({thing,isBus,arrivals,onBack,loading}) => (
-  <DetailView /*pullformore*/>
-    <Title onBack={onBack} thing={thing} isBus={isBus}/>
-    {loading
-      ? [1,2].map(i=><Detail key={i} placeholder/>)
-      : arrivals.map((arrival,i) => <Detail key={i} arrival={arrival} isBus={arrival.id<60}/>)
-    }
-    {!loading && !arrivals.length && <NoContent/>}
-  </DetailView>
-)
+export default ({type, arrivals=[], directions=[], thing, onBack, loading}) => {
+
+  let details = switchy(type)({
+    BUS: _=>arrivals.map((arrival,i) => <Detail key={i} arrival={arrival} type='STOP'/>),
+    STOP: _=>arrivals.map((arrival,i) => <Detail key={i} arrival={arrival} type='BUS'/>),
+    DIRECTIONS: _=>directions.map((content, i) => <Detail key={i} content={content} type='DIRECTIONS'/>),
+  })
+
+  let noContent = switchy(type)({
+    BUS: arrivals.length || <NoContent>This bus doesn't stop anywhere. Sucks for you.</NoContent>,
+    STOP: arrivals.length || <NoContent>No arrivals. Sucks for you.</NoContent>,
+    DIRECTIONS: directions.length || <NoContent>I got nothin.</NoContent>,
+  })
+
+  return(
+    <DetailView /*pullformore*/>
+      <Title onBack={onBack} type={type} thing={thing}/>
+      {loading ? times(2)(i=><Placeholder key={i}/>) : details}
+      {loading || noContent}
+    </DetailView>
+  )
+}
+
 
 
 let DetailView = styled.div`
@@ -33,35 +46,59 @@ let DetailView = styled.div`
   padding-bottom: 15px;
 `
 
-let Title = ({onBack, thing, isBus}) => {
-  let name = isBus ? <Name>{thing.busLine.name} Bus</Name> : <Name>{thing.name}</Name>
-  let icon = isBus ? <div style={{width:'30px'}}><BusSVG color={thing.busLine.color}/></div> : <BusStopDot/>
+
+
+let Title = ({onBack, thing, type}) => {
+  type = switchy(type)
+
+  let name = type({
+    BUS: _=>`${thing.busLine.name} Bus`,
+    STOP: _=>thing.name,
+    DIRECTIONS: 'Directions',
+  })
+
+  let icon = type({
+    BUS: _=><BusIcon color={thing&&thing.busLine.color}/>,
+    STOP: _=><BusStopDot/>,
+    DIRECTIONS: null,
+  })
+
   return (
     <Header>
       <BackArrow onClick={onBack}><ReactSVG path={arrowSVG}/></BackArrow>
-      <Flex>{name}{icon}</Flex>
+      <Flex>
+        <Name>{name}</Name>
+        {icon}
+      </Flex>
     </Header>
   )
 }
 
-let Detail = ({arrival, isBus, placeholder}) => {
-  if (placeholder) return <Placeholder/>
 
-  let time = moment(arrival.time).format('h:mm A')
-  let fromNow = moment(arrival.time).diff(moment(), 'minutes') // 14
-  fromNow += [-1,1].includes(fromNow) ? ' min' : ' mins'
 
-  return (
-    <div>
-      {isBus
-        ? <div>{`${arrival.busLine.name} Bus`} <BusSVG color={arrival.busLine.color}/></div>
-        : <div>{arrival.name} <BusStopDot/></div>
-      }
-      <div>{fromNow}</div>
-      <div>{time}</div>
-    </div>
-  )
+let Detail = ({type, arrival, content}) => {
+
+  let leftDivs = switchy(type)({
+    BUS: _=><div>{`${arrival.busLine.name} Bus`} <BusIcon color={arrival.busLine.color}/></div>,
+    STOP: _=><div>{arrival.name} <BusStopDot/></div>,
+    DIRECTIONS: content,
+  })
+
+  let rightDivs = null
+  if (['BUS', 'STOP'].includes(type)) {
+    let time = moment(arrival.time).format('h:mm A')
+    let fromNow = moment(arrival.time).diff(moment(), 'minutes') // 14
+    fromNow += [-1,1].includes(fromNow) ? ' min' : ' mins'
+    rightDivs =  <div style={{display:'flex', justifyContent:'space-between'}}>
+                  <div>{fromNow}</div>
+                  <div>{time}</div>
+                </div>
+  }
+
+  return <Row>{leftDivs}{rightDivs}</Row>
 }
+
+
 
 let Placeholder = () => (
   <ShinyRow>
@@ -73,11 +110,9 @@ let Placeholder = () => (
   </ShinyRow>
 )
 
-let NoContent = () => (
-  <NoContentDiv>No Arrivals. Sucks for you.</NoContentDiv>
-)
 
-let NoContentDiv = styled.div`
+
+let NoContent = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
@@ -89,6 +124,7 @@ let Row = styled.div`
   margin: 5px 30px;
   display: flex;
   justify-content: space-between;
+  font-size: 17px;
 `
 
 let ShinyRow = styled(Row)`
@@ -134,12 +170,12 @@ let Header = styled(Flex)`
 `
 
 let Name = styled.div`
-  max-width: 210px;
+  max-width: ${isMobile()?'209px':'246px'};
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  font-size: 17px;
   font-weight: 600;
+  font-size: 17px;
 `
 
 let BackArrow = styled.div`

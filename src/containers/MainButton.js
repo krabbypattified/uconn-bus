@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import {connect} from 'react-redux'
 import styled from 'styled-components'
 import {darken, desaturate} from 'polished'
-import {setLocation} from 'data/actions';
+import {setLocation, getDirections} from 'data/actions';
 
 
 class MainButton extends React.Component {
@@ -13,14 +13,14 @@ class MainButton extends React.Component {
   }
 
   render() {
-    let {location,setLocation, thingSelected} = this.props
+    let {location, setLocation, thingSelected, directions, getDirections} = this.props
     let {map} = this.context
 
-    if (thingSelected) return null
+    if (thingSelected || directions) return null
 
     let button = location
-    ? <Button color='#2196f3' onClick={()=>'getDirectionsMode()'}>Get Directions</Button>
-    : <Button color='#f44336' onClick={()=>setLocation(map.getCenter())}>Set My Location</Button>
+    ? <Button color='#2196f3' onClick={()=>{getDirections({from:location, to:map.getCenter().toArray()})}}>Get Directions</Button>
+    : <Button color='#f44336' onClick={()=>setLocation(map.getCenter().toArray())}>Set My Location</Button>
 
     return <BottomBar>{button}</BottomBar>
   }
@@ -31,10 +31,12 @@ class MainButton extends React.Component {
 export default connect(
   state => ({
     location: state.location,
+    directions: state.directions,
     thingSelected: state.selectedThingStack.length,
   }),
   dispatch => ({
-    setLocation: loc => dispatch(setLocation(loc))
+    setLocation: loc => dispatch(setLocation(loc)),
+    getDirections: fromTo => dispatch(getDirections(fromTo)),
   })
 )(MainButton)
 

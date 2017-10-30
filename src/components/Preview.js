@@ -1,8 +1,9 @@
 import React from 'react'
 import styled from 'styled-components'
 import {darken, desaturate} from 'polished'
-import BusSVG from 'components/BusSVG'
+import BusIcon from 'components/BusIcon'
 import BusStopDot from 'components/BusStopDot'
+import {isMobile} from './helpers'
 
 
 export default ({data, onDetailsClick}) => {
@@ -11,7 +12,7 @@ export default ({data, onDetailsClick}) => {
     <Box style={{zIndex:20-data.idx}}>
       <Flex>
         <Title>{data.name||`${data.busLine.name} Bus`}</Title>
-        {isBus ? <BusSVG color={data.busLine.color}/> : <BusStopDot/>}
+        {isBus ? <BusIcon color={data.busLine.color}/> : <BusStopDot/>}
       </Flex>
       <Details onClick={onDetailsClick} color={isBus?data.busLine.color:'#383838'}>Details</Details>
     </Box>
@@ -47,7 +48,7 @@ let Flex = styled.div`
 `
 
 let Title = styled.div`
-  max-width: 209px;
+  max-width: ${isMobile()?'209px':'246px'};
   white-space: nowrap;
   overflow: hidden;
   text-overflow: fade;

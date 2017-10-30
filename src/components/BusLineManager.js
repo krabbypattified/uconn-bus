@@ -1,5 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
+import polyline from '@mapbox/polyline'
 import {SourceManager} from './helpers'
 
 
@@ -14,19 +15,19 @@ export default class BusStopManager extends React.Component {
 
     this.manager = new SourceManager({
       map,
-      source: 'busStops',
-      getProperties: stop => ({
-        coordinates: [stop.longitude, stop.latitude],
+      source: 'busLine',
+      type: 'LineString',
+      getProperties: line => ({
+        coordinates: polyline.decode(line.path),
+        color: line.color,
       })
     })
 
     let paint = {
-      'circle-radius': 4,
-      'circle-color': '#ff6f6f',
-      'circle-stroke-width': 2,
-      'circle-stroke-color': '#fff',
+      'line-color': ['get', 'color'],
+      'line-width': 4,
     }
-    for (let prop in paint) map.setPaintProperty('busStops', prop, paint[prop])
+    for (let prop in paint) map.setPaintProperty('busLine', prop, paint[prop])
   }
 
   componentWillUnmount() {
@@ -34,7 +35,7 @@ export default class BusStopManager extends React.Component {
   }
 
   render() {
-    this.manager.set(this.props.busStops)
+    this.manager.set([this.props.busLine])
     return null
   }
 }

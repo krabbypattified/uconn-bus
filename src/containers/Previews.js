@@ -8,10 +8,10 @@ import {isMobile} from 'components/helpers'
 import 'assets/PreviewAnimation.css'
 
 
-class PreviewList extends React.Component {
+class Previews extends React.Component {
   render() {
-    let {thingSelected, highlightedThings, selectThing} = this.props
-    if (thingSelected) return null
+    let {directions, thingSelected, highlightedThings, selectThing} = this.props
+    if (thingSelected || directions) return null
     return (
       <List>
         <CSSTransitionGroup
@@ -32,11 +32,12 @@ export default connect(
   state => ({
     highlightedThings: state.highlightedThings,
     thingSelected: state.selectedThingStack.length,
+    directions: state.directions,
   }),
   dispatch => ({
     selectThing: thing => dispatch(selectThing(thing))
   })
-)(PreviewList)
+)(Previews)
 
 
 // Helpers

@@ -15,4 +15,13 @@ export default {
     return state
   },
 
+  directions(state = null, action) {
+    if (action.type === 'CLEAR_DIRECTIONS') return null
+    if (action.type === 'GET_DIRECTIONS') {
+      let {from, to} = action
+      return {from, to}
+    }
+    return state
+  },
+
 }
