@@ -1,0 +1,22 @@
+.MainButtonAnimation-enter,
+ .MainButtonAnimation-appear{
+  transform: translateY(100%);
+  transition: transform 130ms ease-out;
+}
+
+
+.MainButtonAnimation-enter-active,
+.MainButtonAnimation-appear-active {
+  transform: none;
+}
+
+
+.MainButtonAnimation-leave {
+  transform: none;
+  transition: transform 130ms ease-out;
+}
+
+
+.MainButtonAnimation-leave-active {
+  transform: translateY(100%);
+}

@@ -73,6 +73,7 @@ export default compose(
 // Helpers
 let PointerImage = styled.img`
   pointer-events: none;
+  user-select: none;
   z-index: 10;
   width: 43px;
   position: absolute;

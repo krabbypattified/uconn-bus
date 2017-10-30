@@ -3,7 +3,9 @@ import PropTypes from 'prop-types'
 import {connect} from 'react-redux'
 import styled from 'styled-components'
 import {darken, desaturate} from 'polished'
-import {setLocation, getDirections} from 'data/actions';
+import CSSTransitionGroup from 'react-addons-css-transition-group'
+import {setLocation, getDirections} from 'data/actions'
+import 'assets/MainButtonAnimation.css'
 
 
 class MainButton extends React.Component {
@@ -16,13 +18,21 @@ class MainButton extends React.Component {
     let {location, setLocation, thingSelected, directions, getDirections} = this.props
     let {map} = this.context
 
-    if (thingSelected || directions) return null
-
     let button = location
-    ? <Button color='#2196f3' onClick={()=>{getDirections({from:location, to:map.getCenter().toArray()})}}>Get Directions</Button>
-    : <Button color='#f44336' onClick={()=>setLocation(map.getCenter().toArray())}>Set My Location</Button>
+    ? <Button key={1} color='#2196f3' onClick={()=>{getDirections({from:location, to:map.getCenter().toArray()})}}>Get Directions</Button>
+    : <Button key={1} color='#f44336' onClick={()=>setLocation(map.getCenter().toArray())}>Set My Location</Button>
+    if (thingSelected || directions) button = null
 
-    return <BottomBar>{button}</BottomBar>
+    return (
+      <BottomBar>
+        <CSSTransitionGroup
+          transitionAppear={true} // weird...
+          transitionName={'MainButtonAnimation'}
+          transitionEnterTimeout={130} transitionLeaveTimeout={130}>
+            {button}
+        </CSSTransitionGroup>
+      </BottomBar>
+    )
   }
 }
 
