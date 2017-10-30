@@ -76,7 +76,7 @@ let PointerImage = styled.img`
   z-index: 10;
   width: 43px;
   position: absolute;
-  left: calc(50% + 9px);
+  left: calc(50% + 8px);
   top: calc(50% + 6px);
   transform: translate(-50%,-100%);
 `
