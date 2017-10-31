@@ -1,15 +1,15 @@
 import React from 'react'
 import {connect} from 'react-redux'
 import {graphql, compose} from 'react-apollo'
-import {deselectThing} from 'data/actions'
+import {deselectThing, selectThing} from 'data/actions'
 import {arrivalsForBus, arrivalsForStop} from 'data/queries'
 import DetailView from 'components/DetailView'
 
 
 // Redux business
-let DetailViewManager = ({thingSelected, thing, deselectThing}) => {
+let DetailViewManager = ({thingSelected, thing, deselectThing, selectThing}) => {
   if (!thingSelected) return null
-  return <ConnectedContainer thing={thing} isBus={thing.id < 60} onBack={deselectThing}/>
+  return <ConnectedContainer isBus={thing.id < 60} onBack={deselectThing} {...({thing,selectThing})}/>
 }
 
 export default connect(
@@ -18,6 +18,7 @@ export default connect(
     thing: state.selectedThingStack[state.selectedThingStack.length-1],
   }),
   dispatch => ({
+    selectThing: thing=>dispatch(selectThing(thing)),
     deselectThing: ()=>dispatch(deselectThing()),
   })
 )(DetailViewManager)
@@ -28,7 +29,7 @@ export default connect(
 // GraphQL business
 class DetailViewContainer extends React.Component {
   render() {
-    let {thing, isBus, onBack, bus, busStop} = this.props
+    let {thing, isBus, onBack, bus, busStop, selectThing} = this.props
 
     let arrivals=[]
     let loading = isBus ? bus.loading : busStop.loading
@@ -40,13 +41,12 @@ class DetailViewContainer extends React.Component {
     }
     let type = isBus ? 'BUS' : 'STOP'
 
-    return <DetailView {...({thing,type,arrivals,onBack,loading})}/>
+    return <DetailView {...({thing,type,arrivals,onBack,loading,selectThing})}/>
   }
 }
 
 let ConnectedContainer = compose(
 
-  // TODO: bug should be arrivals for bus not busline, AND they should be unique?!
   graphql(arrivalsForBus, {
     name: 'bus',
     skip: ({isBus}) => !isBus,

@@ -7,6 +7,8 @@ import styled from 'styled-components'
 
 import Marker from 'components/Marker'
 import BusLineManager from 'components/BusLineManager'
+import BusManager from 'components/BusManager'
+import BusStopManager from 'components/BusStopManager'
 import WalkManager from 'components/WalkManager'
 import DetailView from 'components/DetailView'
 import {clearDirections} from 'data/actions'
@@ -50,9 +52,10 @@ class Directions extends React.Component {
     ]
 
     return (
-      // TODO the bus, the stops
       <div>
-        <DetailView type='DIRECTIONS' directions={theDirections}/>
+        <BusManager buses={[directions.hopOn.bus]} size={.5}/>
+        <BusStopManager busStops={[directions.hopOn.stop, directions.hopOff.stop]} size={6}/>
+        <DetailView type='DIRECTIONS' directions={theDirections} onBack={onBack}/>
         <Marker lngLat={fromTo.to}><ReactSVG path={markerSVG} style={{transform:'translateY(calc(-50% + 3px))'}}/></Marker>
         <BusLineManager line={{
           path: directions.path,

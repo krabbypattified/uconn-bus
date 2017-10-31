@@ -38,7 +38,7 @@ client.query({query:buses})
 client.query({query:busStops})
 client.query({query:busLines})
 
-// TODO make sure all queries get updated when user enters/exits app
+// TODO make sure all queries get updated when user enters/exits app (AND update arrival times every 5 mins?)
 
 // Normalize CSS
 injectGlobal`${normalize()}`

@@ -2,7 +2,8 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import {SourceManager} from './helpers'
 import busSVG from 'assets/bus.svg'
-
+let first = true
+let oldBuses = {}
 
 export default class BusManager extends React.Component {
 
@@ -10,9 +11,10 @@ export default class BusManager extends React.Component {
     map: PropTypes.any
   }
 
+  // only runs on first mount
   componentWillMount() {
+
     let {map} = this.context
-    this.oldBuses = {}
 
     this.manager = new SourceManager({
       map,
@@ -24,30 +26,35 @@ export default class BusManager extends React.Component {
       }),
     })
 
+    let layout = {
+      'icon-image': ['get', 'color'],
+      'icon-size': this.props.size||.33,
+      'icon-allow-overlap': true,
+      'icon-rotation-alignment': 'map',
+      'icon-rotate': {
+        property: 'heading',
+        stops: [[0, 0], [359, 359]]
+      }
+    }
+    for (let prop in layout) map.setLayoutProperty('buses', prop, layout[prop])
+
+
+    // Only load images once
+    if (!first) return
+    first = false
+
     fetch(busSVG).then(x=>x.text()).then(svg => {
 
         let stops = Array.from(new Set(this.props.colors))
 
         stops.forEach(hex => {
-          let img = new Image(33,33)
+          let img = new Image(100, 100)
           img.onload = () => map.addImage(hex, img)
           img.src = 'data:image/svg+xml;charset=UTF-8,'+svg.replace(/#F4D03F/, hex)
         })
 
-        let layout = {
-          'icon-image': ['get', 'color'],
-          'icon-allow-overlap': true,
-          'icon-rotation-alignment': 'map',
-          'icon-rotate': {
-            property: 'heading',
-            stops: [[0, 0], [359, 359]]
-          }
-        }
-        for (let prop in layout) map.setLayoutProperty('buses', prop, layout[prop])
-
     })
 
-    map.moveLayer('busStops', 'buses')
   }
 
   componentWillUnmount() {
@@ -59,11 +66,11 @@ export default class BusManager extends React.Component {
 
     this.manager.set(buses.map(b => ({
       ...b,
-      heading: !b.heading && this.oldBuses[b.id] ? this.oldBuses[b.id].heading : b.heading // Fix heading 0
+      heading: !b.heading && oldBuses[b.id] ? oldBuses[b.id].heading : b.heading // Fix heading 0
     })))
 
     buses.forEach(b => {
-      if (b.heading) this.oldBuses[b.id] = b // Fix heading 0
+      if (b.heading) oldBuses[b.id] = b // Fix heading 0
     })
     return null
   }

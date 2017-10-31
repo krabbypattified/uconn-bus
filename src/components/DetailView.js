@@ -8,11 +8,11 @@ import {isMobile, switchy, times} from './helpers'
 import arrowSVG from 'assets/arrow.svg'
 
 
-export default ({type, arrivals=[], directions=[], thing, onBack, loading}) => {
+export default ({type, arrivals=[], directions=[], thing, onBack, loading, selectThing}) => {
 
   let details = switchy(type)({
-    BUS: _=>arrivals.map((arrival,i) => <Detail key={i} arrival={arrival} type='STOP'/>),
-    STOP: _=>arrivals.map((arrival,i) => <Detail key={i} arrival={arrival} type='BUS'/>),
+    BUS: _=>arrivals.map((arrival,i) => <Detail key={i} arrival={arrival} type='STOP' selectThing={selectThing}/>),
+    STOP: _=>arrivals.map((arrival,i) => <Detail key={i} arrival={arrival} type='BUS' selectThing={selectThing}/>),
     DIRECTIONS: _=>directions.map((content, i) => <Detail key={i} content={content} type='DIRECTIONS'/>),
   })
 
@@ -24,9 +24,11 @@ export default ({type, arrivals=[], directions=[], thing, onBack, loading}) => {
 
   return(
     <DetailView /*pullformore*/>
-      <Title onBack={onBack} type={type} thing={thing}/>
-      {loading ? times(2)(i=><Placeholder key={i}/>) : details}
-      {loading || noContent}
+      <ScrollView>
+        <Title onBack={onBack} type={type} thing={thing}/>
+        {loading ? times(2)(i=><Placeholder key={i}/>) : details}
+        {loading || noContent}
+      </ScrollView>
     </DetailView>
   )
 }
@@ -34,17 +36,20 @@ export default ({type, arrivals=[], directions=[], thing, onBack, loading}) => {
 
 
 let DetailView = styled.div`
-  position: absolute;
-  z-index: 21;
-  width: ${isMobile()?'100%':'400px'};
-  max-width: 100%;
-  ${isMobile()&&'max-height: 50%;'}
   background-color: white;
   box-shadow: 0 0 7px 0 rgba(0,0,0,.2);
+  max-width: 100%;
+  max-height: ${isMobile()?50:100}%;
+  overflow-y: auto;
+  position: absolute;
+  width: ${isMobile()?'100%':'400px'};
+  z-index: 21;
+`
+
+let ScrollView = styled.div`
   display: flex;
   flex-direction: column;
   padding-bottom: 15px;
-  overflow-y: auto;
 `
 
 
@@ -77,22 +82,29 @@ let Title = ({onBack, thing, type}) => {
 
 
 
-let Detail = ({type, arrival, content}) => {
+let Detail = ({type, arrival, content, selectThing}) => {
 
   let leftDivs = switchy(type)({
-    BUS: _=><FlexLeft><Name>{`${arrival.bus.busLine.name} Bus`}</Name><BusIcon color={arrival.bus.busLine.color}/></FlexLeft>,
-    STOP: _=><FlexLeft><Name>{arrival.stop.name}</Name><BusStopDot/></FlexLeft>,
+    BUS: _=><FlexLeft onClick={()=>selectThing(arrival.bus)}>
+      <Name>{`${arrival.bus.busLine.name} Bus`}</Name>
+      <BusIcon color={arrival.bus.busLine.color}/>
+    </FlexLeft>,
+    STOP: _=><FlexLeft onClick={()=>selectThing(arrival.stop)}>
+      <Name>{arrival.stop.name}</Name>
+      <BusStopDot/>
+    </FlexLeft>,
     DIRECTIONS: content,
   })
 
   let rightDivs = null
   if (['BUS', 'STOP'].includes(type)) {
     let time = moment(arrival.time).format('h:mm A')
-    let fromNow = moment(arrival.time).diff(moment(), 'minutes') // 14
+    // TODO bind this to time, or update the props??
+    let fromNow = moment(arrival.time).diff(moment(), 'minutes')
     fromNow += [-1,1].includes(fromNow) ? ' min' : ' mins'
     rightDivs = <div style={{display:'flex'}}>
-                  <div style={{color:'#B1B1B1'}}>{fromNow}</div>
-                  <div style={{marginLeft:'10px'}}>{time}</div>
+                  <div style={{color:'#B1B1B1', whiteSpace:'nowrap'}}>{fromNow}</div>
+                  <div style={{marginLeft:'10px', whiteSpace:'nowrap'}}>{time}</div>
                 </div>
   }
 
@@ -170,6 +182,7 @@ let FlexLeft = styled.div`
   display: flex;
   align-items: center;
   justify-content: flex-start;
+  cursor: pointer;
 `
 
 let Header = styled(Flex)`
@@ -178,16 +191,16 @@ let Header = styled(Flex)`
 `
 
 let Name = styled.div`
-  max-width: ${isMobile()?'139':'161'}px;
+  max-width: ${isMobile()?137:148}px;
   white-space: nowrap;
   overflow: hidden;
-  text-overflow: ellipsis;
+  text-overflow: clip;
   font-weight: 600;
   font-size: 17px;
 `
 
 let TitleName = styled(Name)`
-  max-width: ${isMobile()?'209':'246'}px;
+  max-width: ${isMobile()?209:246}px;
 `
 
 let BackArrow = styled.div`

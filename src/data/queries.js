@@ -43,6 +43,8 @@ query ArrivalsForBus($id: Int!) {
       stop {
         id
         name
+        latitude
+        longitude
       }
     }
   }
@@ -56,6 +58,8 @@ query ArrivalsForStop($id: Int!) {
       time
       bus {
         id
+        latitude
+        longitude
         busLine {
           name
           color

@@ -14,15 +14,35 @@ class MapContainer extends React.Component {
   }
 
   render() {
-    let {children, thingSelected, thing} = this.props
+    let {children, thingSelected, thing, directions} = this.props
 
     if (this.map && thingSelected) {
+      this.lastSelected = true
       let {longitude, latitude} = thing
       this.map.easeTo({
         center: [longitude, latitude],
-        zoom: 16.5,
+        zoom: 15.5,
       })
     }
+
+    if (this.map && !thingSelected && this.lastSelected) {
+      this.lastSelected = false
+      this.map.easeTo({
+        zoom: 13,
+      })
+    }
+
+    // TODO: check if this works
+    if (this.map && directions && !this.oldDirections) {
+      let lon = directions.from[0]/2 + directions.to[0]/2
+      let lat = directions.from[1]/2 + directions.to[1]/2
+      this.map.easeTo({
+        center: [lon, lat],
+        zoom: 13,
+      })
+    }
+    if (!directions) this.oldDirections = false
+    else this.oldDirections = directions
 
     return (
       <Map
@@ -37,9 +57,9 @@ class MapContainer extends React.Component {
         sources={['buses', 'busStops', 'busLine', 'walk']}
         layers={[
           {id:'buses', type:'symbol', source:'buses'},
-          {id:'busStops', type:'circle', source:'busStops'},
-          {id:'busLine', type:'line', source:'busLine'},
-          {id:'walk', type:'line', source:'walk'},
+          {id:'busStops', type:'circle', source:'busStops', before:'buses'},
+          {id:'busLine', type:'line', source:'busLine', before:'busStops'},
+          {id:'walk', type:'line', source:'walk', before:'busStops'},
         ]}
       >{children}</Map>
     )
@@ -52,6 +72,7 @@ export default connect(
   state => ({
     thingSelected: state.selectedThingStack.length,
     thing: state.selectedThingStack[state.selectedThingStack.length-1],
+    directions: state.directions,
   }),
   dispatch => ({
     deselectAll: ()=>dispatch(deselectAll()),

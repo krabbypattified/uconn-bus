@@ -36,7 +36,8 @@ export default class Map extends React.Component {
         this.map.addSource(src, {type:'geojson', data: {type: 'FeatureCollection',features: []}})
       })
       layers.forEach(layer => {
-        this.map.addLayer(layer)
+        let {before, ...other} = layer
+        this.map.addLayer(other, before)
       })
 
       this.renderFunc = ReactDOM.createPortal.bind(

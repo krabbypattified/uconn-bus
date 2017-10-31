@@ -9,8 +9,11 @@ export default class BusStopManager extends React.Component {
     map: PropTypes.any
   }
 
+  // only runs on first mount
   componentWillMount() {
+
     let {map} = this.context
+    let {size=4} = this.props
 
     this.manager = new SourceManager({
       map,
@@ -21,9 +24,9 @@ export default class BusStopManager extends React.Component {
     })
 
     let paint = {
-      'circle-radius': 4,
+      'circle-radius': size,
       'circle-color': '#ff6f6f',
-      'circle-stroke-width': 2,
+      'circle-stroke-width': size/2,
       'circle-stroke-color': '#fff',
     }
     for (let prop in paint) map.setPaintProperty('busStops', prop, paint[prop])
