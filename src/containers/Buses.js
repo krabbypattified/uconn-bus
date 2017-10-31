@@ -9,11 +9,9 @@ import {buses, busLines} from 'data/queries'
 class Buses extends React.Component {
   render() {
     let {buses, busLines, directions} = this.props
-    if (buses.loading || busLines.loading || directions) return null
-    buses = buses.buses || []
-    busLines = busLines.busLines || []
+    if (busLines.loading || directions) return null
 
-    return <BusManager buses={buses} colors={busLines.map(i=>i.color)}/>
+    return <BusManager buses={buses.buses||[]} colors={busLines.busLines.map(i=>i.color)}/>
   }
 }
 

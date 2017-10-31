@@ -11,7 +11,6 @@ export default class BusManager extends React.Component {
     map: PropTypes.any
   }
 
-  // only runs on first mount
   componentWillMount() {
 
     let {map} = this.context
@@ -28,7 +27,7 @@ export default class BusManager extends React.Component {
 
     let layout = {
       'icon-image': ['get', 'color'],
-      'icon-size': this.props.size||.33,
+      'icon-size': this.props.size||.667,
       'icon-allow-overlap': true,
       'icon-rotation-alignment': 'map',
       'icon-rotate': {
@@ -48,7 +47,7 @@ export default class BusManager extends React.Component {
         let stops = Array.from(new Set(this.props.colors))
 
         stops.forEach(hex => {
-          let img = new Image(100, 100)
+          let img = new Image(50, 50)
           img.onload = () => map.addImage(hex, img)
           img.src = 'data:image/svg+xml;charset=UTF-8,'+svg.replace(/#F4D03F/, hex)
         })

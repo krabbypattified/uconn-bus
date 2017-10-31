@@ -2,6 +2,7 @@ import React from 'react'
 import {connect} from 'react-redux'
 import Map from 'components/Map'
 import {deselectAll} from 'data/actions'
+import {isMobile} from 'components/helpers'
 
 class MapContainer extends React.Component {
 
@@ -21,24 +22,23 @@ class MapContainer extends React.Component {
       let {longitude, latitude} = thing
       this.map.easeTo({
         center: [longitude, latitude],
-        zoom: 15.5,
+        zoom: isMobile()?15:16,
       })
     }
 
     if (this.map && !thingSelected && this.lastSelected) {
       this.lastSelected = false
       this.map.easeTo({
-        zoom: 13,
+        zoom: isMobile()?13:14,
       })
     }
 
-    // TODO: check if this works
     if (this.map && directions && !this.oldDirections) {
       let lon = directions.from[0]/2 + directions.to[0]/2
       let lat = directions.from[1]/2 + directions.to[1]/2
       this.map.easeTo({
         center: [lon, lat],
-        zoom: 13,
+        zoom: isMobile()?13:14,
       })
     }
     if (!directions) this.oldDirections = false

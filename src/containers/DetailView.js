@@ -35,6 +35,7 @@ class DetailViewContainer extends React.Component {
     let loading = isBus ? bus.loading : busStop.loading
     if (!loading) {
       arrivals = isBus ? bus.bus.arrivals : busStop.busStop.arrivals
+      // TODO: don't filter? paginate??
       arrivals = arrivals
         .filter(a => a.time < Date.now()+1000*60*100)
         .sort((a,b) => a.time - b.time)

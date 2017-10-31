@@ -10,7 +10,6 @@ export default class BusStopManager extends React.Component {
     map: PropTypes.any
   }
 
-  // only runs on first mount
   componentWillMount() {
 
     let {map} = this.context

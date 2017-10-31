@@ -9,8 +9,8 @@ import {busStops} from 'data/queries'
 class BusStops extends React.Component {
   render() {
     let {data, directions} = this.props
-    if (data.loading || directions) return null
-    return <BusStopManager busStops={data.busStops}/>
+    if (directions) return null
+    return <BusStopManager busStops={data.busStops||[]}/>
   }
 }
 
