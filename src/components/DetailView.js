@@ -126,6 +126,7 @@ let DetailView = styled.div`
   overflow-y: auto;
   position: absolute;
   width: ${isMobile()?'100%':'400px'};
+  height: ${isMobile()||'100%'};
   z-index: 21;
 `
 

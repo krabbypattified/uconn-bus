@@ -41,19 +41,24 @@ export default connect(
 class Directions extends React.Component {
   render() {
     let {onBack, directions:fromTo, data: {loading, directions}} = this.props
-    if (loading || !directions) return <DetailView type='DIRECTIONS' onBack={onBack} loading={loading}/>
+    let endMarker = <Marker lngLat={fromTo.to}><ReactSVG path={markerSVG} style={{transform:'translateY(calc(-50% + 3px))'}}/></Marker>
+
+    if (loading || !directions) return <div><DetailView type='DIRECTIONS' onBack={onBack} loading={loading}/>{endMarker}</div>
 
     let theDirections = [
       <Dir>Walk to <Text color='#ff6f6f'>{directions.hopOn.stop.name}</Text>.</Dir>,
       <Dir>
-        Hop on <Text color={directions.hopOn.bus.busLine.color}>{directions.hopOn.bus.busLine.name}</Text> Bus at {moment(directions.hopOn.time).format('h:mm A')}.
+        Hop on&nbsp;
+        <Text color={directions.hopOn.bus.busLine.color}>{directions.hopOn.bus.busLine.name}</Text>
+        &nbsp;Bus at {moment(directions.hopOn.time).format('h:mm A')}.
       </Dir>,
       <Dir>Arrive at <Text color='#ff6f6f'>{directions.hopOff.stop.name}</Text> at {moment(directions.hopOff.time).format('h:mm A')}.</Dir>,
     ]
 
     return (
       <div>
-        <BusManager buses={[directions.hopOn.bus]} size={1}/>
+        {endMarker}
+        <BusManager buses={[directions.hopOn.bus]} size={.8}/>
         <BusStopManager busStops={[directions.hopOn.stop, directions.hopOff.stop]} size={6}/>
         <DetailView type='DIRECTIONS' directions={theDirections} onBack={onBack}/>
         <Marker lngLat={fromTo.to}><ReactSVG path={markerSVG} style={{transform:'translateY(calc(-50% + 3px))'}}/></Marker>

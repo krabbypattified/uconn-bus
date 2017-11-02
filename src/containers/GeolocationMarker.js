@@ -28,9 +28,15 @@ class GeolocationMarkerContainer extends React.Component {
   }
 
   render() {
-    let {location, setLocation} = this.props
+    let {location, setLocation, directions} = this.props
     if (!location) return null
-    return <GeolocationMarker location={location} onPanEnd={that=>setLocation(that.marker.getLngLat())}/>
+    return (
+      <GeolocationMarker
+        location={location}
+        onPanEnd={that=>setLocation(that.marker.getLngLat().toArray())}
+        scale={directions?1.25:1}
+      />
+    )
   }
 }
 
@@ -38,7 +44,8 @@ class GeolocationMarkerContainer extends React.Component {
 // Connect & Export
 export default connect(
   state => ({
-    location: state.location
+    location: state.location,
+    directions: state.directions
   }),
   dispatch => ({
     setLocation: loc => dispatch(setLocation(loc))

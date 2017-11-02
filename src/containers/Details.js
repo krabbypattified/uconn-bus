@@ -3,7 +3,11 @@ import {connect} from 'react-redux'
 import {graphql, compose} from 'react-apollo'
 import {deselectThing, selectThing} from 'data/actions'
 import {arrivalsForBus, arrivalsForStop} from 'data/queries'
+import Buses from 'containers/Buses'
+import BusStops from 'containers/BusStops'
 import BusLineManager from 'components/BusLineManager'
+import BusManager from 'components/BusManager'
+import BusStopManager from 'components/BusStopManager'
 import DetailView from 'components/DetailView'
 
 
@@ -28,7 +32,7 @@ export default connect(
 
 
 // GraphQL business
-class DetailViewContainer extends React.Component {
+class DetailsContainer extends React.Component {
   render() {
     let {thing, isBus, onBack, bus, busStop, selectThing} = this.props
 
@@ -36,7 +40,7 @@ class DetailViewContainer extends React.Component {
     let loading = isBus ? bus.loading : busStop.loading
     if (!loading) {
       arrivals = isBus ? bus.bus.arrivals : busStop.busStop.arrivals
-      // TODO: don't filter? paginate??
+      // TODO: don't filter (once flex title fixed)!, use backend arrivals
       arrivals = arrivals
         .filter(a => a.time < Date.now()+1000*60*100)
         .sort((a,b) => a.time - b.time)
@@ -46,7 +50,12 @@ class DetailViewContainer extends React.Component {
     return (
       <div>
         <DetailView {...({thing,type,arrivals,onBack,loading,selectThing})}/>
-        {isBus && <BusLineManager lines={[{
+        {isBus
+        ? <BusManager buses={[thing]} size={1}/>
+        : <BusStopManager busStops={[thing]} size={6}/>
+        }
+        {isBus ? <BusStops/> : <Buses/>}
+        {isBus && <BusLineManager opacity={.67} lines={[{
           path: thing.busLine.path,
           color: thing.busLine.color,
         }]}/>}
@@ -69,4 +78,4 @@ let ConnectedContainer = compose(
     options: ({thing}) => ({ variables: { id: thing.id }, notifyOnNetworkStatusChange: true }),
   }),
 
-)(DetailViewContainer)
+)(DetailsContainer)

@@ -6,14 +6,13 @@ import {normalize} from 'polished'
 
 import reducers from 'data/reducers'
 import Map from 'containers/Map'
-import DetailView from 'containers/DetailView'
 import Previews from 'containers/Previews'
-import Pointer from 'containers/Pointer'
-import GeolocationMarker from 'containers/GeolocationMarker'
+import Default from 'containers/Default'
 import Directions from 'containers/Directions'
-import BusStops from 'containers/BusStops'
-import Buses from 'containers/Buses'
+import Details from 'containers/Details'
+import Pointer from 'containers/Pointer'
 import MainButton from 'containers/MainButton'
+import GeolocationMarker from 'containers/GeolocationMarker'
 import {buses,busStops,busLines} from 'data/queries'
 
 
@@ -40,6 +39,9 @@ client.query({query:busLines})
 
 // TODO make sure all queries get updated when user enters/exits app (AND update arrival times every 5 mins?)
 
+// Lock Orientation iOS/Android
+window.screen.lockOrientation && window.screen.lockOrientation('portrait')
+
 // Normalize CSS
 injectGlobal`${normalize()}`
 
@@ -50,13 +52,12 @@ export default class App extends React.Component {
     return (
       <ApolloProvider store={store} client={client}>
         <Map>
-          <DetailView/>
+          <Details/>
           <Previews/>
           <Pointer/>
           <GeolocationMarker/>
           <Directions/>
-          <BusStops/>
-          <Buses/>
+          <Default/>
           <MainButton/>
         </Map>
       </ApolloProvider>

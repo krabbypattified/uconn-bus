@@ -64,6 +64,7 @@ query ArrivalsForStop($id: Int!) {
         busLine {
           name
           color
+          path
         }
       }
     }

@@ -3,15 +3,15 @@ import styled, {keyframes} from 'styled-components'
 import FreeMarker from 'components/FreeMarker'
 
 
-export default ({location, onPanEnd}) => (
+export default ({location, onPanEnd, scale=1}) => (
   <FreeMarker projected
     style={{zIndex:1}}
     lngLat={location}
-    // TODO fork my version of MapBox to fix mobile onPanEnd
     onPanEnd={onPanEnd}
   >
     <Satellite color='#2196f3'/>
-    <Dot color='#2196f3'/>
+    <Dot color='#2196f3' scale={scale}/>
+    <HitBox/>
   </FreeMarker>
 )
 
@@ -48,12 +48,22 @@ let Satellite = styled.div`
 
 
 let Dot = styled.div`
-  pointer-events: auto;
   position: absolute;
   background-color: ${({color})=>color};
-  width: ${({radius=7})=>radius*2}px;
-  height: ${({radius=7})=>radius*2}px;
+  width: 14px;
+  height: 14px;
   border-radius: 100px;
-  border: ${({stroke=2})=>stroke}px solid white;
+  border: 2px solid white;
+  transform: translate(-50%, -50%) scale(${({scale=1})=>scale});
+  pointer-events: none;
+`
+
+
+let HitBox = styled.div`
+  position: absolute;
+  width: 28px;
+  height: 28px;
+  border-radius: 100px;
   transform: translate(-50%, -50%);
+  pointer-events: auto;
 `

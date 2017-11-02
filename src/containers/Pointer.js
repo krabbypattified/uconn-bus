@@ -15,7 +15,7 @@ class Pointer extends React.Component {
     map: PropTypes.any
   }
 
-  setHighlightedThings() {
+  setHighlightedThings = () => {
     let {buses, busStops} = this.props
     let {map} = this.context
 
@@ -34,7 +34,7 @@ class Pointer extends React.Component {
   }
 
   componentWillMount() {
-    this.debounceThings = debounce(this.setHighlightedThings.bind(this), 17)
+    this.debounceThings = debounce(this.setHighlightedThings, 17)
     this.context.map.on('drag', this.debounceThings)
     this.context.map.on('zoom', this.debounceThings)
   }
