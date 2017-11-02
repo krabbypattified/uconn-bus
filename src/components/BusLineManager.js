@@ -27,6 +27,7 @@ export default class BusStopManager extends React.Component {
     let paint = {
       'line-color': ['get', 'color'],
       'line-width': 4,
+      'line-opacity': this.props.opacity || 1
     }
     for (let prop in paint) map.setPaintProperty('busLine', prop, paint[prop])
   }
@@ -36,7 +37,7 @@ export default class BusStopManager extends React.Component {
   }
 
   render() {
-    this.manager.set([this.props.line])
+    this.manager.set(this.props.lines)
     return null
   }
 }

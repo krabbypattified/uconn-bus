@@ -11,6 +11,7 @@ query Buses {
     busLine {
       name
       color
+      path
     }
   }
 }`

@@ -20,6 +20,6 @@ export default compose(
   graphql(buses, {name: 'buses', options: { pollInterval: 2400 }}),
   graphql(busLines, {name: 'busLines'}),
   connect(state => ({
-      directions: state.directions
+      directions: state.directions,
     }))
 )(Buses)

@@ -57,10 +57,10 @@ class Directions extends React.Component {
         <BusStopManager busStops={[directions.hopOn.stop, directions.hopOff.stop]} size={6}/>
         <DetailView type='DIRECTIONS' directions={theDirections} onBack={onBack}/>
         <Marker lngLat={fromTo.to}><ReactSVG path={markerSVG} style={{transform:'translateY(calc(-50% + 3px))'}}/></Marker>
-        <BusLineManager line={{
+        <BusLineManager lines={[{
           path: directions.path,
           color: directions.hopOn.bus.busLine.color,
-        }}/>
+        }]}/>
         <WalkManager walk={[
           {
             from: fromTo.from,

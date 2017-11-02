@@ -7,11 +7,14 @@ import {isMobile} from 'components/helpers'
 class MapContainer extends React.Component {
 
   onLoad(map) {
-    let {deselectAll} = this.props
-
     this.map = map
-    map.on('drag', deselectAll)
-    map.on('click', deselectAll)
+    map.on('drag', ()=>this.deselectIfBusStop())
+    map.on('click', ()=>this.deselectIfBusStop())
+  }
+
+  deselectIfBusStop() {
+    let {deselectAll, thing} = this.props
+    if (thing&&thing.id>=60) deselectAll()
   }
 
   render() {

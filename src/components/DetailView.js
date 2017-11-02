@@ -17,9 +17,9 @@ export default ({type, arrivals=[], directions=[], thing, onBack, loading, selec
   })
 
   let noContent = switchy(type)({
-    BUS: arrivals.length ? null : <NoContent>This bus doesn't stop anywhere. Sucks for you.</NoContent>,
-    STOP: arrivals.length ? null : <NoContent>No arrivals. Sucks for you.</NoContent>,
-    DIRECTIONS: directions.length ? null : <NoContent>I got nothin.</NoContent>,
+    BUS: arrivals.length ? null : <NoContent>This bus doesn't stop anywhere.</NoContent>,
+    STOP: arrivals.length ? null : <NoContent>No arrivals at this bus stop.</NoContent>,
+    DIRECTIONS: directions.length ? null : <NoContent>Directions unavailable.</NoContent>,
   })
 
   return(
@@ -32,25 +32,6 @@ export default ({type, arrivals=[], directions=[], thing, onBack, loading, selec
     </DetailView>
   )
 }
-
-
-
-let DetailView = styled.div`
-  background-color: white;
-  box-shadow: 0 0 7px 0 rgba(0,0,0,.2);
-  max-width: 100%;
-  max-height: ${isMobile()?50:100}%;
-  overflow-y: auto;
-  position: absolute;
-  width: ${isMobile()?'100%':'400px'};
-  z-index: 21;
-`
-
-let ScrollView = styled.div`
-  display: flex;
-  flex-direction: column;
-  padding-bottom: 15px;
-`
 
 
 
@@ -125,13 +106,46 @@ let Placeholder = () => (
 
 
 
-let NoContent = styled.div`
+let NoContent = ({children}) => (
+  <NoContentDiv>
+    <div>{children}</div>
+    <div>
+      You may need to&nbsp;
+      <a onClick={()=>window.location.reload()} style={{cursor: 'pointer',color: '#2196F3'}}>refresh the app</a>.
+    </div>
+  </NoContentDiv>
+)
+
+
+
+let DetailView = styled.div`
+  background-color: white;
+  box-shadow: 0 0 7px 0 rgba(0,0,0,.2);
+  max-width: 100%;
+  max-height: ${isMobile()?50:100}%;
+  overflow-y: auto;
+  position: absolute;
+  width: ${isMobile()?'100%':'400px'};
+  z-index: 21;
+`
+
+
+let ScrollView = styled.div`
+  display: flex;
+  flex-direction: column;
+  padding-bottom: 15px;
+`
+
+
+let NoContentDiv = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
+  flex-direction: column;
   height: 60px;
   font-size: 14px;
 `
+
 
 let Row = styled.div`
   margin: 5px 30px;

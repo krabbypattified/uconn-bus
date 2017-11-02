@@ -3,6 +3,7 @@ import {connect} from 'react-redux'
 import {graphql, compose} from 'react-apollo'
 import {deselectThing, selectThing} from 'data/actions'
 import {arrivalsForBus, arrivalsForStop} from 'data/queries'
+import BusLineManager from 'components/BusLineManager'
 import DetailView from 'components/DetailView'
 
 
@@ -42,7 +43,15 @@ class DetailViewContainer extends React.Component {
     }
     let type = isBus ? 'BUS' : 'STOP'
 
-    return <DetailView {...({thing,type,arrivals,onBack,loading,selectThing})}/>
+    return (
+      <div>
+        <DetailView {...({thing,type,arrivals,onBack,loading,selectThing})}/>
+        {isBus && <BusLineManager lines={[{
+          path: thing.busLine.path,
+          color: thing.busLine.color,
+        }]}/>}
+      </div>
+    )
   }
 }
 

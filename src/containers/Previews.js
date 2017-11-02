@@ -3,6 +3,7 @@ import {connect} from 'react-redux'
 import styled from 'styled-components'
 import CSSTransitionGroup from 'react-addons-css-transition-group'
 import Preview from 'components/Preview'
+import BusLineManager from 'components/BusLineManager'
 import {selectThing} from 'data/actions'
 import {isMobile} from 'components/helpers'
 import 'assets/PreviewAnimation.css'
@@ -10,8 +11,16 @@ import 'assets/PreviewAnimation.css'
 
 class Previews extends React.Component {
   render() {
-    let {directions, thingSelected, highlightedThings, selectThing} = this.props
+    let {directions, thingSelected, highlightedThings, selectThing, firstBus} = this.props
     if (thingSelected || directions) return null
+
+    let busLineIfAny = firstBus && (
+      <BusLineManager opacity={.42} lines={[{
+        path: firstBus.busLine.path,
+        color: firstBus.busLine.color,
+      }]}/>
+    )
+
     return (
       <List>
         <CSSTransitionGroup
@@ -21,6 +30,7 @@ class Previews extends React.Component {
                 <Preview onDetailsClick={()=>selectThing(thing)} key={idx} data={{...thing,idx}}/>
               ))}
         </CSSTransitionGroup>
+        {busLineIfAny}
       </List>
     )
   }
@@ -33,6 +43,7 @@ export default connect(
     highlightedThings: state.highlightedThings,
     thingSelected: state.selectedThingStack.length,
     directions: state.directions,
+    firstBus: state.highlightedThings.filter(t=>t.id<60)[0],
   }),
   dispatch => ({
     selectThing: thing => dispatch(selectThing(thing))
