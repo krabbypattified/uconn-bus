@@ -23,9 +23,9 @@
   "scripts": {
     "start": "NODE_PATH=src react-scripts start",
     "build": "NODE_PATH=src react-scripts build",
+    "deploy": "NODE_PATH=src react-scripts build && aws s3 sync build s3://www.uconnbus.com/",
     "test": "react-scripts test --env=jsdom",
-    "eject": "react-scripts eject",
-    "deploy": "aws s3 sync build s3://www.uconnbus.com/"
+    "eject": "react-scripts eject"
   },
   "devDependencies": {
     "rimraf": "^2.6.2"
