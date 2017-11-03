@@ -1,9 +1,9 @@
 {
   "short_name": "UConn Bus",
-  "name": "UConn Bus App",
+  "name": "UConn Bus",
   "icons": [
     {
-      "src": "favicon.ico",
+      "src": "favicon-192.png",
       "sizes": "192x192",
       "type": "image/png"
     }
