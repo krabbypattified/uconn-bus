@@ -10,11 +10,18 @@
     <link rel=stylesheet href=https://api.tiles.mapbox.com/mapbox-gl-js/v0.41.0/mapbox-gl.css></link>
     <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,600,700" rel="stylesheet">
     <title>UConn Bus</title>
+
+    <!-- Sentry -->
+    <script src="https://cdn.ravenjs.com/3.19.1/raven.min.js" crossorigin="anonymous"></script>
+    <script>Raven.config('https://e837f91551254b27a0e5c07df8238830@sentry.io/239406').install()</script>
+
+    <!-- Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-96186851-2"></script>
+    <script>window.dataLayer = window.dataLayer || [];function gtag(){dataLayer.push(arguments);}gtag('js', new Date());gtag('config', 'UA-96186851-2');</script>
+
   </head>
   <body>
-    <noscript>
-      You need to enable JavaScript to run this app.
-    </noscript>
+    <noscript>You need to enable JavaScript to run this app.</noscript>
     <div id="root"></div>
   </body>
 </html>

@@ -8,4 +8,4 @@ import {busStops} from 'data/queries'
 let BusStops = ({data}) => <BusStopManager busStops={data.busStops||[]}/>
 
 
-export default graphql(busStops)(BusStops)
+export default graphql(busStops, {options: { pollInterval: 1000*90 }})(BusStops)

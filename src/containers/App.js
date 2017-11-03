@@ -1,6 +1,6 @@
 import React from 'react'
 import { createStore, combineReducers, applyMiddleware, compose } from 'redux'
-import { ApolloClient, ApolloProvider, createBatchingNetworkInterface } from 'react-apollo'
+import { ApolloClient, ApolloProvider, createNetworkInterface } from 'react-apollo'
 import {injectGlobal} from 'styled-components'
 import {normalize} from 'polished'
 
@@ -13,16 +13,11 @@ import Details from 'containers/Details'
 import Pointer from 'containers/Pointer'
 import MainButton from 'containers/MainButton'
 import GeolocationMarker from 'containers/GeolocationMarker'
-import {buses,busStops,busLines} from 'data/queries'
 import {isMobile} from 'components/helpers'
 
 
 // Apollo Setup
-const networkInterface = createBatchingNetworkInterface({
-	uri: 'https://uconn-bus-api.herokuapp.com/graphql',
-	batchInterval: 200,
-})
-
+const networkInterface = createNetworkInterface({uri: 'https://uconn-bus-api.herokuapp.com/graphql'})
 const client = new ApolloClient({networkInterface})
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose
 const store = createStore(
@@ -33,12 +28,8 @@ const store = createStore(
 	{/* preloadedState, */},
 	composeEnhancers(applyMiddleware(client.middleware()))
 )
-// Prefetch
-client.query({query:buses})
-client.query({query:busStops})
-client.query({query:busLines})
 
-// TODO make sure all queries get updated when user enters/exits app (AND update arrival times every 5 mins?)
+// TODO Do queries get updates when exiting iOS app overnight??
 
 // Add mobile class to body
 isMobile() && document.body.classList.add('mobile')

@@ -97,9 +97,7 @@ let ConnectedDirections = graphql(directions, {
 
 
 
-let Dir = styled.div`
-  font-weight: 400;
-`
+let Dir = styled.div``
 
 let Text = styled.span`
   font-weight: 600;
