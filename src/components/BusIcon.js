@@ -8,10 +8,9 @@ export default ({color}) => <div style={{width:'30px'}}><SVG path={busSVG} color
 
 
 let SVG = styled(ReactSVG)`
+  margin-left: 5px;
   position: absolute;
-  transform: translate(4px,1px) rotate(60deg) scale(.85);
-  transform: translateY(-50%) translate(5px,0px) rotate(73deg) scale(.85);
-  margin-right: 10px;
+  transform: translateY(-50%) rotate(73deg) scale(.85);
 	.st0 {
 		fill: ${({color}) => color};
 	}

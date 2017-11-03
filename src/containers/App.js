@@ -14,6 +14,7 @@ import Pointer from 'containers/Pointer'
 import MainButton from 'containers/MainButton'
 import GeolocationMarker from 'containers/GeolocationMarker'
 import {buses,busStops,busLines} from 'data/queries'
+import {isMobile} from 'components/helpers'
 
 
 // Apollo Setup
@@ -38,6 +39,9 @@ client.query({query:busStops})
 client.query({query:busLines})
 
 // TODO make sure all queries get updated when user enters/exits app (AND update arrival times every 5 mins?)
+
+// Add mobile class to body
+isMobile() && document.body.classList.add('mobile')
 
 // Lock Orientation iOS/Android
 window.screen.lockOrientation && window.screen.lockOrientation('portrait')

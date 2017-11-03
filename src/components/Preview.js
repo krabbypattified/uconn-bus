@@ -2,37 +2,27 @@ import React from 'react'
 import styled from 'styled-components'
 import {darken, desaturate} from 'polished'
 import BusIcon from 'components/BusIcon'
+import ScrollingName from 'components/ScrollingName'
 import BusStopDot from 'components/BusStopDot'
-import {isMobile} from './helpers'
+import 'assets/Preview.css'
 
 
 export default ({data, onDetailsClick}) => {
   let isBus = data.id < 60
   return (
-    <Box style={{zIndex:20-data.idx}}>
-      <Flex>
-        <Title>{data.name||`${data.busLine.name} Bus`}</Title>
-        {isBus ? <BusIcon color={data.busLine.color}/> : <BusStopDot/>}
-      </Flex>
-      <Details onClick={onDetailsClick} color={isBus?data.busLine.color:'#383838'}>Details</Details>
-    </Box>
+    <Preview className='Preview' style={{zIndex:20-data.idx}}>
+      <ScrollingName>{data.name||`${data.busLine.name} Bus`}</ScrollingName>
+      {isBus ? <BusIcon color={data.busLine.color}/> : <BusStopDot/>}
+      <div className='Padder'/>
+      <DetailButton onClick={onDetailsClick} color={isBus?data.busLine.color:'#383838'}/>
+    </Preview>
   )
 }
 
 
 
-
-let Box = styled.div`
-  position: relative;
-  background: white;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 13px 20px 13px 20px;
-  font-size: 17px;
-  font-weight: 600;
-  width: 100%;
-  border-bottom: .5px solid #e8e8e8;
+// Autoprefixer fix
+let Preview = styled.div`
   &:last-child {
     /*see PreviewAnimation.css*/
     transition-property: transform, opacity, box-shadow, border-radius;
@@ -42,32 +32,14 @@ let Box = styled.div`
   }
 `
 
-let Flex = styled.div`
-  display: flex;
-  align-items: center;
-`
 
-let Title = styled.div`
-  max-width: ${isMobile()?'209px':'246px'};
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: fade;
-  line-height: normal;
-`
+let DetailButton = props => <Button className='DetailButton' {...props}>Details</Button>
 
-let Details = styled.div`
-  user-select: none;
-  cursor: pointer;
-  font-size: 14px;
-  font-weight: 600;
-  color: white;
-  padding: 3px 17px ;
-  background-color: ${({color})=>color};
-  border-radius: 30px;
-  box-shadow: 0 1px 2px 0 rgba(0,0,0,.36);
+let Button = styled.div`
+  background-color: ${p=>p.color};
   transition: all .1s;
   &:hover {
-    background-color: ${({color})=>desaturate(.1,darken(.03,color))};
+    background-color: ${p=>desaturate(.1,darken(.03,p.color))};
     transform: translateY(1px);
   }
 `

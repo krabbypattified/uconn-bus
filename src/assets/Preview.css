@@ -1,0 +1,37 @@
+.Preview {
+  position: relative;
+  background: white;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 13px 20px 13px 20px;
+  font-size: 17px;
+  font-weight: 600;
+  width: 100%;
+  border-bottom: .5px solid #e8e8e8;
+}
+
+
+
+.Preview .Name {
+  max-width: 246px;
+  white-space: nowrap;
+  overflow: hidden;
+  line-height: normal;
+}
+.mobile .Preview .Name {
+  max-width: 209px;
+}
+
+
+
+.DetailButton {
+  user-select: none;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+  color: white;
+  padding: 3px 17px;
+  border-radius: 30px;
+  box-shadow: 0 1px 2px 0 rgba(0,0,0,.36);
+}

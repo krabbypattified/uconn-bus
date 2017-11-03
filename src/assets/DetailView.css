@@ -1,0 +1,142 @@
+.DetailView {
+  background-color: white;
+  box-shadow: 0 0 7px 0 rgba(0,0,0,.2);
+  max-width: 100%;
+  max-height: 100%;
+  overflow-y: auto;
+  position: absolute;
+  width: 400px;
+  height: 100%;
+  z-index: 21;
+  font-size: 17px;
+  font-weight: 600;
+}
+.mobile .DetailView {
+  max-height: 50%;
+  width: 100%;
+  height: auto;
+}
+
+/* ScrollView */
+.DetailView > div {
+  display: flex;
+  flex-direction: column;
+  padding-bottom: 15px;
+}
+
+
+
+.NoContent {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  height: 60px;
+  font-size: 14px;
+}
+
+.NoContent a {
+  cursor: pointer;
+  color: #2196F3;
+}
+
+
+
+.Header {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  margin: 20px;
+}
+
+.Header .Name {
+  max-width: 246px;
+  white-space: nowrap;
+  overflow: hidden;
+  line-height: normal;
+}
+.mobile .Header .Name {
+  max-width: 209px;
+}
+
+.Header .BackArrow {
+  cursor: pointer;
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  svg { transition: transform .3s; }
+  &:hover svg { transform: translateX(-5px) }
+}
+
+
+
+.Row, .ShinyRow {
+  margin: 5px 30px;
+  display: flex;
+  align-items: center;
+}
+
+.Row .Name {
+  cursor: pointer;
+  white-space: nowrap;
+  overflow: hidden;
+  line-height: normal;
+}
+
+.Row .Time {
+  margin-left: auto;
+}
+
+.Row .Time span:first-child {
+  color: #B1B1B1;
+  white-space: nowrap;
+}
+
+.Row .Time span:last-child {
+  margin-left: 10px;
+  white-space: nowrap;
+}
+
+.ShinyRow {
+  position: relative;
+}
+.ShinyRow:after {
+  content: " ";
+  z-index: 10;
+  display: block;
+  position: absolute;
+  height: 100%;
+  top: 0;
+  left: 0;
+  right: 0;
+  color: rgba(255,255,255,0.1);
+  background: linear-gradient(to right, rgba(255,255,255,1) 0%, rgba(255,255,255,0) 50%, rgba(255,255,255,1) 100%);
+  background-size: 300px 100%;
+  background-repeat: repeat-x;
+  pointer-events: none;
+  animation: .8s linear infinite shine;
+}
+@keyframes shine {
+  from { background-position: 0 0; }
+  to { background-position: 300px 0; }
+}
+
+.ShinyRow div {
+  background-color: #e8e8e8;
+  height: 20px;
+  flex-basis: 18%;
+}
+
+.ShinyRow .Padder {
+  background: none;
+}
+
+.ShinyRow div:first-child {
+  flex-basis: 48%;
+}
+
+.ShinyRow div:last-child {
+  margin-left: 10px;
+}
