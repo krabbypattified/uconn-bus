@@ -1,5 +1,6 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
+import 'web-animations-js'
 
 
 export default class ScrollingName extends React.Component {

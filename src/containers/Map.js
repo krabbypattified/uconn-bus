@@ -56,7 +56,7 @@ class MapContainer extends React.Component {
         container='root'
         mapStyle='mapbox://styles/chefgabe/cj9d0hyrr5qu42smoce9sjx8o'
         attributionControl={false}
-        logoPosition='top-left'
+        logoPosition='bottom-left'
         center={[-72.253502, 41.8051962]}
         onLoad={map=>this.onLoad(map)}
         zoom={13}

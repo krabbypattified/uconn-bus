@@ -78,7 +78,7 @@ let Detail = ({type, arrival, content, selectThing}) => {
 
   let right = null
   if (['BUS', 'STOP'].includes(type)) {
-    // TODO bind this to time, or update the props??
+    // TODO bind this to time?
     let fromNow = moment(arrival.time).diff(moment(), 'minutes')
     fromNow += [-1,1].includes(fromNow) ? ' min' : ' mins'
 

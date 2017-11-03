@@ -29,11 +29,6 @@ const store = createStore(
 	composeEnhancers(applyMiddleware(client.middleware()))
 )
 
-// TODO Do queries get updates when exiting iOS app overnight??
-
-// iOS Refresh WebView scroll
-isMobile() && window.scrollTo(0,0)
-
 // Add mobile class to body
 isMobile() && document.body.classList.add('mobile')
 
