@@ -40,13 +40,13 @@ export default class BusManager extends React.Component {
 
     // Only load images once
     if (!first) return
-    first = false
 
     fetch(busSVG).then(x=>x.text()).then(svg => {
 
         let stops = Array.from(new Set(this.props.colors))
 
         stops.forEach(hex => {
+          first = false
           let img = new Image(50, 50)
           img.onload = () => map.addImage(hex, img)
           img.src = 'data:image/svg+xml;charset=UTF-8,'+svg.replace(/#F4D03F/, hex)

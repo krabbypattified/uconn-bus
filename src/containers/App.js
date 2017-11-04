@@ -1,6 +1,10 @@
 import React from 'react'
-import { createStore, combineReducers, applyMiddleware, compose } from 'redux'
-import { ApolloClient, ApolloProvider, createNetworkInterface } from 'react-apollo'
+import {createStore, combineReducers} from 'redux'
+import {Provider} from 'react-redux'
+import {ApolloProvider} from 'react-apollo'
+import {ApolloClient} from 'apollo-client'
+import {HttpLink} from 'apollo-link-http'
+import {InMemoryCache} from 'apollo-cache-inmemory'
 import {injectGlobal} from 'styled-components'
 import {normalize} from 'polished'
 
@@ -16,44 +20,35 @@ import GeolocationMarker from 'containers/GeolocationMarker'
 import {isMobile} from 'components/helpers'
 
 
-// Apollo Setup
-const networkInterface = createNetworkInterface({uri: 'https://uconn-bus-api.herokuapp.com/graphql'})
-const client = new ApolloClient({networkInterface})
-const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose
-const store = createStore(
-	combineReducers({
-		...reducers,
-		apollo: client.reducer(),
-	}),
-	{/* preloadedState, */},
-	composeEnhancers(applyMiddleware(client.middleware()))
-)
+// Apollo setup
+const client = new ApolloClient({
+  link: new HttpLink({uri: 'https://uconn-bus-api.herokuapp.com/graphql'}),
+  cache: new InMemoryCache()
+})
+
+// Redux setup
+const store = createStore( combineReducers({...reducers}) )
 
 // Add mobile class to body
 isMobile() && document.body.classList.add('mobile')
-
-// Lock Orientation iOS/Android
-window.screen.lockOrientation && window.screen.lockOrientation('portrait')
 
 // Normalize CSS
 injectGlobal`${normalize()}`
 
 
 // Base App
-export default class App extends React.Component {
-  render() {
-    return (
-      <ApolloProvider store={store} client={client}>
-        <Map>
-          <Details/>
-          <Previews/>
-          <Pointer/>
-          <GeolocationMarker/>
-          <Directions/>
-          <Default/>
-          <MainButton/>
-        </Map>
-      </ApolloProvider>
-    )
-  }
-}
+export default () => (
+  <ApolloProvider client={client}>
+    <Provider store={store}>
+      <Map>
+        <Details/>
+        <Previews/>
+        <Pointer/>
+        <GeolocationMarker/>
+        <Directions/>
+        <Default/>
+        <MainButton/>
+      </Map>
+    </Provider>
+  </ApolloProvider>
+)

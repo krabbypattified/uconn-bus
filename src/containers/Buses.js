@@ -7,11 +7,13 @@ import {buses, busLines} from 'data/queries'
 
 let Buses = ({buses, busLines}) => {
   if (busLines.loading) return null
-  return <BusManager buses={buses.buses||[]} colors={busLines.busLines.map(i=>i.color)}/>
+  buses = buses.buses || []
+  busLines = busLines.busLines || []
+  return <BusManager buses={buses} colors={busLines.map(i=>i.color)}/>
 }
 
 
 export default compose(
-  graphql(buses, {name: 'buses', options: { pollInterval: 2400 }}),
-  graphql(busLines, {name: 'busLines'}),
+  graphql(buses, {name:'buses', options: {pollInterval: 2400}}),
+  graphql(busLines, {name:'busLines'}),
 )(Buses)

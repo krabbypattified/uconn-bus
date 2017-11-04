@@ -14,13 +14,9 @@
 
 
 .Preview .Name {
-  max-width: 246px;
   white-space: nowrap;
   overflow: hidden;
   line-height: normal;
-}
-.mobile .Preview .Name {
-  max-width: 209px;
 }
 
 
