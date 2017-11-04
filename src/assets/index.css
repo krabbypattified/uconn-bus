@@ -7,17 +7,20 @@
   box-sizing: border-box;
 }
 
-html, body {
+html {
   height: 100vh;
+}
+
+body {
+  height: 100%;
   margin: 0;
+  padding-top: constant(safe-area-inset-top);
 }
 
 #root {
+  height: 100%;
   font-family: "Open Sans", sans-serif;
   color: #3a3a3a;
-  height: 100%;
-  padding-top: constant(safe-area-inset-top);
-  overflow: auto;
 }
 
 
