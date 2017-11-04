@@ -60,7 +60,6 @@ class MapContainer extends React.Component {
         center={[-72.253502, 41.8051962]}
         onLoad={map=>this.onLoad(map)}
         zoom={13}
-        minZoom={12}
         maxZoom={18}
         sources={['buses', 'busStops', 'busLine', 'walk']}
         layers={[
