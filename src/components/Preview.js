@@ -2,7 +2,6 @@ import React from 'react'
 import styled from 'styled-components'
 import {darken, desaturate} from 'polished'
 import BusIcon from 'components/BusIcon'
-import ScrollingName from 'components/ScrollingName'
 import BusStopDot from 'components/BusStopDot'
 import 'assets/Preview.css'
 
@@ -11,7 +10,7 @@ export default ({data, onDetailsClick}) => {
   let isBus = data.id < 60
   return (
     <Preview className='Preview' style={{zIndex:20-data.idx}}>
-      <ScrollingName>{data.name||`${data.busLine.name} Bus`}</ScrollingName>
+      <div className='Name'>{data.name||`${data.busLine.name} Bus`}</div>
       {isBus ? <BusIcon color={data.busLine.color}/> : <BusStopDot/>}
       <div className='Padder'/>
       <DetailButton onClick={onDetailsClick} color={isBus?data.busLine.color:'#383838'}/>
