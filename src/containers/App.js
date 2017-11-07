@@ -24,8 +24,7 @@ import {isMobile} from 'components/helpers'
 // Apollo setup
 const httpLink = new HttpLink({uri: 'https://uconn-bus-api.herokuapp.com/graphql'})
 const logoutLink = onError(({ networkError }) => {
-  console.log(networkError) // TypeError Failed to Fetch
-  debugger
+  if (networkError.message === 'Failed to fetch') return
 })
 const client = new ApolloClient({
   link: logoutLink.concat(httpLink),
