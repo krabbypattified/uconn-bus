@@ -7,6 +7,15 @@ class MapContainer extends React.Component {
 
   onLoad(map) {
     this.map = map
+    // Click-pan
+    this.map.on('click', e => {
+      this.map.easeTo({
+        center: e.lngLat.toArray(),
+        offset: this.offset,
+        duration: 300,
+      })
+      setTimeout(_=>this.map.fire('click-panned'), 300)
+    })
   }
 
   render() {
@@ -16,8 +25,9 @@ class MapContainer extends React.Component {
     if (thingSelected || directions) {
       let width = window.innerWidth
       let height = window.innerHeight
-      var offset = [isMobile() ? 0 : (width-400)/2 - (width/2-400), isMobile() ? height/4 : 0]
+      this.offset = [isMobile() ? 0 : (width-400)/2 - (width/2-400), isMobile() ? height/4 : 0]
     }
+    else this.offset = [0,0]
 
     // Zoom into thing
     if (this.map && thingSelected) {
@@ -25,8 +35,8 @@ class MapContainer extends React.Component {
       let {longitude, latitude} = thing
       this.map.easeTo({
         center: [longitude, latitude],
-        zoom: isMobile()?15:16,
-        offset,
+        offset: this.offset,
+        zoom: isMobile()?14:15,
       })
     }
 
@@ -36,8 +46,8 @@ class MapContainer extends React.Component {
       let lat = directions.from[1]/2 + directions.to[1]/2
       this.map.easeTo({
         center: [lon, lat],
+        offset: this.offset,
         zoom: isMobile()?13:14,
-        offset,
       })
     }
     if (!directions) this.oldDirections = false
