@@ -4,6 +4,7 @@ import {Provider} from 'react-redux'
 import {ApolloProvider} from 'react-apollo'
 import {ApolloClient} from 'apollo-client'
 import {HttpLink} from 'apollo-link-http'
+import {onError} from 'apollo-link-error'
 import {InMemoryCache} from 'apollo-cache-inmemory'
 import {injectGlobal} from 'styled-components'
 import {normalize} from 'polished'
@@ -21,8 +22,13 @@ import {isMobile} from 'components/helpers'
 
 
 // Apollo setup
+const httpLink = new HttpLink({uri: 'https://uconn-bus-api.herokuapp.com/graphql'})
+const logoutLink = onError(({ networkError }) => {
+  console.log(networkError) // TypeError Failed to Fetch
+  debugger
+})
 const client = new ApolloClient({
-  link: new HttpLink({uri: 'https://uconn-bus-api.herokuapp.com/graphql'}),
+  link: logoutLink.concat(httpLink),
   cache: new InMemoryCache()
 })
 
