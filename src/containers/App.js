@@ -4,7 +4,7 @@ import {Provider} from 'react-redux'
 import {ApolloProvider} from 'react-apollo'
 import {ApolloClient} from 'apollo-client'
 import {HttpLink} from 'apollo-link-http'
-import {onError} from 'apollo-link-error'
+import {RetryLink} from 'apollo-link-retry'
 import {InMemoryCache} from 'apollo-cache-inmemory'
 import {injectGlobal} from 'styled-components'
 import {normalize} from 'polished'
@@ -23,11 +23,12 @@ import {isMobile} from 'components/helpers'
 
 // Apollo setup
 const httpLink = new HttpLink({uri: 'https://uconn-bus-api.herokuapp.com/graphql'})
-const logoutLink = onError(({ networkError }) => {
-  if (networkError.message === 'Failed to fetch') return
+const retry = new RetryLink({
+  max: Infinity,
+  delay: 5000
 })
 const client = new ApolloClient({
-  link: logoutLink.concat(httpLink),
+  link: retry.concat(httpLink),
   cache: new InMemoryCache()
 })
 
