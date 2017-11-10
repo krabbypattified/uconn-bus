@@ -4,7 +4,7 @@ import {Provider} from 'react-redux'
 import {ApolloProvider} from 'react-apollo'
 import {ApolloClient} from 'apollo-client'
 import {HttpLink} from 'apollo-link-http'
-import {RetryLink} from 'apollo-link-retry'
+// import {RetryLink} from 'apollo-link-retry'
 import {InMemoryCache} from 'apollo-cache-inmemory'
 import {injectGlobal} from 'styled-components'
 import {normalize} from 'polished'
@@ -21,14 +21,21 @@ import GeolocationMarker from 'containers/GeolocationMarker'
 import {isMobile} from 'components/helpers'
 
 
+// Handle loader
+// let loader = document.querySelector('.Loader')
+// let statusBar = document.querySelector('.Loader status')
+// window.addEventListener('BUSES_LOADED', ()=>loader.remove())
+// window.addEventListener('NEW_LOAD_STATUS', e=>statusBar.style.width = `${e*100}%`)
+
 // Apollo setup
 const httpLink = new HttpLink({uri: 'https://uconn-bus-api.herokuapp.com/graphql'})
-const retry = new RetryLink({
-  max: Infinity,
-  delay: 5000
-})
+// TODO
+// const retry = new RetryLink({
+//   max: Infinity,
+//   delay: 5000
+// })
 const client = new ApolloClient({
-  link: retry.concat(httpLink),
+  link: httpLink,
   cache: new InMemoryCache()
 })
 

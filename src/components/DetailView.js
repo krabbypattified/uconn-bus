@@ -79,9 +79,7 @@ let Detail = ({type, arrival, content, selectThing}) => {
   let right = null
   if (['BUS', 'STOP'].includes(type)) {
     // TODO bind this to time?
-    let fromNow = moment(arrival.time).diff(moment(), 'minutes')
-    fromNow += [-1,1].includes(fromNow) ? ' min' : ' mins'
-
+    let fromNow = moment(arrival.time).diff(moment(), 'minutes') + 'm'
     let time = moment(arrival.time).format('h:mm A')
 
     right = <div className='Time'>

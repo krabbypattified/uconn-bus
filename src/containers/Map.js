@@ -69,6 +69,7 @@ class MapContainer extends React.Component {
         logoPosition='bottom-left'
         center={[-72.253502, 41.8051962]}
         onLoad={map=>this.onLoad(map)}
+        doubleClickZoom={false}
         zoom={13}
         maxZoom={18}
         sources={['buses', 'busStops', 'busLine', 'walk']}
