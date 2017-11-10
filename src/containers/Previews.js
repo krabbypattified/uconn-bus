@@ -42,7 +42,7 @@ export default connect(
   state => ({
     highlightedThings: state.highlightedThings,
     thingSelected: state.selectedThingStack.length,
-    directions: state.directions,
+    directions: state.directions.state,
     firstBus: state.highlightedThings.filter(t=>t.id<60)[0],
   }),
   dispatch => ({

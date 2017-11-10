@@ -5,21 +5,23 @@ import ReactSVG from 'react-svg'
 import moment from 'moment'
 import styled from 'styled-components'
 
+import Pointer from 'containers/Pointer'
 import Marker from 'components/Marker'
 import BusLineManager from 'components/BusLineManager'
 import BusManager from 'components/BusManager'
 import BusStopManager from 'components/BusStopManager'
 import WalkManager from 'components/WalkManager'
 import DetailView from 'components/DetailView'
-import {clearDirections} from 'data/actions'
+import {directionsBack, directionsNext} from 'data/actions'
 import {directions} from 'data/queries'
 import markerSVG from 'assets/marker.svg'
+import {switchy} from 'components/helpers'
 
 
 // Redux business
-let DirectionsManager = ({directions, clearDirections}) => {
-  if (!directions) return null
-  return <ConnectedDirections directions={directions} onBack={clearDirections}/>
+let DirectionsManager = ({directions, directionsBack}) => {
+  if (!directions.state) return null
+  return <ConnectedDirections directions={directions} onBack={directionsBack} onNext={directionsNext}/>
 }
 
 export default connect(
@@ -27,19 +29,31 @@ export default connect(
     directions: state.directions,
   }),
   dispatch => ({
-    clearDirections: ()=>dispatch(clearDirections()),
+    directionsBack: ()=>dispatch(directionsBack()),
+    directionsNext: ()=>dispatch(directionsNext()),
   })
 )(DirectionsManager)
 
 
 
 
-
+// TODO manage new directions state
 
 
 
 class Directions extends React.Component {
+
   render() {
+    let {directions, onBack, onNext} = this.props
+
+    return switchy(directions.state)({
+      1:_=> <div><DetailView type='DIRECTIONS' onBack={onBack} onNext={onNext}/><Pointer labelled/></div>/*header,coolPointer*/,
+      2:0/*header,coolPointer,startMarker*/,
+      3:0/*header, theActualDirections, start/endMarkers, bus, stops, line*/,
+    })
+  }
+
+  /*render() {
     let {onBack, directions:fromTo, data: {loading, directions}} = this.props
     let endMarker = <Marker lngLat={fromTo.to}><ReactSVG path={markerSVG} style={{transform:'translateY(calc(-50% + 3px))'}}/></Marker>
 
@@ -78,10 +92,12 @@ class Directions extends React.Component {
         ]}/>
       </div>
     )
-  }
+  }*/
+
 }
 
 let ConnectedDirections = graphql(directions, {
+  skip: ({directions}) => directions.state !== 3,
   options: ({directions: {from, to}}) => ({notifyOnNetworkStatusChange: true, variables: {
     from: {
       longitude: from[0],

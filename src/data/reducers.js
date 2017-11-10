@@ -15,12 +15,21 @@ export default {
     return state
   },
 
-  directions(state = null, action) {
-    if (action.type === 'CLEAR_DIRECTIONS') return null
-    if (action.type === 'GET_DIRECTIONS') {
-      let {from, to} = action
-      return {from, to}
+  directions(state = {state:0}, action) {
+    if (action.type === 'DIRECTIONS_BACK') return {
+      ...state,
+      state: state.state ? state.state-1 : 0
     }
+
+    if (action.type === 'DIRECTIONS_NEXT') {
+      let {type, ...other} = action
+      return {
+        ...state,
+        ...other,
+        state: state.state>=3 ? 3 : state.state+1
+      }
+    }
+
     return state
   },
 

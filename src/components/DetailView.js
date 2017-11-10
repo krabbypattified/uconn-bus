@@ -4,7 +4,7 @@ import moment from 'moment'
 import ScrollingName from 'components/ScrollingName'
 import BusIcon from 'components/BusIcon'
 import BusStopDot from 'components/BusStopDot'
-import {switchy, times} from './helpers'
+import {switchy} from './helpers'
 import arrowSVG from 'assets/arrow.svg'
 import 'assets/DetailView.css'
 
@@ -23,20 +23,26 @@ export default ({type, arrivals=[], directions=[], thing, onBack, loading, selec
     DIRECTIONS: directions.length ? null : <NoContent>Directions unavailable.</NoContent>,
   })
 
+  let DetailMain = (type === 'DIRECTIONS' && !directions.length)
+  ? <div/>
+  : <div className='DetailMain'> {/*TODO Hammer drag*/}
+      <div>
+      {loading ? <Placeholder/> : details} {/*TODO is only 1 good?*/}
+      {loading || noContent}
+      </div>
+    </div>
+
   return(
     <div className='DetailView'>
-      <div>
-        <Header onBack={onBack} type={type} thing={thing}/>
-        {loading ? times(2)(i=><Placeholder key={i}/>) : details}
-        {loading || noContent}
-      </div>
+      <DetailHeader onBack={onBack} type={type} thing={thing}/>
+      {DetailMain}
     </div>
   )
 }
 
 
 
-let Header = ({onBack, thing, type}) => {
+let DetailHeader = ({onBack, thing, type}) => {
   type = switchy(type)
 
   let name = type({
@@ -52,7 +58,7 @@ let Header = ({onBack, thing, type}) => {
   })
 
   return (
-    <div className='Header'>
+    <div className='DetailHeader'>
       <div className='BackArrow' onClick={onBack}><ReactSVG path={arrowSVG}/></div>
       <ScrollingName>{name}</ScrollingName>
       {icon}

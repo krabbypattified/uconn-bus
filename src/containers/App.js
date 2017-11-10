@@ -21,15 +21,9 @@ import GeolocationMarker from 'containers/GeolocationMarker'
 import {isMobile} from 'components/helpers'
 
 
-// Handle loader
-// let loader = document.querySelector('.Loader')
-// let statusBar = document.querySelector('.Loader status')
-// window.addEventListener('BUSES_LOADED', ()=>loader.remove())
-// window.addEventListener('NEW_LOAD_STATUS', e=>statusBar.style.width = `${e*100}%`)
-
 // Apollo setup
 const httpLink = new HttpLink({uri: 'https://uconn-bus-api.herokuapp.com/graphql'})
-// TODO
+// breaks app refresh
 // const retry = new RetryLink({
 //   max: Infinity,
 //   delay: 5000

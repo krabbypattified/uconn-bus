@@ -16,6 +16,6 @@ let Default = ({directions, thingSelected}) => (
 
 
 export default connect(state => ({
-  directions: state.directions,
+  directions: state.directions.state,
   thingSelected: state.selectedThingStack.length,
 }))(Default)

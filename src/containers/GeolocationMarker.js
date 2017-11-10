@@ -45,7 +45,7 @@ class GeolocationMarkerContainer extends React.Component {
 export default connect(
   state => ({
     location: state.location,
-    directions: state.directions
+    directions: state.directions.state
   }),
   dispatch => ({
     setLocation: loc => dispatch(setLocation(loc))

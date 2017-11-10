@@ -61,7 +61,7 @@ export default compose(
   connect(
     state => ({
       thingSelected: state.selectedThingStack.length,
-      directions: state.directions,
+      directions: state.directions.state,
     }),
     dispatch => ({
       setHighlightedThings: things => dispatch(setHighlightedThings(things))

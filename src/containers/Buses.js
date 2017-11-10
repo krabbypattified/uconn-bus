@@ -1,3 +1,4 @@
+/* global Loader */
 import React from 'react'
 import {graphql, compose} from 'react-apollo'
 
@@ -11,8 +12,8 @@ let Buses = ({buses, busLines}) => {
   buses = buses.buses || []
   busLines = busLines.busLines || []
   if (!loaded) {
-    window.dispatchEvent(new Event('BUSES_LOADED'))
     loaded = true
+    Loader.finish()
   }
   return <BusManager buses={buses} colors={busLines.map(i=>i.color)}/>
 }

@@ -1,0 +1,34 @@
+.Loader {
+  background: white;
+  height: 100%;
+  position: fixed;
+  z-index: 100;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.Loader > div {
+  width: 80px;
+  height: 5px;
+  border-radius: 5px;
+  background: #eee;
+  position: absolute;
+  transform: translateY(100px);
+}
+
+.Loader .status {
+  height: 100%;
+  background: gray;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition-property: transform;
+}
+
+.Loader .status.done {
+  transform: scaleX(1);
+}

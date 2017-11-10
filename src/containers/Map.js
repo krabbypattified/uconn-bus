@@ -11,7 +11,6 @@ class MapContainer extends React.Component {
     this.map.on('click', e => {
       this.map.easeTo({
         center: e.lngLat.toArray(),
-        offset: this.offset,
         duration: 300,
       })
       setTimeout(_=>this.map.fire('click-panned'), 300)
@@ -21,36 +20,26 @@ class MapContainer extends React.Component {
   render() {
     let {children, thingSelected, thing, directions} = this.props
 
-    // Offset ratios
-    if (thingSelected || directions) {
-      let width = window.innerWidth
-      let height = window.innerHeight
-      this.offset = [isMobile() ? 0 : (width-400)/2 - (width/2-400), isMobile() ? height/4 : 0]
-    }
-    else this.offset = [0,0]
-
     // Zoom into thing
     if (this.map && thingSelected) {
       this.lastSelected = true
       let {longitude, latitude} = thing
       this.map.easeTo({
         center: [longitude, latitude],
-        offset: this.offset,
         zoom: isMobile()?14:15,
       })
     }
 
     // Zoom into directions
-    if (this.map && directions && !this.oldDirections) {
+    if (this.map && directions.state===3 && !this.oldDirections) { // TODO better bounds
       let lon = directions.from[0]/2 + directions.to[0]/2
       let lat = directions.from[1]/2 + directions.to[1]/2
       this.map.easeTo({
         center: [lon, lat],
-        offset: this.offset,
         zoom: isMobile()?13:14,
       })
     }
-    if (!directions) this.oldDirections = false
+    if (!directions.state) this.oldDirections = false
     else this.oldDirections = directions
 
     // Zoom out

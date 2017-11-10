@@ -4,7 +4,7 @@ import {connect} from 'react-redux'
 import styled from 'styled-components'
 import {darken, desaturate} from 'polished'
 import CSSTransitionGroup from 'react-addons-css-transition-group'
-import {setLocation, getDirections} from 'data/actions'
+import {directionsNext} from 'data/actions'
 import 'assets/MainButtonAnimation.css'
 
 
@@ -15,13 +15,12 @@ class MainButton extends React.Component {
   }
 
   render() {
-    let {location, setLocation, thingSelected, directions, getDirections} = this.props
+    let {location, thingSelected, directions, directionsNext} = this.props
     let {map} = this.context
+    let button
 
-    let button = location
-    ? <Button key={1} color='#2196f3' onClick={()=>{getDirections({from:location, to:map.getCenter().toArray()})}}>Get Directions</Button>
-    : <Button key={1} color='#f44336' onClick={()=>setLocation(map.getCenter().toArray())}>Set My Location</Button>
     if (thingSelected || directions) button = null
+    else button = <Button key={1} color='#2196f3' onClick={()=>{directionsNext({from:location, to:map.getCenter().toArray()})}}>Get Directions</Button>
 
     return (
       <BottomBar>
@@ -41,12 +40,11 @@ class MainButton extends React.Component {
 export default connect(
   state => ({
     location: state.location,
-    directions: state.directions,
+    directions: state.directions.state,
     thingSelected: state.selectedThingStack.length,
   }),
   dispatch => ({
-    setLocation: loc => dispatch(setLocation(loc)),
-    getDirections: fromTo => dispatch(getDirections(fromTo)),
+    directionsNext: fromTo => dispatch(directionsNext(fromTo)),
   })
 )(MainButton)
 
