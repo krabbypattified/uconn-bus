@@ -1,0 +1,31 @@
+.Pin {
+  pointer-events: none;
+  user-select: none;
+  z-index: 10;
+  width: 43px;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%,-100%) translate(8px,12px);
+}
+.Pin img {width: 100%}
+
+
+.small.Pin {
+  transform-origin: bottom;
+  transform: translate(-50%,-100%) translate(6px,10px) scale(.82);
+}
+
+
+.Pin div {
+  position: absolute;
+  transform: translate(-50%,-50%);
+  left: calc(50% - 8px);
+  top: 21px;
+  background-color: white;
+  border-radius: 100px;
+  padding: 5px 17px;
+  box-shadow: 0 1px 2px 0 rgba(0,0,0,.2);
+  font-size: 16px;
+  font-weight: 600;
+}

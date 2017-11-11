@@ -1,54 +1,87 @@
 import React from 'react'
 import {connect} from 'react-redux'
 import Map from 'components/Map'
-import {isMobile} from 'components/helpers'
+import {isMobile, switchy} from 'components/helpers'
 
 class MapContainer extends React.Component {
 
   onLoad(map) {
     this.map = map
-    // Click-pan
-    this.map.on('click', e => {
-      this.map.easeTo({
-        center: e.lngLat.toArray(),
-        duration: 300,
-      })
-      setTimeout(_=>this.map.fire('click-panned'), 300)
+    map.on('drag', _=>this.map.fire('center-changed'))
+    map.on('zoom', _=>this.map.fire('center-changed'))
+    map.on('click', e => { // Click-pan
+        setTimeout(_=>map.fire('center-changed'), 300)
+        map.easeTo({
+          center: e.lngLat.toArray(),
+          duration: 300,
+        })
     })
+  }
+
+  shouldComponentUpdate({thingSelected, directions}) {
+    this.thingChanged = this.props.thingSelected !== thingSelected
+    this.dirStateChanged = this.props.directions.state !== directions.state
+    return this.thingChanged || this.dirStateChanged
   }
 
   render() {
     let {children, thingSelected, thing, directions} = this.props
 
-    // Zoom into thing
-    if (this.map && thingSelected) {
-      this.lastSelected = true
-      let {longitude, latitude} = thing
-      this.map.easeTo({
-        center: [longitude, latitude],
-        zoom: isMobile()?14:15,
-      })
+    if (this.map) {
+
+        if (this.thingChanged || this.dirStateChanged) setTimeout(_=>this.map.fire('center-changed'), 1000)
+
+        if (this.thingChanged) {
+
+            if (thingSelected) {
+                let {longitude, latitude} = thing
+                this.map.easeTo({
+                  center: [longitude, latitude],
+                  zoom: isMobile()?14:15,
+                })
+            }
+
+            else {
+                this.map.easeTo({
+                  zoom: isMobile()?13:14,
+                })
+            }
+
+        }
+
+        if (this.dirStateChanged) {
+          switchy(directions.state)({
+            0:_=>{
+                this.map.easeTo({
+                  zoom: isMobile()?13:14,
+                })
+            },
+
+            1:_=>{
+                this.map.easeTo({
+                  center: directions.from,
+                })
+            },
+
+            2:_=>{
+                this.map.easeTo({
+                  center: directions.to,
+                })
+            },
+
+            3:_=>{ // TODO better bounds
+                let lon = directions.from[0]/2 + directions.to[0]/2
+                let lat = directions.from[1]/2 + directions.to[1]/2
+                this.map.easeTo({
+                  center: [lon, lat],
+                  zoom: isMobile()?13:14,
+                })
+            },
+          })
+        }
+
     }
 
-    // Zoom into directions
-    if (this.map && directions.state===3 && !this.oldDirections) { // TODO better bounds
-      let lon = directions.from[0]/2 + directions.to[0]/2
-      let lat = directions.from[1]/2 + directions.to[1]/2
-      this.map.easeTo({
-        center: [lon, lat],
-        zoom: isMobile()?13:14,
-      })
-    }
-    if (!directions.state) this.oldDirections = false
-    else this.oldDirections = directions
-
-    // Zoom out
-    if (this.map && !thingSelected && this.lastSelected) {
-      this.lastSelected = false
-      this.map.easeTo({
-        zoom: isMobile()?13:14,
-      })
-    }
 
     return (
       <Map
@@ -71,6 +104,7 @@ class MapContainer extends React.Component {
       >{children}</Map>
     )
   }
+
 }
 
 

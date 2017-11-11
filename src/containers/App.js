@@ -34,7 +34,11 @@ const client = new ApolloClient({
 })
 
 // Redux setup
-const store = createStore( combineReducers({...reducers}) )
+const store = createStore(
+  combineReducers({...reducers}),
+  // preload,
+  window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
+)
 
 // Add mobile class to body
 isMobile() && document.body.classList.add('mobile')

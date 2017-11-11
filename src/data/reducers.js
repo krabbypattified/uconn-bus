@@ -21,12 +21,16 @@ export default {
       state: state.state ? state.state-1 : 0
     }
 
-    if (action.type === 'DIRECTIONS_NEXT') {
+    if (action.type === 'DIRECTIONS_NEXT') return {
+      ...state,
+      state: state.state>=3 ? 3 : state.state+1
+    }
+
+    if (action.type === 'SET_DIRECTIONS') {
       let {type, ...other} = action
       return {
         ...state,
         ...other,
-        state: state.state>=3 ? 3 : state.state+1
       }
     }
 

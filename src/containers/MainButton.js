@@ -4,7 +4,9 @@ import {connect} from 'react-redux'
 import styled from 'styled-components'
 import {darken, desaturate} from 'polished'
 import CSSTransitionGroup from 'react-addons-css-transition-group'
-import {directionsNext} from 'data/actions'
+import {directionsNext, setDirections} from 'data/actions'
+import {switchy} from 'components/helpers'
+import 'assets/MainButton.css'
 import 'assets/MainButtonAnimation.css'
 
 
@@ -14,69 +16,59 @@ class MainButton extends React.Component {
     map: PropTypes.any
   }
 
+
+  initDirections() {
+    let {location, setDirections, directionsNext} = this.props
+    setDirections({
+      from: location ? location : this.context.map.getCenter().toArray(),
+      to: this.context.map.getCenter().toArray(),
+    })
+    directionsNext()
+  }
+
+
   render() {
-    let {location, thingSelected, directions, directionsNext} = this.props
-    let {map} = this.context
-    let button
+    let {thingSelected, directions, directionsNext} = this.props
 
-    if (thingSelected || directions) button = null
-    else button = <Button key={1} color='#2196f3' onClick={()=>{directionsNext({from:location, to:map.getCenter().toArray()})}}>Get Directions</Button>
+    let button = switchy(directions.state)({
+      0:_=><Button color='#4a90f0' onClick={()=>this.initDirections()}>Get Directions</Button>,
+      1:_=><Button color='#53bf85' onClick={()=>directionsNext()}>Next</Button>,
+      2:_=><Button color='#53bf85' onClick={()=>directionsNext()}>Next</Button>,
+      DEFAULT:_=>null,
+    })
+    if (thingSelected) button = null
 
-    return (
-      <BottomBar>
-        <CSSTransitionGroup
-          transitionName={'MainButtonAnimation'}
-          transitionAppear={true} transitionAppearTimeout={130} // weird...
-          transitionEnterTimeout={130} transitionLeaveTimeout={130}>
-            {button}
-        </CSSTransitionGroup>
-      </BottomBar>
-    )
+    return <CSSTransitionGroup
+             transitionName={'MainButtonAnimation'}
+             transitionAppear={true} transitionAppearTimeout={130} // weird...
+             transitionEnterTimeout={130} transitionLeaveTimeout={130}>
+               {button}
+           </CSSTransitionGroup>
   }
 }
+
+
 
 
 // Connect & Export
 export default connect(
   state => ({
     location: state.location,
-    directions: state.directions.state,
+    directions: state.directions,
     thingSelected: state.selectedThingStack.length,
   }),
   dispatch => ({
-    directionsNext: fromTo => dispatch(directionsNext(fromTo)),
+    setDirections: payload => dispatch(setDirections(payload)),
+    directionsNext: () => dispatch(directionsNext()),
   })
 )(MainButton)
 
 
-// Helpers
-let BottomBar = styled.div`
-  position: absolute;
-  bottom: 0;
-  width: 100%;
-  padding: 1em 7px 0 7px;
-  z-index: 11;
-  pointer-events: none;
-`
 
-let Button = styled.div`
-  user-select: none;
-  pointer-events: auto;
-  cursor: pointer;
-  margin: 0 auto;
-  width: 400px;
-  max-width: 100%;
-  background-color: white;
-  background-color: ${({color})=>color};
-  text-align: center;
-  color: white;
-  border-radius: 10px 10px 0 0;
-  padding: 13px;
-  font-size: 17px;
-  font-weight: 600;
-  box-shadow: 0 0px 12px -1px rgba(0,0,0,0.33);
-  transition: background-color .15s;
-  &:active {
-    background-color: ${({color})=>desaturate(.45,darken(.13,color))};
-  }
+
+// Helpers
+let Button = ({children, ...other}) => <ButtonDiv key={1} className='MainButton' {...other}>{children}</ButtonDiv>
+let ButtonDiv = styled.div`
+  background-color: ${p=>p.color};
+  &:active { background-color: ${p=>desaturate(.45,darken(.13,p.color))} }
 `

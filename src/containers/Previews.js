@@ -5,7 +5,6 @@ import CSSTransitionGroup from 'react-addons-css-transition-group'
 import Preview from 'components/Preview'
 import BusLineManager from 'components/BusLineManager'
 import {selectThing} from 'data/actions'
-import {isMobile} from 'components/helpers'
 import 'assets/PreviewAnimation.css'
 
 
@@ -55,7 +54,9 @@ export default connect(
 let List = styled.div`
   position: absolute;
   z-index: 20;
-  width: ${isMobile()?'100%':'400px'};
-  max-width: 100%;
-  ${isMobile()&&'padding: 0 7px;'}
+  width: 100%;
+  left: 7px;
+  right: 7px;
+  margin: 0 auto;
+  max-width: 590px;
 `

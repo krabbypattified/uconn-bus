@@ -2,11 +2,10 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import {connect} from 'react-redux'
 import {graphql, compose} from 'react-apollo'
-import styled from 'styled-components'
 import {LngLat} from 'mapbox-gl'
-import pointerImage from 'assets/pointer.png'
+import Pin from 'components/Pointer'
 import {buses, busStops} from 'data/queries'
-import {setHighlightedThings} from 'data/actions'
+import {setHighlightedThings, setDirections} from 'data/actions'
 
 
 class Pointer extends React.Component {
@@ -15,43 +14,46 @@ class Pointer extends React.Component {
     map: PropTypes.any
   }
 
-  setHighlightedThings = () => {
-    let {buses, busStops} = this.props
+  geocode() {
+    this.setState({label:geocode(this.context.map.getCenter().toArray())})
+  }
+
+  onHoverDirections() {
+    this.geocode()
+    let center = this.context.map.getCenter().toArray()
+    let {setDirections, directions} = this.props
+    directions.state === 1
+    ? setDirections({from:center})
+    : setDirections({to:center})
+  }
+
+  onHoverThings() {
+    this.geocode()
     let {map} = this.context
-
-    if (buses.loading || busStops.loading) return null
-    buses = buses.buses || []
-    busStops = busStops.busStops || []
-
+    let {buses:{buses}, busStops:{busStops}} = this.props
+    if (!buses||!busStops) return null
     let center = map.getCenter()
     let centerPx = map.project(center)
-    let offCenterPx = [centerPx.x+24,centerPx.y] // 96px per inch
+    let offCenterPx = [centerPx.x+24,centerPx.y] // 96ppi, ~1cm from center
     let offCenter = map.unproject(offCenterPx)
     let maxDist = distance(center, offCenter)
-
     let things = getNearestThings([...buses, ...busStops], {distance:maxDist, location:center, max:3})
     this.props.setHighlightedThings(things)
   }
 
   componentWillMount() {
-    this.debounceThings = debounce(this.setHighlightedThings, 17)
-    this.context.map.on('drag', this.debounceThings)
-    this.context.map.on('zoom', this.debounceThings)
-    this.context.map.on('click-panned', this.debounceThings)
-  }
-
-  componentWillUnmount() {
-    this.context.map.off('drag', this.debounceThings)
-    this.context.map.off('zoom', this.debounceThings)
-    this.context.map.off('click-panned', this.debounceThings)
+    this.geocode()
   }
 
   render() {
     let {thingSelected, directions} = this.props
-    if (thingSelected || directions) return null
-    return <PointerImage src={pointerImage}/>
+    if ([1,2].includes(directions.state)) return <Pin label={this.state.label} onChange={_=>this.onHoverDirections()}/>
+    else if (thingSelected || directions.state === 3) return null
+    else return <Pin onChange={_=>this.onHoverThings()}/>
   }
 }
+
+
 
 
 // Connect & Export
@@ -61,10 +63,11 @@ export default compose(
   connect(
     state => ({
       thingSelected: state.selectedThingStack.length,
-      directions: state.directions.state,
+      directions: state.directions,
     }),
     dispatch => ({
-      setHighlightedThings: things => dispatch(setHighlightedThings(things))
+      setHighlightedThings: things => dispatch(setHighlightedThings(things)),
+      setDirections: payload => dispatch(setDirections(payload)),
     })
   ),
 )(Pointer)
@@ -73,17 +76,6 @@ export default compose(
 
 
 // Helpers
-let PointerImage = styled.img`
-  pointer-events: none;
-  user-select: none;
-  z-index: 10;
-  width: 43px;
-  position: absolute;
-  left: calc(50% + 8px);
-  top: calc(50% + 6px);
-  transform: translate(-50%,-100%);
-`
-
 function distance(one,two) {
   let from = one instanceof LngLat ? one.toArray() : [one.longitude, one.latitude]
   let to = two instanceof LngLat ? two.toArray() : [two.longitude, two.latitude]
@@ -103,17 +95,7 @@ function getNearestThings(things, {distance:maxDist, location, max}) {
     .map(wrap => wrap.val)
 }
 
-function debounce(func, wait, immediate) {
-  var timeout;
-  return function() {
-    var context = this, args = arguments;
-    var later = function() {
-      timeout = null;
-      if (!immediate) func.apply(context, args);
-    };
-    var callNow = immediate && !timeout;
-    clearTimeout(timeout);
-    timeout = setTimeout(later, wait);
-    if (callNow) func.apply(context, args);
-  };
+
+function geocode(point) {
+  return 'McMahon'
 }

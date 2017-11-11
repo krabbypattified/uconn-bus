@@ -66,7 +66,7 @@ export function randomNumber() {
 
 export function switchy(thing) {
 	return function(choices) {
-  	let res = choices[thing]
+  	let res = typeof choices[thing] === 'undefined' ? choices['DEFAULT'] : choices[thing]
 	  return res instanceof Function ? res() : res
   }
 }
@@ -78,4 +78,20 @@ export function times(num) {
     ? [...Array(num)].map((v,i)=>i).map(val)
     : [...Array(10)].map(v=>val)
   }
+}
+
+
+export function debounce(func, wait, immediate) {
+  var timeout;
+  return function() {
+    var context = this, args = arguments;
+    var later = function() {
+      timeout = null;
+      if (!immediate) func.apply(context, args);
+    };
+    var callNow = immediate && !timeout;
+    clearTimeout(timeout);
+    timeout = setTimeout(later, wait);
+    if (callNow) func.apply(context, args);
+  };
 }

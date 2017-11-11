@@ -35,12 +35,19 @@ export const deselectAll = () => {
 export const directionsNext = payload => {
   return {
     type: 'DIRECTIONS_NEXT',
-    payload
+    ...payload
   }
 }
 
 export const directionsBack = () => {
   return {
     type: 'DIRECTIONS_BACK',
+  }
+}
+
+export const setDirections = payload => {
+  return {
+    type: 'SET_DIRECTIONS',
+    ...payload
   }
 }

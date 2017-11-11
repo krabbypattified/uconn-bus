@@ -23,9 +23,18 @@ export default class Marker extends React.Component {
   }
 
   render() {
+    setStyle(this.markerDiv, this.props.style)
     return ReactDOM.createPortal(
       this.props.children,
       this.markerDiv,
     )
   }
+}
+
+
+
+
+// Helpers
+function setStyle(el, style={}) {
+  for (let p in style) el.style[p] = style[p]
 }

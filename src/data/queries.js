@@ -37,9 +37,9 @@ query BusStops {
 
 
 export const arrivalsForBus = gql`
-query ArrivalsForBus($id: Int!) {
+query ArrivalsForBus($id: Int!, $before: Float!) {
   bus(id: $id) {
-    arrivals {
+    arrivals(before: $before) {
       time
       stop {
         id
@@ -53,9 +53,9 @@ query ArrivalsForBus($id: Int!) {
 
 
 export const arrivalsForStop = gql`
-query ArrivalsForStop($id: Int!) {
+query ArrivalsForStop($id: Int!, $before: Float!) {
   busStop(id: $id) {
-    arrivals {
+    arrivals(before: $before) {
       time
       bus {
         id
