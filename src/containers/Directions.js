@@ -44,7 +44,7 @@ class Directions extends React.Component {
 
     // Handle final directions
     if (directions.state === 3 && data.loading) directions = {...directions, state: 'LOADING'}
-    if (directions.state === 3 && !data.loading && !directions) directions = {...directions, state: 'NO_DIRECTIONS'}
+    if (directions.state === 3 && !data.loading && !data.directions) directions = {...directions, state: 'NO_DIRECTIONS'}
 
 
     return switchy(directions.state)({
@@ -68,6 +68,8 @@ class Directions extends React.Component {
       <div>
         <DetailHeader title='Directions' onBack={onBack}/>
         <DetailContent noContent='Directions unavailable.'/>
+        <TextMarker key='w' text='Start' background='#77d09f' lngLat={directions.from}/>
+        <TextMarker key='x' text='End' background='#61A3FE' lngLat={directions.to}/>
       </div>,
 
       3:_=>

@@ -3,9 +3,8 @@
   border-radius: 6px 6px 0 0;
   flex-direction: column;
   justify-content: flex-start;
+  will-change: transform;
   bottom: 0;
-  transform: translateY(100%) translateY(-127px);
-  min-height: 127px;
 }
 
 
