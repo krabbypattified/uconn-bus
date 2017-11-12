@@ -13,8 +13,10 @@ export default class extends React.Component {
   }
 
   componentWillMount() {
-    this.debounceThings = debounce(()=>this.props.onChange&&this.props.onChange(), 17)
-    this.context.map.on('center-changed', this.debounceThings)
+    let {map} = this.context
+    let {onChange} = this.props
+    this.debounceThings = debounce(_=>onChange&&onChange(map), 17)
+    map.on('center-changed', this.debounceThings)
   }
 
   componentWillUnmount() {

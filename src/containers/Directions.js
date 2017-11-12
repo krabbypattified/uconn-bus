@@ -18,20 +18,18 @@ import {switchy} from 'components/helpers'
 
 
 // Redux
-class DirectionsManager extends React.Component {
+export default connect(
+  state => ({
+    directions: state.directions,
+  }),
+  dispatch => ({
+    directionsBack: ()=>dispatch(directionsBack()),
+    directionsNext: ()=>dispatch(directionsNext()),
+  })
+)
+({directions, directionsBack, directionsNext}) =>
+directions.state ? <GQLDirections directions={directions} onBack={directionsBack} onNext={directionsNext}/> : null
 
-  shouldComponentUpdate({directions}) {
-    return directions.state !== this.props.directions.state
-  }
-
-  render() {
-    let {directions, directionsBack, directionsNext} = this.props
-    return !directions.state
-    ? null
-    : <ConnectedDirections directions={directions} onBack={directionsBack} onNext={directionsNext}/>
-  }
-
-}
 
 
 
@@ -101,19 +99,10 @@ class Directions extends React.Component {
 }
 
 
-// Connect Redux
-export default connect(
-  state => ({
-    directions: state.directions,
-  }),
-  dispatch => ({
-    directionsBack: ()=>dispatch(directionsBack()),
-    directionsNext: ()=>dispatch(directionsNext()),
-  })
-)(DirectionsManager)
+
 
 // Connect GraphQL
-let ConnectedDirections = graphql(directions, {
+let GQLDirections = graphql(directions, {
   skip: ({directions}) => directions.state !== 3,
   options: ({directions: {from, to}}) => ({notifyOnNetworkStatusChange: true, variables: {
     from: {

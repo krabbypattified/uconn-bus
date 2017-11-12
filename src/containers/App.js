@@ -16,7 +16,7 @@ import Default from 'containers/Default'
 import Directions from 'containers/Directions'
 import Details from 'containers/Details'
 import Pointer from 'containers/Pointer'
-import MainButton from 'containers/MainButton'
+import SearchBar from 'containers/SearchBar'
 import GeolocationMarker from 'containers/GeolocationMarker'
 import {isMobile} from 'components/helpers'
 
@@ -58,7 +58,7 @@ export default () => (
         <GeolocationMarker/>
         <Directions/>
         <Default/>
-        <MainButton/>
+        <SearchBar/>
       </Map>
     </Provider>
   </ApolloProvider>

@@ -18,15 +18,24 @@ import ScrollingName from 'components/ScrollingName'
 
 
 // Redux
-let DetailViewManager = ({thingSelected, thing, deselectThing, selectThing}) => {
-  if (!thingSelected) return null
-  return <ConnectedContainer onBack={deselectThing} thing={thing} selectThing={selectThing}/>
-}
+export default connect(
+  state => ({
+    thingSelected: state.selectedThingStack.length,
+    thing: state.selectedThingStack[state.selectedThingStack.length-1],
+  }),
+  dispatch => ({
+    selectThing: thing=>dispatch(selectThing(thing)),
+    deselectThing: ()=>dispatch(deselectThing()),
+  })
+)
+({thingSelected, thing, deselectThing, selectThing}) =>
+!thingSelected ? null : <GQLDetails onBack={deselectThing} thing={thing} selectThing={selectThing}/>
+
 
 
 
 // GraphQL
-class DetailsContainer extends React.Component {
+class Details extends React.Component {
 
   render() {
     let {thing, onBack, bus, busStop, selectThing} = this.props
@@ -48,21 +57,9 @@ class DetailsContainer extends React.Component {
 
 
 
-// Connect Redux
-export default connect(
-  state => ({
-    thingSelected: state.selectedThingStack.length,
-    thing: state.selectedThingStack[state.selectedThingStack.length-1],
-  }),
-  dispatch => ({
-    selectThing: thing=>dispatch(selectThing(thing)),
-    deselectThing: ()=>dispatch(deselectThing()),
-  })
-)(DetailViewManager)
-
 
 // Connect GQL
-let ConnectedContainer = compose(
+let GQLDetails = compose(
 
   graphql(arrivalsForBus, {
     name: 'bus',
@@ -76,7 +73,7 @@ let ConnectedContainer = compose(
     options: ({thing}) => ({ variables: { id:thing.id, before: Date.now() + 1000*60*90 }, notifyOnNetworkStatusChange: true }),
   }),
 
-)(DetailsContainer)
+)(Details)
 
 
 

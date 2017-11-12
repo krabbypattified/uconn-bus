@@ -95,3 +95,24 @@ export function debounce(func, wait, immediate) {
     if (callNow) func.apply(context, args);
   };
 }
+
+
+export function distance(one,two) {
+  let from = one instanceof LngLat ? one.toArray() : [one.longitude, one.latitude]
+  let to = two instanceof LngLat ? two.toArray() : [two.longitude, two.latitude]
+  let d2 = Math.pow(from[0] - to[0], 2) + Math.pow(from[1] - to[1], 2)
+  return Math.sqrt(d2) * 60.7053 // for miles (hacky)
+}
+
+
+export function getNearestThings(things, {distance:maxDist=Infinity, location, max=Infinity}) {
+  return things
+    .map(thing => ({
+      val: thing,
+      distance: distance(location, thing)
+    }))
+    .sort((a,b) => a.distance - b.distance)
+    .slice(0,max)
+    .filter(({distance}) => distance < maxDist)
+    .map(wrap => wrap.val)
+}
