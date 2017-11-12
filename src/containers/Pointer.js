@@ -1,8 +1,6 @@
 import React from 'react'
-import PropTypes from 'prop-types'
 import {connect} from 'react-redux'
 import {graphql, compose} from 'react-apollo'
-import {LngLat} from 'mapbox-gl'
 import Pin from 'components/Pointer'
 import {buses, busStops} from 'data/queries'
 import {setHighlightedThings, setDirections} from 'data/actions'
@@ -17,7 +15,7 @@ class Pointer extends React.Component {
     setDirections(directions.state === 1 ? {from:center} : {to:center})
   }
 
-  onHoverThings() {
+  onHoverThings(map) {
     let {buses:{buses}, busStops:{busStops}, setHighlightedThings} = this.props
     if (!buses||!busStops) return null
     let center = map.getCenter()

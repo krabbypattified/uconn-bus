@@ -1,6 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import {SourceManager} from './helpers'
+import {SourceManager} from 'components/helpers'
 
 
 export default class BusStopManager extends React.Component {

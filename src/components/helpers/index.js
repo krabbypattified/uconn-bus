@@ -1,3 +1,6 @@
+import {LngLat} from 'mapbox-gl'
+
+
 export class SourceManager {
 
   constructor(args) {

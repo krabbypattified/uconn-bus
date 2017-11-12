@@ -1,6 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import {SourceManager} from './helpers'
+import {SourceManager} from 'components/helpers'
 import busSVG from 'assets/bus.svg'
 let first = true
 let oldBuses = {}

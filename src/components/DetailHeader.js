@@ -1,5 +1,4 @@
 import React from 'react'
-import ReactSVG from 'react-svg'
 import arrowSVG from 'assets/arrow.svg'
 import 'assets/DetailHeader.css'
 
@@ -8,8 +7,8 @@ import 'assets/DetailHeader.css'
 // onNext: Func
 export default ({title, onBack, onNext}) => (
   <div className='DetailHeader'>
-    {onBack && <div className='Arrow Back' onClick={onBack}><ReactSVG path={arrowSVG}/></div>}
-    {onNext && <div className='Arrow Forward' onClick={onNext}><ReactSVG path={arrowSVG}/></div>}
+    {onBack && <img className='Arrow Back' onClick={onBack} src={arrowSVG} alt=''/>}
+    {onNext && <img className='Arrow Forward' onClick={onNext} src={arrowSVG} alt=''/>}
     {title}
   </div>
 )

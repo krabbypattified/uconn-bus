@@ -26,9 +26,10 @@ export default connect(
     directionsBack: ()=>dispatch(directionsBack()),
     directionsNext: ()=>dispatch(directionsNext()),
   })
+)(
+  ({directions, directionsBack, directionsNext}) =>
+  directions.state ? <GQLDirections directions={directions} onBack={directionsBack} onNext={directionsNext}/> : null
 )
-({directions, directionsBack, directionsNext}) =>
-directions.state ? <GQLDirections directions={directions} onBack={directionsBack} onNext={directionsNext}/> : null
 
 
 

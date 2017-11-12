@@ -1,7 +1,7 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 import Hammer from 'hammerjs'
-import {debounce} from './helpers'
+import {debounce} from 'components/helpers'
 import 'assets/DetailContent.css'
 
 // content: [DOM]
@@ -9,7 +9,7 @@ import 'assets/DetailContent.css'
 export default class extends React.Component {
 
   pop(arg) {
-    this.div.style.transition = 'transform .5s'
+    this.div.style.transition = 'transform .25s'
     arg
     ? this.div.style.transform = translateY(this.openHeight)
     : this.div.style.transform = translateY(this.closeHeight)
@@ -21,7 +21,7 @@ export default class extends React.Component {
 
     let div = ReactDOM.findDOMNode(this)
     this.div = div
-    this.noTrans = debounce(_=>this.div.style.transition='',500)
+    this.noTrans = debounce(_=>this.div.style.transition='',250)
 
 
     this.closeHeight = Math.min(div.offsetHeight, 127)

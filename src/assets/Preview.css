@@ -1,33 +1,23 @@
 .Preview {
-  position: relative;
-  background: white;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 13px 20px;
-  font-size: 17px;
-  font-weight: 600;
-  width: 100%;
-  border-bottom: .5px solid #e8e8e8;
+  display         : flex;
+  position        : relative;
+  width           : 100%;
+  padding         : 13px 20px;
+  border-bottom   : .5px solid #e8e8e8;
+  background      : white;
+  align-items     : center;
+  font-size       : 17px;
+  font-weight     : 600;
+  justify-content : space-between;
 }
-
-
-
-.Preview .Name {
-  white-space: nowrap;
-  overflow: hidden;
-  line-height: normal;
-}
-
-
 
 .DetailButton {
-  user-select: none;
-  cursor: pointer;
-  font-size: 14px;
-  font-weight: 600;
-  color: white;
-  padding: 3px 17px;
-  border-radius: 30px;
-  box-shadow: 0 1px 2px 0 rgba(0,0,0,.36);
+  padding       : 3px 17px;
+  color         : white;
+  border-radius : 30px;
+  box-shadow    : 0 1px 2px 0 rgba(0,0,0,.36);
+  font-size     : 14px;
+  font-weight   : 600;
+  user-select   : none;
+  cursor        : pointer;
 }

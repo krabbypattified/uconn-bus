@@ -27,9 +27,10 @@ export default connect(
     selectThing: thing=>dispatch(selectThing(thing)),
     deselectThing: ()=>dispatch(deselectThing()),
   })
+)(
+  ({thingSelected, thing, deselectThing, selectThing}) =>
+  !thingSelected ? null : <GQLDetails onBack={deselectThing} thing={thing} selectThing={selectThing}/>
 )
-({thingSelected, thing, deselectThing, selectThing}) =>
-!thingSelected ? null : <GQLDetails onBack={deselectThing} thing={thing} selectThing={selectThing}/>
 
 
 

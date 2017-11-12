@@ -1,0 +1,112 @@
+.SearchExpander {
+  z-index         : 22;
+  display         : flex;
+  position        : absolute;
+  right           : 7px;
+  bottom          : 0;
+  left            : 7px;
+  max-width       : 590px;
+  margin          : 0 auto;
+  border-radius   : 6px 6px 0 0;
+  background      : white;
+  box-shadow      : 0 0 7px 0 rgba(0,0,0,.2);
+  font-size       : 17px;
+  font-weight     : 600;
+  flex-direction  : column;
+  justify-content : flex-end;
+  user-select     : none;
+}
+
+.SearchExpander.Fullscreen {
+  top           : 0;
+  right         : 0;
+  bottom        : 0;
+  left          : 0;
+  max-width     : none;
+  padding       : 0 7px 14px 7px;
+  border-radius : 0;
+}
+
+.Autofill {
+  margin-bottom : 14px;
+  padding       : 0 20px 0 20px;
+  overflow-y    : auto;
+}
+
+.Autofill::-webkit-scrollbar {
+  display : none;
+}
+
+.Autofill div:first-child {
+  padding-top : 27px;
+}
+
+.Autofill div {
+  padding-top : 1em;
+}
+
+.Autofill span {
+  padding-left : 6px;
+  color        : #C6C6C6;
+}
+
+.SearchBar {
+  display         : flex;
+  padding         : 13px 20px;
+  overflow        : hidden;
+  align-items     : center;
+  justify-content : space-between;
+}
+
+/* Directions button */
+
+.SearchBar svg {
+  cursor : pointer;
+}
+
+body:not(.mobile) .SearchBar svg:hover path {
+  fill : #4085e4;
+}
+
+.SearchBar div:last-child {
+  /* fix svg offset */
+  display : flex;
+}
+
+/* x.svg hover */
+.Fullscreen .SearchBar svg:hover #Search {
+  stroke: gray;
+}
+
+/* Placeholder */
+
+.Search {
+  display     : flex;
+  overflow    : hidden;
+  align-items : center;
+}
+
+.Search .Name {
+  margin-right : 6px;
+}
+
+.Search span {
+  margin-right : 6px;
+  color        : #C6C6C6;
+}
+
+/* Search Input */
+
+input.Search {
+  -webkit-appearance : none;
+  width              : 100%;
+  margin-right       : 5px;
+  padding            : 0;
+  border             : 0;
+  outline            : 0;
+  font               : inherit;
+}
+
+input.Search::placeholder {
+  color : #C6C6C6;
+}

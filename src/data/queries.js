@@ -1,17 +1,6 @@
 import gql from 'graphql-tag'
 
 
-export const geocode = gql`
-query Geocode($lngLat: LngLat!) {
-  geocode(lngLat: $lngLat) {
-    name
-    latitude
-    longitude
-  }
-}`
-
-query ArrivalsForBus($id: Int!, $before: Float!) {
-  bus(id: $id) {
 export const buses = gql`
 query Buses {
   buses {
@@ -47,6 +36,28 @@ query BusStops {
 }`
 
 
+export const buildings = gql`
+query Buildings {
+  buildings {
+    name
+    latitude
+    longitude
+    abbreviation
+    type
+  }
+}`
+
+
+export const geocode = gql`
+query Geocode($lngLat: LngLat!) {
+  geocode(lngLat: $lngLat) {
+    name
+    latitude
+    longitude
+  }
+}`
+
+
 export const arrivalsForBus = gql`
 query ArrivalsForBus($id: Int!, $before: Float!) {
   bus(id: $id) {
@@ -72,6 +83,7 @@ query ArrivalsForStop($id: Int!, $before: Float!) {
         id
         latitude
         longitude
+        heading
         busLine {
           name
           color

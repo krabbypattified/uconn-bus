@@ -1,49 +1,42 @@
-.DetailHeader, .DetailContent {
-  position: absolute;
-  z-index: 21;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: white;
-  box-shadow: 0 0 7px 0 rgba(0,0,0,.2);
-  font-size: 17px;
-  font-weight: 600;
-  left: 7px;
-  right: 7px;
-  margin: 0 auto;
-  padding: 13px 20px;
-  max-width: 590px;
-  border-radius: 0 0 6px 6px;
-  user-select: none;
+.DetailContent,
+.DetailHeader {
+  z-index         : 21;
+  display         : flex;
+  position        : absolute;
+  right           : 7px;
+  left            : 7px;
+  max-width       : 590px;
+  margin          : 0 auto;
+  padding         : 13px 20px;
+  border-radius   : 0 0 6px 6px;
+  background      : white;
+  box-shadow      : 0 0 7px 0 rgba(0,0,0,.2);
+  align-items     : center;
+  font-size       : 17px;
+  font-weight     : 600;
+  justify-content : center;
+  user-select     : none;
 }
 
 .DetailHeader .Name {
-  max-width: calc(100% - 100px);
-  white-space: nowrap;
-  overflow: hidden;
-  line-height: normal;
+  max-width : calc(100% - 100px);
 }
 
 .Arrow {
-  cursor: pointer;
-  position: absolute;
+  position   : absolute;
+  transition : transform .3s;
+  cursor     : pointer;
 }
-.Arrow div {
-  display: flex;
-  align-items: center;
-}
-.Arrow svg {
-  transition: transform .3s;
-}
-.Arrow:hover svg {
-  transform: translateX(-5px)
+
+.Arrow:hover {
+  transform : translateX(-3px);
 }
 
 .Back.Arrow {
-  left: 20px
+  left : 20px;
 }
 
 .Forward.Arrow {
-  right: 20px;
-  transform: rotate(180deg);
+  right     : 20px;
+  transform : rotate(180deg);
 }
