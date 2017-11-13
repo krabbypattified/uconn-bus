@@ -40,16 +40,19 @@ class SearchBarManager extends React.PureComponent {
     return {longitude:c[0], latitude:c[1]}
   }
 
-  updateGeocode() {
+  updateGeocode = () => {
+    if (!this.mounted) return
     this.closeBuildings && this.setState({geocode: this.closeBuildings[0] || this.center}) // also updates sorted buildings
   }
 
   componentWillMount() {
-    this.debounceGeocode = debounce(_=>this.updateGeocode(), 350)
+    this.mounted = true
+    this.debounceGeocode = debounce(this.updateGeocode, 350)
     this.context.map.on('center-changed', this.debounceGeocode)
   }
 
   componentWillUnmount() {
+    this.mounted = false
     this.context.map.off('center-changed', this.debounceGeocode)
   }
 
