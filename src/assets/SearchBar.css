@@ -6,6 +6,7 @@
   bottom          : 0;
   left            : 7px;
   max-width       : 590px;
+  height          : 100%;
   margin          : 0 auto;
   border-radius   : 6px 6px 0 0;
   background      : white;
@@ -14,17 +15,30 @@
   font-weight     : 600;
   flex-direction  : column;
   justify-content : flex-end;
+  transition      : max-width .27s linear, all .27s;
   user-select     : none;
+
+  /* enables animation */
+  max-height      : 55px;
 }
 
 .SearchExpander.Fullscreen {
-  top           : 0;
   right         : 0;
-  bottom        : 0;
   left          : 0;
-  max-width     : none;
+  max-width     : 100%;
+  max-height    : 100%;
   padding       : 0 7px 14px 7px;
   border-radius : 0;
+}
+.SearchExpander.Fullscreen:after {
+  pointer-events: none;
+  content: ' ';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: linear-gradient(to bottom, white, rgba(255,255,255,0) 32%, rgba(255,255,255,0) 37%)
 }
 
 .Autofill {
@@ -74,8 +88,9 @@ body:not(.mobile) .SearchBar svg:hover path {
 }
 
 /* x.svg hover */
+
 .Fullscreen .SearchBar svg:hover #Search {
-  stroke: gray;
+  stroke : gray;
 }
 
 /* Placeholder */

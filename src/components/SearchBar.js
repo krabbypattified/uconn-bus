@@ -1,38 +1,67 @@
 import React from 'react'
-// import PropTypes from 'prop-types'
 import ReactSVG from 'react-svg'
 import fuzzy from 'fuzzy'
 import directionsSVG from 'assets/directions.svg'
 import xSVG from 'assets/x.svg'
-import ScrollingName from 'components/ScrollingName'
 import 'assets/SearchBar.css'
 
 
 export default class SearchBar extends React.Component {
 
-  // static contextTypes = {
-  //   map: PropTypes.any
-  // }
+  constructor(...args) {
+    super(...args)
+    this.state = {fullscreen:false, autofill:''}
+  }
+
+  onKeystroke(e) {
+    if (e.keyCode === 27) this.setState({fullscreen:false})
+    if (e.keyCode === 13) {
+      if (!this.state.fullscreen) return this.setState({fullscreen:true})
+      let selection = this.state.autofill && this.autofiller && this.autofiller[this.autofiller.length-1]
+      selection && this.selectBuilding(selection)
+    }
+  }
+
+  selectBuilding(building) {
+    let {onSelect} = this.props
+    onSelect && onSelect(building)
+    this.setState({fullscreen:false})
+  }
+
+  setAutofill(text) {
+    let autofill = document.querySelector('.Autofill')
+    autofill && autofill.scrollTo(0,10000)
+    this.setState({autofill:text})
+  }
 
   componentWillMount() {
-    this.setState({fullscreen:false, autofill:''})
-    this.escape = e => e.keyCode === 27 && this.setState({fullscreen:false})
-    document.addEventListener('keyup', this.escape)
+    document.addEventListener('keyup', this.onKeystroke.bind(this))
   }
 
   componentWillUnmount() {
-    document.removeEventListener('keyup', this.escape)
+    document.removeEventListener('keyup', this.onKeystroke)
   }
 
   componentDidUpdate() {
-    // Focus/blur input
-    if (this.wasFullscreen && !this.state.fullscreen) {
-      let input = document.querySelector('input.Search')
-      input.blur()
-      input.value = ''
+    let {fullscreen} = this.state
+    let input = document.querySelector('input.Search')
+
+    // blur
+    if (this.wasFullscreen && !fullscreen) {
+      this.setAutofill('')
+      if (input) {
+        input.blur()
+        input.value = ''
+      }
     }
-    else if (!this.wasFullscreen && this.state.fullscreen) document.querySelector('input.Search').focus()
-    this.wasFullscreen = this.state.fullscreen
+
+    // focus
+    else if (!this.wasFullscreen && fullscreen) {
+      this.setAutofill('')
+      input.focus()
+    }
+
+    this.wasFullscreen = fullscreen
   }
 
   onButtonClick(e) {
@@ -44,7 +73,7 @@ export default class SearchBar extends React.Component {
 
   render() {
     let {placeholder, autofill:buildings, loading, state:directionState} = this.props
-    let {fullscreen, autofill} = this.state
+    let {fullscreen, autofill:autofillText} = this.state
     let Text
 
 
@@ -52,21 +81,26 @@ export default class SearchBar extends React.Component {
     else {
       Text = placeholder && !fullscreen
       ? <div className='Search'>
-          <ScrollingName>{placeholder.name}</ScrollingName>
+          <div className='Name'>{placeholder.name}</div>
           {placeholder.abbreviation && <span>{placeholder.abbreviation}</span>}
         </div>
-      : <input className='Search' placeholder='Search UConn' onChange={e=>this.setState({autofill:e.target.value})}/>
+      : <input className='Search' placeholder='Search UConn' onChange={e=>this.setAutofill(e.target.value)}/>
     }
 
 
-    let Autofill = fullscreen
-    ? <div className='Autofill'>{fuzzy
-
-        .filter(autofill, buildings, {extract: o => `${o.name} ${o.abbreviation}`})
+    buildings = buildings.slice(0).reverse()
+    if (fullscreen && autofillText) {
+      this.autofiller = fuzzy
+        .filter(autofillText, buildings, {extract: o => `${o.name} ${o.abbreviation}`})
         .sort((a,b) => a.score - b.score)
-        .map(({original:b}, i) =>
+        .map(r => r.original)
+    }
+    else if (fullscreen) this.autofiller = buildings
 
-        <div key={i}>{b.name}<span>{b.abbreviation}</span></div>)}
+
+    let Autofill = fullscreen
+    ? <div className='Autofill'>
+        {this.autofiller.map((b, i) => <div key={i} onClick={_=>this.selectBuilding(b)}>{b.name}<span>{b.abbreviation}</span></div>)}
       </div>
     : null
 
@@ -75,7 +109,7 @@ export default class SearchBar extends React.Component {
              {Autofill}
              <div className='SearchBar' onClick={_=>this.setState({fullscreen:true})}>
                {Text}
-               {directionState || <div onClick={e=>this.onButtonClick(e)}><ReactSVG path={fullscreen?xSVG:directionsSVG}/></div>}
+               {directionState ? null : <div onClick={e=>this.onButtonClick(e)}><ReactSVG path={fullscreen?xSVG:directionsSVG}/></div>}
              </div>
            </div>
   }

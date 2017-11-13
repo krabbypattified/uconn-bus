@@ -11,7 +11,7 @@ import BusLineManager from 'components/BusLineManager'
 import BusManager from 'components/BusManager'
 import BusStopManager from 'components/BusStopManager'
 import WalkManager from 'components/WalkManager'
-import {directionsBack, directionsNext} from 'data/actions'
+import {directionsBack, directionsNext, directionsDone} from 'data/actions'
 import {directions} from 'data/queries'
 import {switchy} from 'components/helpers'
 
@@ -25,10 +25,11 @@ export default connect(
   dispatch => ({
     directionsBack: ()=>dispatch(directionsBack()),
     directionsNext: ()=>dispatch(directionsNext()),
+    directionsDone: ()=>dispatch(directionsDone()),
   })
 )(
   ({directions, directionsBack, directionsNext}) =>
-  directions.state ? <GQLDirections directions={directions} onBack={directionsBack} onNext={directionsNext}/> : null
+  directions.state ? <GQLDirections directions={directions} onBack={directionsBack} onNext={directionsNext} onDone={directionsDone}/> : null
 )
 
 
@@ -37,8 +38,10 @@ export default connect(
 // Graphql
 class Directions extends React.Component {
 
+  componentDidMount() { setTimeout(_=>this.toggleOff=true, 1500) }
+
   render() {
-    let {directions, onBack, onNext, data} = this.props
+    let {directions, onBack, onNext, onDone, data} = this.props
 
 
     // Handle final directions
@@ -48,7 +51,7 @@ class Directions extends React.Component {
 
     return switchy(directions.state)({
       1:_=>
-      <DetailHeader title='From' onBack={onBack} onNext={onNext}/>,
+      <DetailHeader title='From' onBack={onBack} onNext={onNext} hint={!this.toggleOff}/>,
 
       2:_=>
       <div>
@@ -58,22 +61,22 @@ class Directions extends React.Component {
 
       LOADING:_=>
       <div>
-        <DetailHeader title='Loading...' onBack={onBack}/>
+        <DetailHeader title='Loading...' onBack={onBack} onDone={onDone}/>
         <TextMarker key='w' text='Start' background='#77d09f' lngLat={directions.from}/>
         <TextMarker key='x' text='End' background='#61A3FE' lngLat={directions.to}/>
       </div>,
 
       NO_DIRECTIONS:_=>
       <div>
-        <DetailHeader title='Directions' onBack={onBack}/>
-        <DetailContent noContent='Directions unavailable.'/>
+        <DetailHeader title='Directions' onBack={onBack} onDone={onDone}/>
+        <DetailContent noContent='No buses are scheduled to arrive at this time.'/>
         <TextMarker key='w' text='Start' background='#77d09f' lngLat={directions.from}/>
         <TextMarker key='x' text='End' background='#61A3FE' lngLat={directions.to}/>
       </div>,
 
       3:_=>
       <div>
-        <DetailHeader title='Directions' onBack={onBack}/>
+        <DetailHeader title='Directions' onBack={onBack} onDone={onDone}/>
         <DetailContent content={getInstructions(data)}/>
         <TextMarker key='w' text='Start' background='#77d09f' lngLat={directions.from}/>
         <TextMarker key='x' text='End' background='#61A3FE' lngLat={directions.to}/>

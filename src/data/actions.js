@@ -51,3 +51,9 @@ export const setDirections = payload => {
     ...payload
   }
 }
+
+export const directionsDone = () => {
+  return {
+    type: 'DIRECTIONS_DONE',
+  }
+}

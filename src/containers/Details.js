@@ -108,7 +108,7 @@ function content(arrivals, selectThing, isBus) {
 }
 
 function noContent(thing) {
-  return isBus(thing) ? 'This bus doesn\'t stop anywhere.' : 'No arrivals at this bus stop.'
+  return isBus(thing) ? 'This bus isn\'t scheduled to stop anywhere.' : 'No arrivals are currently scheduled for this stop.'
 }
 
 function managers(thing) {

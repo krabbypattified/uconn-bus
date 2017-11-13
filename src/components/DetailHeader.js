@@ -1,14 +1,14 @@
 import React from 'react'
+import ReactSVG from 'react-svg'
 import arrowSVG from 'assets/arrow.svg'
 import 'assets/DetailHeader.css'
 
-// title: String, DOM
-// onBack: Func
-// onNext: Func
-export default ({title, onBack, onNext}) => (
+
+export default ({title, onBack, onNext, onDone, hint}) => (
   <div className='DetailHeader'>
-    {onBack && <img className='Arrow Back' onClick={onBack} src={arrowSVG} alt=''/>}
-    {onNext && <img className='Arrow Forward' onClick={onNext} src={arrowSVG} alt=''/>}
+    {onBack && <div onClick={onBack} className='Arrow Back'><ReactSVG path={arrowSVG}/></div>}
+    {onNext && <div onClick={onNext} className={`Arrow Forward ${hint?'hint':''}`}><ReactSVG path={arrowSVG}/></div>}
+    {onDone && <div className='Done'>Done</div>}
     {title}
   </div>
 )

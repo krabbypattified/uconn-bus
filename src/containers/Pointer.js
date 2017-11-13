@@ -4,7 +4,7 @@ import {graphql, compose} from 'react-apollo'
 import Pin from 'components/Pointer'
 import {buses, busStops} from 'data/queries'
 import {setHighlightedThings, setDirections} from 'data/actions'
-import {distance, getNearestThings} from 'components/helpers'
+import {distance, getNearestThings, switchy} from 'components/helpers'
 
 
 class Pointer extends React.Component {
@@ -29,10 +29,15 @@ class Pointer extends React.Component {
 
   render() {
     let {thingSelected, directions} = this.props
-    if ([1,2].includes(directions.state)) return <Pin label={this.state.label} onChange={map=>this.onHoverDirections(map)}/>
-    else if (thingSelected || directions.state === 3) return null
-    else return <Pin onChange={map=>this.onHoverThings(map)}/>
+    if (thingSelected) return null
+    return switchy(directions.state)({
+      0:_=> <Pin onChange={map=>this.onHoverThings(map)}/>,
+      1:_=> <Pin label='Start' background='#71D5A0' onChange={map=>this.onHoverDirections(map)}/>,
+      2:_=> <Pin label='End' background='#61A3FE' onChange={map=>this.onHoverDirections(map)}/>,
+      3:_=> null,
+    })
   }
+
 }
 
 

@@ -27,16 +27,39 @@
   transition : transform .3s;
   cursor     : pointer;
 }
-
-.Arrow:hover {
-  transform : translateX(-3px);
+.Arrow div {
+  display: flex;
 }
 
 .Back.Arrow {
   left : 20px;
 }
+.Back.Arrow:hover {
+  transform : translateX(-3px);
+}
 
 .Forward.Arrow {
   right     : 20px;
   transform : rotate(180deg);
+}
+.Forward.Arrow:hover {
+  transform : rotate(180deg) translateX(-3px);
+}
+.Forward.Arrow #Stop-Details {
+  stroke: #60a3fe;
+}
+.Forward.Arrow.hint {
+  animation: .5s ease 2 hint;
+}
+@keyframes hint {
+  from { transform : rotate(180deg) translateX(0); }
+  50%  { transform : rotate(180deg) translateX(-6.5px); }
+  to   { transform : rotate(180deg) translateX(0); }
+}
+
+.Done {
+  position   : absolute;
+  cursor     : pointer;
+  right     : 20px;
+  color: #60a3fe;
 }

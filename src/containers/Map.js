@@ -9,12 +9,15 @@ class MapContainer extends React.Component {
     this.map = map
     map.on('drag', _=>this.map.fire('center-changed'))
     map.on('zoom', _=>this.map.fire('center-changed'))
-    map.on('click', e => { // Click-pan
-        setTimeout(_=>map.fire('center-changed'), 300)
-        map.easeTo({
-          center: e.lngLat.toArray(),
-          duration: 300,
-        })
+    map.on('fake-click', e => this.clickPan(e.lngLat))
+    map.on('click', e => this.clickPan(e.lngLat.toArray()))
+  }
+
+  clickPan(lngLatArray) {
+    setTimeout(_=>this.map.fire('center-changed'), 300)
+    this.map.easeTo({
+      center: lngLatArray,
+      duration: 300,
     })
   }
 

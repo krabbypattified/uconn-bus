@@ -12,21 +12,25 @@ export default class extends React.Component {
     map: PropTypes.any
   }
 
+  onChange = () => {
+    this.changeFunc()
+  }
+
   componentWillMount() {
-    let {map} = this.context
-    let {onChange} = this.props
-    this.debounceThings = debounce(_=>onChange&&onChange(map), 17)
-    map.on('center-changed', this.debounceThings)
+    this.context.map.on('center-changed', this.onChange)
   }
 
   componentWillUnmount() {
-    this.context.map.off('center-changed', this.debounceThings)
+    console.log('unmounting')
+    this.context.map.off('center-changed', this.onChange)
   }
 
   render() {
-    return this.props.label
+    let {label, background, onChange} = this.props
+    if (onChange) this.changeFunc = debounce(onChange.bind(this, this.context.map), 17)
+    return label
     ? <div className='Pin'>
-        <div>{this.props.label}</div>
+        <div style={{background}}>{label}</div>
         <img src={pinStickImage} alt=''/>
       </div>
     : <div className='Pin'>

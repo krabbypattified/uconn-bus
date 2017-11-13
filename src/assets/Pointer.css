@@ -23,8 +23,9 @@
   top              : 21px;
   left             : calc(50% - 8px);
   padding          : 5px 17px;
+  color            : white;
   border-radius    : 100px;
-  background-color : white;
+  background-color : #333;
   box-shadow       : 0 1px 2px 0 rgba(0,0,0,.2);
   font-size        : 16px;
   font-weight      : 600;

@@ -4,6 +4,7 @@ import {connect} from 'react-redux'
 import {graphql, compose} from 'react-apollo'
 import SearchBar from 'components/SearchBar'
 import {debounce, getNearestThings} from 'components/helpers'
+import {setDirections, directionsNext} from 'data/actions'
 import {buildings, geocode} from 'data/queries'
 
 
@@ -12,6 +13,11 @@ class SearchBarManager extends React.PureComponent {
 
   static contextTypes = {
     map: PropTypes.any
+  }
+
+  constructor(...args) {
+    super(...args)
+    this.state = {geocode: null}
   }
 
   get closeBuildings() {
@@ -35,11 +41,10 @@ class SearchBarManager extends React.PureComponent {
   }
 
   updateGeocode() {
-    this.closeBuildings && this.setState({geocode: this.closeBuildings[0] || this.center})
+    this.closeBuildings && this.setState({geocode: this.closeBuildings[0] || this.center}) // also updates sorted buildings
   }
 
   componentWillMount() {
-    this.setState({geocode: null})
     this.debounceGeocode = debounce(_=>this.updateGeocode(), 350)
     this.context.map.on('center-changed', this.debounceGeocode)
   }
@@ -49,10 +54,21 @@ class SearchBarManager extends React.PureComponent {
   }
 
   render() {
-    let {thingSelected, directions} = this.props
-    return thingSelected
+    let {thingSelected, directions, location, setDirections, directionsNext} = this.props
+    let {longitude, latitude} = this.center
+    let center = [longitude, latitude]
+    return (thingSelected||directions.state===3)
     ? null
-    : <GQLSearchBar autofill={this.sortedBuildings} state={directions.state} geocode={this.state.geocode}/>
+    : <GQLSearchBar
+        initializeDirections={_=> {
+          setDirections({from: location||center, to: center})
+          directionsNext()
+        }}
+        autofill={this.sortedBuildings}
+        state={directions.state}
+        geocode={this.state.geocode}
+        map={this.context.map}
+      />
   }
 }
 
@@ -60,8 +76,13 @@ export default compose(
   graphql(buildings),
   connect(
     state => ({
+      location: state.location,
       thingSelected: state.selectedThingStack.length,
       directions: state.directions,
+    }),
+    dispatch => ({
+      setDirections: d=>dispatch(setDirections(d)),
+      directionsNext: _=>dispatch(directionsNext()),
     })
   )
 )(SearchBarManager)
@@ -76,8 +97,10 @@ let GQLSearchBar = compose(
     options: p => ({variables: {lngLat: p.geocode}})
   })
 )(
-  ({data, geocode, autofill, state}) =>
+  ({data, geocode, autofill, state, map, initializeDirections}) =>
   <SearchBar
+    onDirectionsClick={initializeDirections}
+    onSelect={bldg => map.fire('fake-click', {lngLat:[bldg.longitude, bldg.latitude]})}
     placeholder={shouldQuery(geocode) ? data.geocode : geocode}
     loading={shouldQuery(geocode) && data.loading}
     autofill={autofill}

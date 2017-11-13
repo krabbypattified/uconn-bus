@@ -32,7 +32,7 @@ let Preview = styled.div`
 `
 
 
-let DetailButton = props => <Button className='DetailButton' {...props}>Details</Button>
+let DetailButton = props => <Button className='DetailButton' {...props}>Arrivals</Button>
 
 let Button = styled.div`
   background-color: ${p=>p.color};
