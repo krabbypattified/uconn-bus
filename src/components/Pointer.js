@@ -21,7 +21,6 @@ export default class extends React.Component {
   }
 
   componentWillUnmount() {
-    console.log('unmounting')
     this.context.map.off('center-changed', this.onChange)
   }
 
