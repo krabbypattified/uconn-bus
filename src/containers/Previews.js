@@ -54,7 +54,6 @@ export default connect(
 let List = styled.div`
   position: absolute;
   z-index: 20;
-  width: 100%;
   left: 7px;
   right: 7px;
   margin: 0 auto;
