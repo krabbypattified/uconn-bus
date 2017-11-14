@@ -27,9 +27,6 @@
   transition : transform .3s;
   cursor     : pointer;
 }
-.Arrow div {
-  display: flex;
-}
 
 .Back.Arrow {
   left : 20px;

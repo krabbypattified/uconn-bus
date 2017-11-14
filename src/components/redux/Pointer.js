@@ -2,7 +2,7 @@ import React from 'react'
 import {connect} from 'react-redux'
 import PointerGraphQL from 'components/graphql/Pointer'
 import {setHighlightedThings, setDirections} from 'data/actions'
-import {distance, getNearestThings} from 'helpers'
+import {distance, getNearestThings, switchy} from 'helpers'
 
 
 class Pointer extends React.Component {
@@ -29,7 +29,12 @@ class Pointer extends React.Component {
     let {thingSelected, directions} = this.props
     return thingSelected
     ? null
-    : <PointerGraphQL directions={directions} onHoverDirections={this.onHoverDirections} onHoverThings={this.onHoverThings}/>
+    : switchy(directions.state)({
+        0:_=> <PointerGraphQL onChange={this.onHoverThings}/>,
+        1:_=> <PointerGraphQL label='Start' background='#71D5A0' onChange={this.onHoverDirections}/>,
+        2:_=> <PointerGraphQL label='End' background='#61A3FE' onChange={this.onHoverDirections}/>,
+        3:_=> null,
+      })
   }
 
 }

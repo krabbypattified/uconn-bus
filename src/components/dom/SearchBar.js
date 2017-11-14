@@ -1,6 +1,8 @@
 import React from 'react'
-import ReactSVG from 'react-svg'
 import fuzzy from 'fuzzy'
+
+import SVG from 'components/dom/SVG'
+
 import directionsSVG from 'assets/directions.svg'
 import searchSVG from 'assets/search.svg'
 import xSVG from 'assets/x.svg'
@@ -111,8 +113,8 @@ export default class SearchBar extends React.Component {
              {Autofill}
              <div className='SearchBar' onClick={_=>this.setState({fullscreen:true})}>
                {Text}
-               {fullscreen ? null : <div className='searchSVG'><ReactSVG path={searchSVG}/></div>}
-               <div className='mainSVG' onClick={e=>this.onButtonClick(e)}><ReactSVG path={fullscreen?xSVG:directionsSVG}/></div>
+               {fullscreen ? null : <SVG className='searchSVG' path={searchSVG}/>}
+               <SVG className='mainSVG' onClick={e=>this.onButtonClick(e)} path={fullscreen?xSVG:directionsSVG}/>
              </div>
            </div>
   }
