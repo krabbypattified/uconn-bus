@@ -1,22 +1,20 @@
 import React from 'react'
 import {connect} from 'react-redux'
-import {graphql, compose} from 'react-apollo'
-import Pin from 'components/Pointer'
-import {buses, busStops} from 'data/queries'
+import PointerGraphQL from 'graphql/Pointer'
 import {setHighlightedThings, setDirections} from 'data/actions'
-import {distance, getNearestThings, switchy} from 'helpers'
+import {distance, getNearestThings} from 'helpers'
 
 
 class Pointer extends React.Component {
 
-  onHoverDirections(map) {
+  onHoverDirections = ({map}) => {
     let {setDirections, directions} = this.props
     let center = map.getCenter().toArray()
     setDirections(directions.state === 1 ? {from:center} : {to:center})
   }
 
-  onHoverThings(map) {
-    let {buses:{buses}, busStops:{busStops}, setHighlightedThings} = this.props
+  onHoverThings = ({map, buses, busStops}) => {
+    let {setHighlightedThings} = this.props
     if (!buses||!busStops) return null
     let center = map.getCenter()
     let centerPx = map.project(center)
@@ -29,32 +27,21 @@ class Pointer extends React.Component {
 
   render() {
     let {thingSelected, directions} = this.props
-    if (thingSelected) return null
-    return switchy(directions.state)({
-      0:_=> <Pin onChange={map=>this.onHoverThings(map)}/>,
-      1:_=> <Pin label='Start' background='#71D5A0' onChange={map=>this.onHoverDirections(map)}/>,
-      2:_=> <Pin label='End' background='#61A3FE' onChange={map=>this.onHoverDirections(map)}/>,
-      3:_=> null,
-    })
+    return thingSelected
+    ? null
+    : <PointerGraphQL directions={directions} onHoverDirections={this.onHoverDirections} onHoverThings={this.onHoverThings}/>
   }
 
 }
 
 
-
-
-// Connect & Export
-export default compose(
-  graphql(buses, {name: 'buses'}),
-  graphql(busStops, {name: 'busStops'}),
-  connect(
-    state => ({
-      thingSelected: state.selectedThingStack.length,
-      directions: state.directions,
-    }),
-    dispatch => ({
-      setHighlightedThings: things => dispatch(setHighlightedThings(things)),
-      setDirections: payload => dispatch(setDirections(payload)),
-    })
-  ),
+export default connect(
+  state => ({
+    thingSelected: state.selectedThingStack.length,
+    directions: state.directions,
+  }),
+  dispatch => ({
+    setHighlightedThings: things => dispatch(setHighlightedThings(things)),
+    setDirections: fromTo => dispatch(setDirections(fromTo)),
+  })
 )(Pointer)
