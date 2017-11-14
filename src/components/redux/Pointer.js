@@ -1,6 +1,6 @@
 import React from 'react'
 import {connect} from 'react-redux'
-import PointerGraphQL from 'graphql/Pointer'
+import PointerGraphQL from 'components/graphql/Pointer'
 import {setHighlightedThings, setDirections} from 'data/actions'
 import {distance, getNearestThings} from 'helpers'
 

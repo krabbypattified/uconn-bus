@@ -1,7 +1,7 @@
 import React from 'react'
 import {graphql} from 'react-apollo'
 
-import BusStopManager from 'components/BusStopManager'
+import BusStopManager from 'components/react/BusStopManager'
 import {busStops} from 'data/queries'
 
 

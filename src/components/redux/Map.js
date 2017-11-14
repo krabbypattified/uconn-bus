@@ -1,6 +1,6 @@
 import React from 'react'
 import {connect} from 'react-redux'
-import Map from 'components/Map'
+import Map from 'components/react/Map'
 import {isMobile, switchy} from 'helpers'
 
 class MapContainer extends React.Component {

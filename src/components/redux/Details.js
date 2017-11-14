@@ -1,7 +1,7 @@
 import React from 'react'
 import {connect} from 'react-redux'
 import {deselectThing, selectThing} from 'data/actions'
-import Details from 'graphql/Details'
+import Details from 'components/graphql/Details'
 
 
 export default connect(

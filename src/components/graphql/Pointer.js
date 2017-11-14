@@ -1,6 +1,6 @@
 import React from 'react'
 import {graphql, compose} from 'react-apollo'
-import PointerReact from 'components/Pointer'
+import PointerReact from 'components/react/Pointer'
 import {buses, busStops} from 'data/queries'
 import {switchy} from 'helpers'
 

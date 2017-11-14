@@ -1,8 +1,8 @@
 import React from 'react'
 import styled from 'styled-components'
 import {darken, desaturate} from 'polished'
-import BusIcon from 'components/BusIcon'
-import BusStopDot from 'components/BusStopDot'
+import BusIcon from 'components/react/BusIcon'
+import BusStopDot from 'components/react/BusStopDot'
 import {hexColor} from 'helpers'
 import 'assets/Preview.css'
 

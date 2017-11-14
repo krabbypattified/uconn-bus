@@ -1,7 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import {connect} from 'react-redux'
-import GeolocationMarker from 'components/GeolocationMarker'
+import GeolocationMarker from 'components/react/GeolocationMarker'
 import {setLocation} from 'data/actions'
 
 

@@ -1,7 +1,7 @@
 import React from 'react'
 import {connect} from 'react-redux'
 import {directionsBack, directionsNext, directionsDone} from 'data/actions'
-import DirectionsGraphQL from 'graphql/Directions'
+import DirectionsGraphQL from 'components/graphql/Directions'
 
 
 export default connect(
