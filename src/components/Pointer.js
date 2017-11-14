@@ -1,6 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import {debounce} from 'components/helpers'
+import {debounce} from 'helpers'
 import pinImage from 'assets/pointer.png'
 import pinStickImage from 'assets/pointerStick.png'
 import 'assets/Pointer.css'

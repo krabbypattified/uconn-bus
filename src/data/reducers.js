@@ -1,4 +1,4 @@
-import {switchy} from 'components/helpers'
+import {switchy} from 'helpers'
 
 
 export default {

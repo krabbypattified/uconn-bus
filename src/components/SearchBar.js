@@ -2,6 +2,7 @@ import React from 'react'
 import ReactSVG from 'react-svg'
 import fuzzy from 'fuzzy'
 import directionsSVG from 'assets/directions.svg'
+import searchSVG from 'assets/search.svg'
 import xSVG from 'assets/x.svg'
 import 'assets/SearchBar.css'
 
@@ -60,6 +61,7 @@ export default class SearchBar extends React.Component {
       this.setAutofill('')
       input.focus()
     }
+    else if (fullscreen) input.focus()
 
     this.wasFullscreen = fullscreen
   }
@@ -72,7 +74,7 @@ export default class SearchBar extends React.Component {
   }
 
   render() {
-    let {placeholder, autofill:buildings, loading, state:directionState} = this.props
+    let {placeholder, autofill:buildings, loading} = this.props
     let {fullscreen, autofill:autofillText} = this.state
     let Text
 
@@ -109,7 +111,8 @@ export default class SearchBar extends React.Component {
              {Autofill}
              <div className='SearchBar' onClick={_=>this.setState({fullscreen:true})}>
                {Text}
-               {directionState ? null : <div onClick={e=>this.onButtonClick(e)}><ReactSVG path={fullscreen?xSVG:directionsSVG}/></div>}
+               {fullscreen ? null : <div className='searchSVG'><ReactSVG path={searchSVG}/></div>}
+               <div className='mainSVG' onClick={e=>this.onButtonClick(e)}><ReactSVG path={fullscreen?xSVG:directionsSVG}/></div>
              </div>
            </div>
   }

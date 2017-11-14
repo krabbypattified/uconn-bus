@@ -4,7 +4,7 @@ import {graphql, compose} from 'react-apollo'
 import Pin from 'components/Pointer'
 import {buses, busStops} from 'data/queries'
 import {setHighlightedThings, setDirections} from 'data/actions'
-import {distance, getNearestThings, switchy} from 'components/helpers'
+import {distance, getNearestThings, switchy} from 'helpers'
 
 
 class Pointer extends React.Component {

@@ -1,6 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import {SourceManager} from 'components/helpers'
+import {SourceManager} from 'helpers'
 
 
 export default class WalkManager extends React.Component {

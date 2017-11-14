@@ -18,7 +18,7 @@ import Details from 'containers/Details'
 import Pointer from 'containers/Pointer'
 import SearchBar from 'containers/SearchBar'
 import GeolocationMarker from 'containers/GeolocationMarker'
-import {isMobile} from 'components/helpers'
+import {isMobile} from 'helpers'
 
 
 // Apollo setup

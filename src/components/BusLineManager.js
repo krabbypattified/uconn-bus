@@ -1,7 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import polyline from '@mapbox/polyline'
-import {SourceManager, hexColor} from 'components/helpers'
+import {SourceManager, hexColor} from 'helpers'
 
 
 export default class BusStopManager extends React.Component {
@@ -20,7 +20,7 @@ export default class BusStopManager extends React.Component {
       type: 'LineString',
       getProperties: line => ({
         coordinates: line.path ? polyline.decode(line.path).map(pt=>[pt[1], pt[0]]) : [[]],
-        color: hexColor[line.color],
+        color: hexColor(line.color),
       })
     })
 

@@ -3,7 +3,7 @@ import styled from 'styled-components'
 import {darken, desaturate} from 'polished'
 import BusIcon from 'components/BusIcon'
 import BusStopDot from 'components/BusStopDot'
-import {hexColor} from 'components/helpers'
+import {hexColor} from 'helpers'
 import 'assets/Preview.css'
 
 
@@ -12,9 +12,9 @@ export default ({data, onDetailsClick}) => {
   return (
     <Preview className='Preview' style={{zIndex:20-data.idx}}>
       <div className='Name'>{data.name||`${data.busLine.name} Bus`}</div>
-      {isBus ? <BusIcon color={hexColor[data.busLine.color]}/> : <BusStopDot/>}
+      {isBus ? <BusIcon color={hexColor(data.busLine.color)}/> : <BusStopDot/>}
       <div className='Padder'/>
-      <DetailButton onClick={onDetailsClick} color={isBus?hexColor[data.busLine.color]:'#383838'}/>
+      <DetailButton onClick={onDetailsClick} color={isBus?hexColor(data.busLine.color):'#383838'}/>
     </Preview>
   )
 }

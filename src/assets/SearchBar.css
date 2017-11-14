@@ -70,11 +70,6 @@
   overflow        : hidden;
   align-items     : center;
   justify-content : space-between;
-}
-
-/* Directions button */
-
-.SearchBar svg {
   cursor : pointer;
 }
 
@@ -82,14 +77,31 @@ body:not(.mobile) .SearchBar svg:hover path {
   fill : #4085e4;
 }
 
-.SearchBar div:last-child {
+.SearchBar .mainSVG div, .SearchBar .searchSVG div {
   /* fix svg offset */
   display : flex;
 }
 
+.searchSVG {
+  margin-left: auto;
+  position: relative;
+  padding-right: 9px;
+  margin-right: 8px;
+}
+
+.searchSVG:after {
+  content: ' ';
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 1px;
+  height: 107%;
+  background: #ECECEC;
+}
+
 /* x.svg hover */
 
-.Fullscreen .SearchBar svg:hover #Search {
+.Fullscreen .mainSVG svg:hover #Search {
   stroke : gray;
 }
 

@@ -1,7 +1,7 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 import Hammer from 'hammerjs'
-import {debounce} from 'components/helpers'
+import {debounce} from 'helpers'
 import 'assets/DetailContent.css'
 
 // content: [DOM]
