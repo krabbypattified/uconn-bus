@@ -1,6 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import {SourceManager} from 'components/helpers'
+import {SourceManager, hexColor} from 'components/helpers'
 import busSVG from 'assets/bus.svg'
 let first = true
 let oldBuses = {}
@@ -21,7 +21,7 @@ export default class BusManager extends React.Component {
       getProperties: bus => ({
         coordinates: [bus.longitude, bus.latitude],
         heading: bus.heading,
-        color: bus.busLine.color,
+        color: hexColor[bus.busLine.color],
       }),
     })
 

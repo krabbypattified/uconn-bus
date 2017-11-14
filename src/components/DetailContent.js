@@ -10,11 +10,10 @@ export default class extends React.Component {
 
   pop(arg) {
     this.div.style.transition = 'transform .25s'
-    arg
-    ? this.div.style.transform = translateY(this.openHeight)
-    : this.div.style.transform = translateY(this.closeHeight)
+    this.div.style.transform = translateY(arg ?this.openHeight : this.closeHeight)
     this.noTrans()
     this.popped = arg
+    this.currentHeight = arg ? this.openHeight : this.closeHeight
   }
 
   componentDidMount() {
@@ -49,7 +48,7 @@ export default class extends React.Component {
 
     mc.on('panend', _=> {
       let cVal = clamp({...this.clamp, give:0})
-      this.popped = this.openHeight-this.currentHeight < this.currentHeight-this.closeHeight
+      this.popped = this.openHeight-this.clamp.val < this.clamp.val-this.closeHeight
       if (cVal!==this.clamp.val) this.pop(this.popped)
       this.currentHeight = cVal
     })

@@ -14,6 +14,7 @@ import BusStopManager from 'components/BusStopManager'
 import BusStopDot from 'components/BusStopDot'
 import BusIcon from 'components/BusIcon'
 import ScrollingName from 'components/ScrollingName'
+import {hexColor} from 'components/helpers'
 
 
 
@@ -86,7 +87,7 @@ function isBus(thing) {
 
 function title(thing, selectThing) {
   let name = isBus(thing) ? `${thing.busLine.name} Bus` : thing.name
-  let icon = isBus(thing) ? <BusIcon key='bi' color={thing.busLine.color}/> : <BusStopDot key='bi'/>
+  let icon = isBus(thing) ? <BusIcon key='bi' color={hexColor[thing.busLine.color]}/> : <BusStopDot key='bi'/>
   return [ <ScrollingName key='bn' onClick={()=>selectThing&&selectThing(thing)}>{name}</ScrollingName>, icon ]
 }
 

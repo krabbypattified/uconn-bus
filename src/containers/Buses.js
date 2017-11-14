@@ -3,6 +3,7 @@ import React from 'react'
 import {graphql, compose} from 'react-apollo'
 
 import BusManager from 'components/BusManager'
+import {hexColor} from 'components/helpers'
 import {buses, busLines} from 'data/queries'
 let loaded
 
@@ -15,7 +16,7 @@ let Buses = ({buses, busLines}) => {
     loaded = true
     Loader.finish()
   }
-  return <BusManager buses={buses} colors={busLines.map(i=>i.color)}/>
+  return <BusManager buses={buses} colors={busLines.map(i=>hexColor[i.color])}/>
 }
 
 

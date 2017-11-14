@@ -13,7 +13,7 @@ import BusStopManager from 'components/BusStopManager'
 import WalkManager from 'components/WalkManager'
 import {directionsBack, directionsNext, directionsDone} from 'data/actions'
 import {directions} from 'data/queries'
-import {switchy} from 'components/helpers'
+import {switchy, hexColor} from 'components/helpers'
 
 
 
@@ -129,7 +129,7 @@ function getInstructions(data) {
     <div className='Row' key='a'>Walk to&nbsp;
          <Text color='#929292'>{data.directions.hopOn.stop.name}</Text>.</div>,
     <div className='Row' key='b'>Hop on&nbsp;
-         <Text color={data.directions.hopOn.bus.busLine.color}>{data.directions.hopOn.bus.busLine.name}</Text>
+         <Text color={hexColor[data.directions.hopOn.bus.busLine.color]}>{data.directions.hopOn.bus.busLine.name}</Text>
          &nbsp;Bus at {moment(data.directions.hopOn.time).format('h:mm A')}.</div>,
     <div className='Row' key='c'>Arrive at&nbsp;
          <Text color='#929292'>{data.directions.hopOff.stop.name}</Text>
