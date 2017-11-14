@@ -1,8 +1,8 @@
 import React from 'react'
 import {connect} from 'react-redux'
 
-import Buses from 'components/redux/Buses'
-import BusStops from 'components/redux/BusStops'
+import Buses from 'components/graphql/Buses'
+import BusStops from 'components/graphql/BusStops'
 
 
 let Default = ({directions, thingSelected}) => (
