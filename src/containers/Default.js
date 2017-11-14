@@ -2,10 +2,10 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import {connect} from 'react-redux'
 
-import Buses from 'components/graphql/Buses'
-import BusStops from 'components/graphql/BusStops'
-// import SearchExpander from 'components/graphql/SearchExpander'
-// import SearchReceiver from 'components/graphql/SearchReceiver'
+import Buses from 'components/Buses'
+import BusStops from 'components/BusStops'
+// import SearchExpander from 'components/SearchExpander'
+// import SearchReceiver from 'components/SearchReceiver'
 
 import {setDirections, directionsNext} from 'data/actions'
 

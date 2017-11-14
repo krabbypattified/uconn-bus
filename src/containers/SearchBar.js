@@ -2,7 +2,9 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import {connect} from 'react-redux'
 import {graphql, compose} from 'react-apollo'
-import SearchBarGraphQL from 'components/graphql/SearchBar'
+
+import SearchBarGraphQL from 'components/SearchBar'
+
 import {debounce, getNearestThings} from 'helpers'
 import {setDirections, directionsNext} from 'data/actions'
 import {buildings} from 'data/queries'

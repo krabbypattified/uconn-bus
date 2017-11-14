@@ -1,7 +1,7 @@
 import React from 'react'
 import busSVG from 'assets/bus.svg'
 import styled from 'styled-components'
-import SVG from 'components/dom/SVG'
+import SVG from 'components/SVG'
 
 
 export default props => <BusSVG {...props} path={busSVG}/>

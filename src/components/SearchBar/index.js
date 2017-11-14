@@ -1,7 +1,7 @@
 import React from 'react'
 import {geocode} from 'data/queries'
 import {graphql, compose} from 'react-apollo'
-import SearchBarReact from 'components/dom/SearchBar'
+import SearchBarReact from './SearchBar'
 
 
 let SearchBar = ({data, geocode, autofill, map, initializeDirections}) =>

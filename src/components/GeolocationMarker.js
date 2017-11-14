@@ -1,6 +1,6 @@
 import React from 'react'
 import styled, {keyframes} from 'styled-components'
-import FreeMarker from 'components/dom/FreeMarker'
+import FreeMarker from 'components/FreeMarker'
 
 
 export default ({location, onPanEnd, scale=1}) => (

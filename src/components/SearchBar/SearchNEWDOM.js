@@ -2,7 +2,7 @@
 import React from 'react'
 import fuzzy from 'fuzzy'
 
-import SVG from 'components/dom/SVG'
+import SVG from 'components/SVG'
 
 import xSVG from 'assets/x.svg'
 

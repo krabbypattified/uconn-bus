@@ -1,7 +1,7 @@
 import React from 'react'
 import fuzzy from 'fuzzy'
 
-import SVG from 'components/dom/SVG'
+import SVG from 'components/SVG'
 
 import directionsSVG from 'assets/directions.svg'
 import searchSVG from 'assets/search.svg'

@@ -1,7 +1,7 @@
 import React from 'react'
 import {graphql} from 'react-apollo'
 import {geocode} from 'data/queries'
-import {SearchReceiverDOM} from 'components/dom/SearchReceiver'
+import {SearchReceiverDOM} from 'components/SearchReceiver'
 
 
 let SearchReceiver = ({placeholder, data, geocode}) =>

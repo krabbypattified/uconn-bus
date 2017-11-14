@@ -1,9 +1,11 @@
 import React from 'react'
-import {connect} from 'react-redux'
 import styled from 'styled-components'
 import CSSTransitionGroup from 'react-addons-css-transition-group'
-import Preview from 'components/dom/Preview'
-import BusLineManager from 'components/dom/BusLineManager'
+import {connect} from 'react-redux'
+
+import Preview from 'components/Preview'
+import BusLineManager from 'components/BusLineManager'
+
 import {selectThing} from 'data/actions'
 import 'assets/PreviewAnimation.css'
 

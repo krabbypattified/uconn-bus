@@ -1,6 +1,6 @@
 import React from 'react'
 
-import SVG from 'components/dom/SVG'
+import SVG from 'components/SVG'
 
 import arrowSVG from 'assets/arrow.svg'
 import 'assets/DetailHeader.css'

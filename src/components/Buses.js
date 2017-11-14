@@ -2,7 +2,7 @@
 import React from 'react'
 import {graphql, compose} from 'react-apollo'
 
-import BusManager from 'components/dom/BusManager'
+import BusManager from 'components/BusManager'
 import {hexColor} from 'helpers'
 import {buses, busLines} from 'data/queries'
 let loaded

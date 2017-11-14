@@ -1,5 +1,5 @@
 import React from 'react'
-import Marker from 'components/dom/Marker'
+import Marker from 'components/Marker'
 import pinStickImage from 'assets/pointerStick.png'
 
 
