@@ -55,7 +55,7 @@ class Directions extends React.Component {
       3:_=>
       <div>
         <DetailHeader title='Directions' onBack={onBack} onDone={onDone}/>
-        <DetailContent content={getInstructions(data)}/>
+        <DetailContent>{getInstructions(data)}</DetailContent>
         <TextMarker key='w' text='Start' background='#77d09f' lngLat={directions.from}/>
         <TextMarker key='x' text='End' background='#61A3FE' lngLat={directions.to}/>
         <BusManager buses={[data.directions.hopOn.bus]} size={.8}/>

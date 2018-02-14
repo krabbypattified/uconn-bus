@@ -4,62 +4,55 @@ import {Provider} from 'react-redux'
 import {ApolloProvider} from 'react-apollo'
 import {ApolloClient} from 'apollo-client'
 import {HttpLink} from 'apollo-link-http'
-// import {RetryLink} from 'apollo-link-retry'
 import {InMemoryCache} from 'apollo-cache-inmemory'
 import {injectGlobal} from 'styled-components'
 import {normalize} from 'polished'
 
 import reducers from 'data/reducers'
 import Map from 'containers/Map'
-import Previews from 'containers/Previews'
 import Default from 'containers/Default'
 import Directions from 'containers/Directions'
 import Details from 'containers/Details'
 import Pointer from 'containers/Pointer'
-import SearchBar from 'containers/SearchBar'
 import GeolocationMarker from 'containers/GeolocationMarker'
 import {isMobile} from 'helpers'
 
 
 // Apollo setup
 const httpLink = new HttpLink({uri: 'https://uconn-bus-api.herokuapp.com/graphql'})
-// breaks app refresh
-// const retry = new RetryLink({
-//   max: Infinity,
-//   delay: 5000
-// })
+// const retry = new RetryLink({max:Infinity,delay:5000})
 const client = new ApolloClient({
   link: httpLink,
   cache: new InMemoryCache()
 })
 
+
 // Redux setup
 const store = createStore(
   combineReducers({...reducers}),
-  // preload,
   window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
 )
 
-// Add mobile class to body
-isMobile() && document.body.classList.add('mobile')
 
-// Normalize CSS
+// CSS Helpers
+isMobile() && document.body.classList.add('mobile')
 injectGlobal`${normalize()}`
 
 
 // Base App
-export default () => (
+const App = () => (
   <ApolloProvider client={client}>
     <Provider store={store}>
       <Map>
+        <Default/>
         <Details/>
-        <Previews/>
+        <Directions/>
         <Pointer/>
         <GeolocationMarker/>
-        <Directions/>
-        <Default/>
-        <SearchBar/>
       </Map>
     </Provider>
   </ApolloProvider>
 )
+
+
+export default App

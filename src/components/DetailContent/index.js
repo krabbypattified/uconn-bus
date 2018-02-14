@@ -2,7 +2,7 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 import Hammer from 'hammerjs'
 import {debounce} from 'helpers'
-import 'assets/DetailContent.css'
+import './DetailContent.css'
 
 // content: [DOM]
 // nocontent: String
@@ -58,10 +58,8 @@ export default class extends React.Component {
   }
 
   render() {
-    let {content, noContent} = this.props
-    return <div className='DetailContent'>
-             {content&&content.length ? content : <NoContent>{noContent}</NoContent>}
-           </div>
+    let {children, noContent, ...other} = this.props
+    return <div className='DetailContent' {...other}>{children || <NoContent>{noContent}</NoContent>}</div>
   }
 
 }

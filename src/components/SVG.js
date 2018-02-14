@@ -3,10 +3,13 @@ import ReactSVG from 'react-svg'
 import styled from 'styled-components'
 
 
-export default ({path, ...props}) => <div {...props}><SVG path={path}/></div>
+const SVG = ({path, ...props}) => <div {...props}><SVGDiv path={path}/></div>
 
 
-let SVG = styled(ReactSVG)`
+export default SVG
+
+
+let SVGDiv = styled(ReactSVG)`
   display: flex;
   div {display: flex}
 `

@@ -1,28 +1,31 @@
 import React from 'react'
-import {geocode} from 'data/queries'
-import {graphql, compose} from 'react-apollo'
-import SearchBarReact from './SearchBar'
+import PropTypes from 'prop-types'
+import {graphql} from 'react-apollo'
+import SearchBarDOM from './SearchBar'
+import {buildings} from 'data/queries'
+import {getNearestThings} from 'helpers'
 
 
-let SearchBar = ({data, geocode, autofill, map, initializeDirections}) =>
-<SearchBarReact
-  onDirectionsClick={initializeDirections}
-  onSelect={bldg => map.fire('fake-click', {lngLat:[bldg.longitude, bldg.latitude]})}
-  placeholder={shouldQuery(geocode) ? data.geocode : geocode}
-  loading={shouldQuery(geocode) && data.loading}
-  autofill={autofill}
-/>
+class SearchBar extends React.Component {
+
+  static contextTypes = {
+    map: PropTypes.any
+  }
 
 
-export default compose(
-  graphql(geocode, {
-    skip: p => !shouldQuery(p.geocode),
-    options: p => ({variables: {lngLat: p.geocode}})
-  })
-)(SearchBar)
+  get center() {
+    let c = this.context.map.getCenter().toArray()
+    return {longitude:c[0], latitude:c[1]}
+  }
 
 
-// Helper
-function shouldQuery(geocode) {
-  return geocode && !geocode.type
+  render() {
+    let {initializeDirections, data: {buildings}} = this.props
+    let sortedBuildings = buildings ? getNearestThings(buildings, {location:this.center}) : []
+    return <SearchBarDOM buildings={sortedBuildings} initializeDirections={initializeDirections}/>
+  }
+
 }
+
+
+export default graphql(buildings)(SearchBar)

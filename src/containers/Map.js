@@ -1,11 +1,10 @@
 import React from 'react'
 import {connect} from 'react-redux'
-
-import Map from 'components/Map'
-
+import MapDOM from 'components/Map'
 import {isMobile, switchy} from 'helpers'
 
-class MapContainer extends React.Component {
+
+class Map extends React.Component {
 
   onLoad(map) {
     this.map = map
@@ -15,6 +14,7 @@ class MapContainer extends React.Component {
     map.on('click', e => this.clickPan(e.lngLat.toArray()))
   }
 
+
   clickPan(lngLatArray) {
     setTimeout(_=>this.map.fire('center-changed'), 300)
     this.map.easeTo({
@@ -23,11 +23,13 @@ class MapContainer extends React.Component {
     })
   }
 
+
   shouldComponentUpdate({thingSelected, directions}) {
     this.thingChanged = this.props.thingSelected !== thingSelected
     this.dirStateChanged = this.props.directions.state !== directions.state
     return this.thingChanged || this.dirStateChanged
   }
+
 
   render() {
     let {children, thingSelected, thing, directions} = this.props
@@ -89,7 +91,7 @@ class MapContainer extends React.Component {
 
 
     return (
-      <Map
+      <MapDOM
         container='root'
         mapStyle='mapbox://styles/chefgabe/cj9d0hyrr5qu42smoce9sjx8o'
         attributionControl={false}
@@ -106,18 +108,17 @@ class MapContainer extends React.Component {
           {id:'busLine', type:'line', source:'busLine', before:'busStops'},
           {id:'walk', type:'line', source:'walk', before:'busStops'},
         ]}
-      >{children}</Map>
+      >{children}</MapDOM>
     )
   }
 
 }
 
 
-// Connect & Export
 export default connect(
   state => ({
     thingSelected: state.selectedThingStack.length,
     thing: state.selectedThingStack[state.selectedThingStack.length-1],
     directions: state.directions,
   })
-)(MapContainer)
+)(Map)

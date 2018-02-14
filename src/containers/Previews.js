@@ -1,44 +1,23 @@
 import React from 'react'
-import styled from 'styled-components'
-import CSSTransitionGroup from 'react-addons-css-transition-group'
 import {connect} from 'react-redux'
-
-import Preview from 'components/Preview'
+import PreviewsDOM from 'components/Previews'
 import BusLineManager from 'components/BusLineManager'
-
 import {selectThing} from 'data/actions'
-import 'assets/PreviewAnimation.css'
 
 
-class Previews extends React.Component {
-  render() {
-    let {directions, thingSelected, highlightedThings, selectThing, firstBus} = this.props
-    if (thingSelected || directions) return null
-
-    let busLineIfAny = firstBus && (
-      <BusLineManager opacity={.42} lines={[{
-        path: firstBus.busLine.path,
-        color: firstBus.busLine.color,
-      }]}/>
-    )
-
-    return (
-      <List>
-        <CSSTransitionGroup
-          transitionName={'PreviewAnimation'}
-          transitionEnterTimeout={200} transitionLeaveTimeout={200}>
-              {highlightedThings.map((thing, idx) => (
-                <Preview onDetailsClick={()=>selectThing(thing)} key={idx} data={{...thing,idx}}/>
-              ))}
-        </CSSTransitionGroup>
-        {busLineIfAny}
-      </List>
-    )
-  }
-}
+let Previews = ({directions, thingSelected, highlightedThings, selectThing, firstBus}) =>
+<div>
+  <PreviewsDOM things={highlightedThings} selectFunc={selectThing}/>
+  {firstBus && (
+    <BusLineManager opacity={.42} lines={[{
+    path: firstBus.busLine.path,
+    color: firstBus.busLine.color,
+    }]}/>
+  )}
+</div>
 
 
-// Connect & Export
+
 export default connect(
   state => ({
     highlightedThings: state.highlightedThings,
@@ -50,14 +29,3 @@ export default connect(
     selectThing: thing => dispatch(selectThing(thing))
   })
 )(Previews)
-
-
-// Helpers
-let List = styled.div`
-  position: absolute;
-  z-index: 20;
-  left: 7px;
-  right: 7px;
-  margin: 0 auto;
-  max-width: 590px;
-`

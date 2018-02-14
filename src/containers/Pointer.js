@@ -1,8 +1,6 @@
 import React from 'react'
 import {connect} from 'react-redux'
-
 import PointerGraphQL from 'components/Pointer'
-
 import {setHighlightedThings, setDirections} from 'data/actions'
 import {distance, getNearestThings, switchy} from 'helpers'
 
@@ -14,6 +12,7 @@ class Pointer extends React.Component {
     let center = map.getCenter().toArray()
     setDirections(directions.state === 1 ? {from:center} : {to:center})
   }
+
 
   onHoverThings = ({map, buses, busStops}) => {
     let {setHighlightedThings} = this.props
@@ -27,8 +26,11 @@ class Pointer extends React.Component {
     setHighlightedThings(things)
   }
 
+
   render() {
     let {thingSelected, directions} = this.props
+
+    
     return thingSelected
     ? null
     : switchy(directions.state)({

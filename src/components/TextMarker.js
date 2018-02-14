@@ -3,7 +3,7 @@ import Marker from 'components/Marker'
 import pinStickImage from 'assets/pointerStick.png'
 
 
-export default ({text, background='#333', lngLat}) => (
+const TextMarker = ({text, background='#333', lngLat}) => (
   <Marker lngLat={lngLat} style={{zIndex:2}}>
     <div className='small Pin'>
       <div style={{background, color:'white'}}>{text}</div>
@@ -11,3 +11,6 @@ export default ({text, background='#333', lngLat}) => (
     </div>
   </Marker>
 )
+
+
+export default TextMarker

@@ -23,14 +23,14 @@ class Details extends React.Component {
 
     // Arrivals
     let arrivals=[]
-    if (isBus(thing) && !loading) arrivals = bus.bus.arrivals.slice(0).sort((a,b)=>a.time-b.time)
-    else if (!isBus(thing) && !loading) arrivals = busStop.busStop.arrivals.slice(0).sort((a,b)=>a.time-b.time)
+    if (isBus(thing) && !loading) arrivals = bus.bus.arrivals.slice().sort((a,b)=>a.time-b.time)
+    else if (!isBus(thing) && !loading) arrivals = busStop.busStop.arrivals.slice().sort((a,b)=>a.time-b.time)
 
 
     return <div>
              {managers(thing)}
              <DetailHeader title={title(thing)} onBack={onBack}/>
-             {!loading && <DetailContent content={content(arrivals, selectThing, !isBus(thing))} noContent={noContent(thing)}/>}
+             {!loading && <DetailContent noContent={noContent(thing)}>{content(arrivals, selectThing, !isBus(thing))}</DetailContent>}
            </div>
   }
 }
@@ -67,20 +67,22 @@ function title(thing, selectThing) {
 }
 
 function content(arrivals, selectThing, isBus) {
-  return arrivals.map((arrival,idx) => {
-    let fromNow = moment(arrival.time).diff(moment(), 'minutes') + 'm'
-    let time = moment(arrival.time).format('h:mm A')
-    return (
-      <div className="Row" key={idx}>
-        {title(isBus?arrival.bus:arrival.stop, selectThing)}
-        <div className='Padder'/>
-        <div className='Time'>
-          <span>{fromNow}</span>
-          <span>{time}</span>
+  return arrivals.length
+  ? arrivals.map((arrival,idx) => {
+      let fromNow = moment(arrival.time).diff(moment(), 'minutes') + 'm'
+      let time = moment(arrival.time).format('h:mm A')
+      return (
+        <div className="Row" key={idx}>
+          {title(isBus?arrival.bus:arrival.stop, selectThing)}
+          <div className='Padder'/>
+          <div className='Time'>
+            <span>{fromNow}</span>
+            <span>{time}</span>
+          </div>
         </div>
-      </div>
-    )
-  })
+      )
+    })
+  : null
 }
 
 function noContent(thing) {

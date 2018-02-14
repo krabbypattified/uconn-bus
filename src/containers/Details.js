@@ -1,9 +1,17 @@
 import React from 'react'
 import {connect} from 'react-redux'
-
-import Details from 'components/Details'
-
+import DetailsDOM from 'components/Details'
 import {deselectThing, selectThing} from 'data/actions'
+
+
+let Details = ({thingSelected, thing, deselectThing, selectThing}) =>
+thingSelected
+? <DetailsDOM
+    onBack={deselectThing}
+    thing={thing}
+    selectThing={selectThing}
+  />
+: null
 
 
 export default connect(
@@ -15,7 +23,4 @@ export default connect(
     selectThing: thing=>dispatch(selectThing(thing)),
     deselectThing: ()=>dispatch(deselectThing()),
   })
-)(
-  ({thingSelected, thing, deselectThing, selectThing}) =>
-  !thingSelected ? null : <Details onBack={deselectThing} thing={thing} selectThing={selectThing}/>
-)
+)(Details)

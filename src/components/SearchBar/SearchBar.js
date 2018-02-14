@@ -1,121 +1,114 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 import fuzzy from 'fuzzy'
-
+import DetailContent from 'components/DetailContent'
+import Geocoder from 'components/Geocoder'
+import Expander from 'components/Expander'
 import SVG from 'components/SVG'
-
-import directionsSVG from 'assets/directions.svg'
 import searchSVG from 'assets/search.svg'
-import xSVG from 'assets/x.svg'
-import 'assets/SearchBar.css'
+import directionsSVG from 'assets/directions.svg'
+import {debounce} from 'helpers'
 
 
 export default class SearchBar extends React.Component {
 
+  static contextTypes = {
+    map: PropTypes.any
+  }
+
   constructor(...args) {
     super(...args)
-    this.state = {fullscreen:false, autofill:''}
+    this.state = {fullscreen:false, text:'', geocode:null}
   }
 
-  onKeystroke(e) {
-    if (e.keyCode === 27) this.setState({fullscreen:false})
-    if (e.keyCode === 13) {
-      if (!this.state.fullscreen) return this.setState({fullscreen:true})
-      let selection = this.state.autofill && this.autofiller && this.autofiller[this.autofiller.length-1]
-      selection && this.selectBuilding(selection)
-    }
+
+  initializeDirections = e => {
+    e.stopPropagation()
+    this.props.initializeDirections(this.context.map.getCenter().toArray())
   }
+
+
+  setFullscreen(fullscreen) {
+    this.setState({fullscreen})
+    if (fullscreen) setTimeout(_=>document.querySelector('.SearchBar input').focus(), 0)
+    else this.setText('')
+  }
+
+
+  setText(text) {
+    this.setState({text})
+    let Autofill = document.querySelector('.Autofill')
+    Autofill&&Autofill.scrollTo(0,10000)
+  }
+
 
   selectBuilding(building) {
-    let {onSelect} = this.props
-    onSelect && onSelect(building)
-    this.setState({fullscreen:false})
+    this.setText('')
+    this.setState({fullscreen:false, geocode:building})
   }
 
-  setAutofill(text) {
-    let autofill = document.querySelector('.Autofill')
-    autofill && autofill.scrollTo(0,10000)
-    this.setState({autofill:text})
+
+  get center() {
+    let c = this.context.map.getCenter().toArray()
+    return {longitude: c[1], latitude: c[0]}
   }
+
+
+  updateGeocode = () => {
+    if (!this.mounted) return
+    this.setState({geocode:this.center})
+  }
+
 
   componentWillMount() {
-    document.addEventListener('keyup', this.onKeystroke.bind(this))
+    this.mounted = true
+    this.debounceGeocode = debounce(this.updateGeocode, 350)
+    this.context.map.on('center-changed', this.debounceGeocode)
   }
+
 
   componentWillUnmount() {
-    document.removeEventListener('keyup', this.onKeystroke)
+    this.mounted = false
+    this.context.map.off('center-changed', this.debounceGeocode)
   }
 
-  componentDidUpdate() {
-    let {fullscreen} = this.state
-    let input = document.querySelector('input.Search')
 
-    // blur
-    if (this.wasFullscreen && !fullscreen) {
-      this.setAutofill('')
-      if (input) {
-        input.blur()
-        input.value = ''
-      }
-    }
-
-    // focus
-    else if (!this.wasFullscreen && fullscreen) {
-      this.setAutofill('')
-      input.focus()
-    }
-    else if (fullscreen) input.focus()
-
-    this.wasFullscreen = fullscreen
-  }
-
-  onButtonClick(e) {
-    let {onDirectionsClick} = this.props
-    e.stopPropagation()
-    if (this.state.fullscreen) this.setState({fullscreen:false})
-    else onDirectionsClick&&onDirectionsClick()
-  }
 
   render() {
-    let {placeholder, autofill:buildings, loading} = this.props
-    let {fullscreen, autofill:autofillText} = this.state
-    let Text
+    let {buildings} = this.props
+    let {fullscreen, text, geocode} = this.state
+    let Autofiller
 
 
-    if (loading) Text = <input className='Search' placeholder='Loading...'/>
-    else {
-      Text = placeholder && !fullscreen
-      ? <div className='Search'>
-          <div className='Name'>{placeholder.name}</div>
-          {placeholder.abbreviation && <span>{placeholder.abbreviation}</span>}
-        </div>
-      : <input className='Search' placeholder='Search UConn' onChange={e=>this.setAutofill(e.target.value)}/>
-    }
-
-
-    buildings = buildings.slice(0).reverse()
-    if (fullscreen && autofillText) {
-      this.autofiller = fuzzy
-        .filter(autofillText, buildings, {extract: o => `${o.name} ${o.abbreviation}`})
-        .sort((a,b) => a.score - b.score)
+    // Fuzzy filter buildings
+    if (fullscreen && text) Autofiller = fuzzy
+        .filter(text, buildings, {extract: o => `${o.name} ${o.abbreviation}`})
+        .sort((a,b) => a.score - b.score) // ascending score, best at bottom
         .map(r => r.original)
-    }
-    else if (fullscreen) this.autofiller = buildings
+    else Autofiller = buildings
 
+    // TODO fix the search thingy
+    return null
 
-    let Autofill = fullscreen
-    ? <div className='Autofill'>
-        {this.autofiller.map((b, i) => <div key={i} onClick={_=>this.selectBuilding(b)}>{b.name}<span>{b.abbreviation}</span></div>)}
-      </div>
-    : null
-
-
-    return <div className={`SearchExpander ${fullscreen?'Fullscreen':''}`}>
-             {Autofill}
-             <div className='SearchBar' onClick={_=>this.setState({fullscreen:true})}>
-               {Text}
-               {fullscreen ? null : <SVG className='searchSVG' path={searchSVG}/>}
-               <SVG className='mainSVG' onClick={e=>this.onButtonClick(e)} path={fullscreen?xSVG:directionsSVG}/>
-             </div>
-           </div>
+    return (
+      <Expander
+        className='SearchBar'
+        isFullscreen={fullscreen}
+        fullscreen={(
+          <div>
+            <div className='Autofill'>{Autofiller.map((b, i) => <div key={i} onClick={_=>this.selectBuilding(b)}>{b.name}<span>{b.abbreviation}</span></div>)}</div>
+            <input placeholder='Search UConn' onChange={e=>this.setText(e.target.value)}/>
+          </div>
+        )}
+        notFullscreen={(
+          <DetailContent onClick={_=>this.setFullscreen(true)}>
+            <Geocoder placeholder='Search UConn' geocode={geocode||this.center}/>
+            <SVG className='searchSVG' path={searchSVG}/>
+            <SVG className='directionsSVG' onClick={this.initializeDirections} path={directionsSVG}/>
+          </DetailContent>
+        )}
+      />
+    )
   }
+
 }

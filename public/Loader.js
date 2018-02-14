@@ -1,15 +1,18 @@
-let done = []
+let endCallbacks = []
+let loaded
 
 class Loader {
 
-  constructor(callback, doneEarly, defaultPrediction) {
-    done.push(doneEarly)
-    callback(localStorage.getItem('prediction')-0 || defaultPrediction)
+  constructor(startCallback, endCallback, defaultPrediction) {
+    endCallbacks.push(endCallback)
+    startCallback(localStorage.getItem('prediction')-0 || defaultPrediction)
   }
 
   static finish() {
+    if (loaded) return
+    else loaded = true
     localStorage.setItem('prediction', performance.now())
-    done.forEach(f=>f())
+    endCallbacks.forEach(c=>c())
   }
 
 }

@@ -35,6 +35,9 @@ export default {
         let {type, ...other} = action
         return {...state, ...other}
       },
+      SET_LOCATION: _=> {
+        return {...state, from:action.location}
+      },
       DEFAULT: _=> state
     })
   },

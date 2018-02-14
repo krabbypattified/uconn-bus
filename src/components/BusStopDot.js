@@ -1,7 +1,7 @@
 import styled from 'styled-components'
 
 
- export default styled.div`
+const BusStopDot = styled.div`
   background-color: #ff6f6f;
   border-radius: 100px;
   border: 2px solid white;
@@ -11,3 +11,6 @@ import styled from 'styled-components'
   min-width: 14px;
   width: 14px;
 `
+
+
+ export default BusStopDot

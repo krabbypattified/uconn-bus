@@ -1,50 +1,25 @@
 import React from 'react'
-import PropTypes from 'prop-types'
 import {connect} from 'react-redux'
-
+import SearchBar from 'containers/SearchBar'
+import Previews from 'containers/Previews'
 import Buses from 'components/Buses'
 import BusStops from 'components/BusStops'
-// import SearchExpander from 'components/SearchExpander'
-// import SearchReceiver from 'components/SearchReceiver'
-
-import {setDirections, directionsNext} from 'data/actions'
 
 
-
-class Default extends React.Component {
-
-  static contextTypes = {
-    map: PropTypes.any
-  }
-
-  render() {
-    let {directions, thingSelected/*, setDirections, directionsNext*/} = this.props
-    // let center = this.context.map.getCenter().toArray()
-    return directions || thingSelected
-    ? null
-    : <div>
-        <Buses/>
-        <BusStops/>
-        {/* <SearchExpander>
-          <SearchReceiver/>
-          <SVG className='searchSVG' path={searchSVG}/>
-          <SVG className='directionsSVG' path={directionsSVG} onClick={_=>{
-            setDirections({from: location||center, to: center})
-            directionsNext()
-          }}/>
-        </SearchExpander> */}
-      </div>
-  }
-}
+let Default = ({directions, thingSelected}) =>
+directions.state || thingSelected
+? null
+: <div>
+    <Buses/>
+    <BusStops/>
+    <Previews/>
+    <SearchBar/>
+  </div>
 
 
 export default connect(
   state => ({
-    directions: state.directions.state,
+    directions: state.directions,
     thingSelected: state.selectedThingStack.length,
   }),
-  dispatch => ({
-    setDirections: fromTo => dispatch(setDirections(fromTo)),
-    directionsNext: _=> dispatch(directionsNext()),
-  })
 )(Default)

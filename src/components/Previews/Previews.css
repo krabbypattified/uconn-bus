@@ -1,3 +1,12 @@
+.PreviewList {
+  z-index   : 20;
+  position  : absolute;
+  right     : 7px;
+  left      : 7px;
+  max-width : 590px;
+  margin    : 0 auto;
+}
+
 .Preview {
   display         : flex;
   position        : relative;

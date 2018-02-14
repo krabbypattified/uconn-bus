@@ -3,7 +3,7 @@ import styled, {keyframes} from 'styled-components'
 import FreeMarker from 'components/FreeMarker'
 
 
-export default ({location, onPanEnd, scale=1}) => (
+const GeolocationMarker = ({location, onPanEnd, scale=1}) => (
   <FreeMarker projected
     style={{zIndex:1}}
     lngLat={location}
@@ -14,6 +14,9 @@ export default ({location, onPanEnd, scale=1}) => (
     <HitBox/>
   </FreeMarker>
 )
+
+
+export default GeolocationMarker
 
 
 // Styled Components

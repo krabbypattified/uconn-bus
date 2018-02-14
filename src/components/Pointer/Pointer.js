@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import {debounce} from 'helpers'
 import pinImage from 'assets/pointer.png'
 import pinStickImage from 'assets/pointerStick.png'
-import 'assets/Pointer.css'
+import './Pointer.css'
 
 
 export default class extends React.Component {

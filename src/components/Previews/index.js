@@ -1,28 +1,46 @@
 import React from 'react'
 import styled from 'styled-components'
 import {darken, desaturate} from 'polished'
+import CSSTransitionGroup from 'react-addons-css-transition-group'
 import BusIcon from 'components/BusIcon'
 import BusStopDot from 'components/BusStopDot'
 import {hexColor} from 'helpers'
-import 'assets/Preview.css'
+import './PreviewAnimation.css'
+import './Previews.css'
 
 
-export default ({data, onDetailsClick}) => {
+const Previews = ({things, selectFunc}) => (
+  <div className='PreviewList'>
+    <CSSTransitionGroup
+      transitionName={'PreviewAnimation'}
+      transitionEnterTimeout={200} transitionLeaveTimeout={200}>
+        {things.map((thing, idx) => (
+          <Preview key={idx} onDetailsClick={_=>selectFunc(thing)} data={{...thing,idx}}/>
+        ))}
+    </CSSTransitionGroup>
+  </div>
+)
+
+
+export default Previews
+
+
+
+
+let Preview = ({data, onDetailsClick}) => {
   let isBus = data.id < 60
   return (
-    <Preview className='Preview' style={{zIndex:20-data.idx}}>
+    <PreviewDiv className='Preview' style={{zIndex:20-data.idx}}>
       <div className='Name'>{data.name||`${data.busLine.name} Bus`}</div>
       {isBus ? <BusIcon color={hexColor(data.busLine.color)}/> : <BusStopDot/>}
       <div className='Padder'/>
       <DetailButton onClick={onDetailsClick} color={isBus?hexColor(data.busLine.color):'#383838'}/>
-    </Preview>
+    </PreviewDiv>
   )
 }
 
-
-
 // Autoprefixer fix
-let Preview = styled.div`
+let PreviewDiv = styled.div`
   &:last-child {
     /*see PreviewAnimation.css*/
     transition-property: transform, opacity, box-shadow, border-radius;
