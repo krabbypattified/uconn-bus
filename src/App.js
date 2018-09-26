@@ -19,7 +19,8 @@ import {isMobile} from 'helpers'
 
 
 // Apollo setup
-const httpLink = new HttpLink({uri: 'https://uconn-bus-api.herokuapp.com/graphql'})
+const httpLink = new HttpLink({uri: 'http://localhost:4000/graphql'})
+// const httpLink = new HttpLink({uri: 'https://uconn-bus-api.herokuapp.com/graphql'})
 // const retry = new RetryLink({max:Infinity,delay:5000})
 const client = new ApolloClient({
   link: httpLink,
